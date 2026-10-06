@@ -4,6 +4,9 @@
 and antibiotics for medical and allied-health students (Department of Pharmacology, Maulana Azad
 Medical College, New Delhi, with the MAMC Gaming Society).
 
+**Play it:** https://body-bastion.onrender.com (Render free plan, Singapore: the first visit after
+15 minutes of inactivity takes about a minute to wake the server).
+
 You build and upgrade a gut base (stomach, small intestine, colon, liver gate, Bone Marrow Core) with
 real defences (acid, mucus and villi walls, gut flora, Paneth cells, IgA, macrophages, neutrophils,
 Kupffer cells, ORS + zinc, IV fluids, prescribed drug batteries) and attack other players' guts with
