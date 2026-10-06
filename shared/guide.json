@@ -1,0 +1,441 @@
+{
+ "intro": "Body Bastion is a strategy game about the gut and the germs that attack it. You build and upgrade a gut base (stomach acid, mucus and villi walls, the gut flora, immune-cell towers, ORS and IV fluid stations and drug batteries) and you attack other players' guts with armies of real enteric germs. Medical knowledge wins: rehydration saves bases, the right drug beats the right germ, unnecessary antibiotics breed resistance and destroy the flora, and vaccines weaken an attack without ever abolishing it. Made by the Department of Pharmacology, Maulana Azad Medical College, New Delhi, with the MAMC Gaming Society, for MBBS and allied-health students.",
+ "howToPlay": [
+  "Register (organisers approve accounts) or try the game as a guest. Under-18 players need a parent or guardian's consent.",
+  "Build your gut base. Germs enter at the mouth and travel one path: stomach, small intestine, colon, liver gate, then the Bone Marrow Core. Tap an empty site to build; tap a building to upgrade, move its prescription or remove it. Some buildings belong to one zone only (Acid Moat in the stomach, Villi Wall and Peyer's Patch in the small intestine, Gut Flora Garden in the colon, Kupffer Cell Gate at the liver).",
+  "Prescribe your Drug Batteries. Each battery holds one researched drug and fires only at the germ types you tick. Nothing ticked means the battery stays idle. Every shot costs ATP from the base's pool.",
+  "Set your defence policy. Your base defends itself while you are offline. You may set an automatic Stop-Flow (loperamide) threshold for adult patients; it fires at most once per battle.",
+  "Attack. Pick an army of unlocked germs that fits your army space (training costs nutrients), then deploy germs at the mouth by tapping their cards. Tap a spell, then tap the gut path to cast it. A battle lasts up to 3 minutes; you may end it early.",
+  "Answer the knowledge boost (optional). Before a battle you get one 20-second question. A correct answer gives your germs +10% health when attacking, or your towers and drugs +10% damage in campaign cases and Defence Trials, and adds 150 points to a tournament attack score.",
+  "Win stars. One star for destroying at least 50% of the buildings (walls do not count), one for destroying the Bone Marrow Core, one for 100%. If the defender's hydration reaches zero the base collapses: 3 stars and 100%.",
+  "Read the 'Why did this happen?' cards after each battle. They explain the real mechanism behind what you saw.",
+  "Upgrade. Mitochondria Plants make ATP and Nutrient Absorbers make nutrients over time. Spend them on buildings, upgrades, a stronger Bone Marrow Core, and research: new drugs in the Pharmacy Lab, vaccines in the Vaccine Lab and T cells in the Peyer's Patch.",
+  "Play the case campaign. You are the doctor: each level is a real clinical case in which scripted germ waves attack a base you set up within a budget. Pause, speed up, build, sell, change prescriptions and use Stop-Flow during the battle. Stars come from surviving and meeting the case's two treatment objectives."
+ ],
+ "rules": [
+  {
+   "title": "Hydration first",
+   "game": "Toxin germs (Cholera, Rotavirus, ETEC, Shigella, C. difficile) drain the hydration meter once they are past the stomach, and toxins next to a Villi Wall make it leak. ORS stations refill the meter, but below 25% hydration ORS works at only 20% of its rate; the IV Ringer's Lactate Stand then switches on automatically and runs until hydration is back to 50%. At zero hydration the base collapses even if every tower stands.",
+   "teaching": "Dehydration is what kills in acute diarrhoea. Low-osmolarity ORS treats some dehydration (WHO Plan B); severe dehydration or shock needs IV Ringer's lactate (Plan C, 100 ml/kg) before switching back to ORS. Zinc is added for children under 5."
+  },
+  {
+   "title": "Spectrum matching",
+   "game": "A Drug Battery's damage depends on the drug-versus-germ matrix: Y = 100%, P = a reduced value for that pair (ciprofloxacin against Typhoid only 10%), X = 50% but counted as unnecessary, N = 0% (the shot is wasted and breeds resistance). Resistance lowers damage further.",
+   "teaching": "Every antimicrobial has a spectrum. Choose the drug that is active against the likely germ and indicated by guidelines, then refine it with culture and local susceptibility data."
+  },
+  {
+   "title": "Antibiotics are not always needed",
+   "game": "Any antibiotic shot at Rotavirus or ETEC counts as unnecessary, as does any N or X shot. Campaign objectives and Defence Trial scores penalise unnecessary shots (30 trial points each).",
+   "teaching": "Most acute watery diarrhoea (viral or ETEC) needs ORS, zinc for young children and feeding, not antibiotics. Antibiotics are for bloody diarrhoea, suspected cholera with severe dehydration, enteric fever and other specific infections."
+  },
+  {
+   "title": "Resistance meter",
+   "game": "Every shot adds resistance pressure for that drug: 1 for a Y shot, 3 for P, 5 for X or N. After each defence of your own base, every 20 points raise the drug's resistance by 1% (maximum 90%), and each 1% cuts that drug's damage by 1%. Resistance fades by 2 points an hour. From 50% the germs show as resistant variants (FQ-resistant, ESBL, macrolide-resistant and so on).",
+   "teaching": "Antibiotic use selects resistant survivors that spread and share resistance genes. Fluoroquinolone-resistant typhoid and Shigella, ESBL E. coli and NDM carbapenemases are Indian examples of what overuse produces."
+  },
+  {
+   "title": "Collateral damage",
+   "game": "Antibiotic shots damage every Gut Flora Garden: ceftriaxone 5 points per shot, ciprofloxacin 4, the H. pylori regimen 3, azithromycin 2, doxycycline, metronidazole, oral vancomycin/fidaxomicin and the luminal agent 1, albendazole and antifungals 0. If a garden dies after antibiotic damage, 2 C. diff Phantoms and 1 Candida Creeper appear; with no garden at all, every 40 collateral points spawns a C. diff Phantom. A healthy garden attacks C. difficile and Candida in the colon and regrows once the antibiotics stop.",
+   "teaching": "Broad-spectrum antibiotics deplete the normal flora and its colonisation resistance, opening the door to C. difficile infection and Candida overgrowth. Clindamycin, cephalosporins, fluoroquinolones and carbapenems carry the highest C. difficile risk; doxycycline carries a low risk."
+  },
+  {
+   "title": "Combination therapy",
+   "game": "Only the H. pylori regimen battery hurts the H. pylori Driller: levels 1-2 are PPI + clarithromycin + amoxicillin triple therapy, level 3 and above bismuth quadruple therapy, which halves the regimen's resistance. Single antibiotics do nothing to H. pylori and push regimen resistance up. Each regimen shot starts the PPI for 5 seconds: the Acid Moat drops to 30% strength and antibiotic damage to the flora rises by half.",
+   "teaching": "H. pylori is cured only by a 14-day regimen with a PPI. Bismuth quadruple therapy (PPI + bismuth + tetracycline + metronidazole) is preferred where clarithromycin resistance is high or unknown, as in much of India; clarithromycin triple therapy only where resistance is low. Acid suppression helps the antibiotics but makes other enteric infections and C. difficile more likely."
+  },
+  {
+   "title": "Stop-Flow trap",
+   "game": "Stop-Flow (loperamide) reduces fluid drain to 60% for 8 seconds and pauses the Peristalsis Conveyor, then needs 25 seconds to recharge. It never refills hydration. Shigella, Amoeba and C. difficile caught by it regenerate and deal 1.5 times damage. It is locked in every child case.",
+   "teaching": "Antimotility drugs do not treat dehydration. They are never given to children with acute diarrhoea (WHO) and are avoided in bloody or febrile diarrhoea, C. difficile infection and Shiga toxin-producing E. coli, where they prolong contact with invasive germs and toxins. Loperamide may relieve symptoms in adults with non-bloody traveller's diarrhoea."
+  },
+  {
+   "title": "Vaccination",
+   "game": "Vaccines researched in the Vaccine Lab weaken that germ against your base: rotavirus 55%, typhoid conjugate 80%, oral cholera 65%. A vaccinated germ arrives with less health (by half the efficacy) and drains that much less fluid, and IgA does double damage to it, but it still attacks. In multiplayer and clan wars, clan coverage adds herd protection for every member, vaccinated or not (up to half the efficacy at 60% coverage; total capped at 90%).",
+   "teaching": "Enteric vaccines give strong but partial, waning protection: rotavirus vaccines prevent about half of severe disease in Indian infants, typhoid conjugate vaccine about 80%, killed oral cholera vaccine about 65% over 3-5 years. High coverage also protects the unvaccinated (herd protection). No vaccine replaces ORS, safe water and sanitation."
+  },
+  {
+   "title": "Deworming day",
+   "game": "When the organisers open a Deworming Day event, a base that deworms (50 ATP) receives 500 nutrients, and for 24 hours Worm Titans attacking it arrive with 30% less health.",
+   "teaching": "India's National Deworming Day (10 February and 10 August, with mop-up days) gives single-dose albendazole to all children and adolescents aged 1-19 through schools and anganwadis: 400 mg, or 200 mg for ages 1-2. Sanitation and hand-washing prevent reinfection."
+  },
+  {
+   "title": "Immune memory",
+   "game": "With a Peyer's Patch standing, killing at least 5 germs of one type in a multiplayer or clan-war defence adds a memory stack for that germ (maximum 3). Each stack gives immune towers +10% damage against it while the Peyer's Patch survives.",
+   "teaching": "A secondary immune response is faster and stronger: memory B and T cells primed in gut lymphoid tissue such as Peyer's patches produce high-affinity, class-switched antibody (including IgA) on re-exposure. Vaccines exploit the same memory."
+  },
+  {
+   "title": "Knowledge boost",
+   "game": "Before a battle you may answer one 20-second question. A correct answer gives +10% germ health when attacking, or +10% tower and drug damage in campaign cases and Defence Trials, and adds 150 points to a tournament attack score. In the league everyone gets the same question for the same base, and the server checks the answer.",
+   "teaching": "Recall under time pressure, as on a ward round. The questions cover rehydration, the germs, drugs, vaccines, immunology and stewardship."
+  }
+ ],
+ "units": {
+  "rotavirus": {
+   "mechanism": "A segmented double-stranded RNA virus that infects the mature enterocytes at the tips of small-intestinal villi. Villus damage reduces absorption, and the viral protein NSP4 acts as an enterotoxin that raises intracellular calcium and drives chloride secretion; the virus also stimulates the enteric nervous system.",
+   "clinical": "The leading cause of severe dehydrating diarrhoea in children aged 6-24 months: fever and vomiting, then profuse watery diarrhoea for 3-7 days. It spreads faecal-orally and survives on hands and surfaces; a stool antigen test confirms it when needed.",
+   "treatment": "ORS (WHO Plan A, B or C by degree of dehydration), zinc for 10-14 days and continued breastfeeding and feeding. No antibiotics and no antimotility drugs. Prevention: Rotavac or Rotasiil at 6, 10 and 14 weeks under the Universal Immunisation Programme, which prevents about half of severe disease."
+  },
+  "etec": {
+   "mechanism": "Enterotoxigenic Escherichia coli, a Gram-negative rod, sticks to small-intestinal cells with colonisation-factor fimbriae and releases heat-labile toxin (LT, raises cAMP like cholera toxin) and/or heat-stable toxin (ST, raises cGMP). Chloride and water pour into the lumen. It does not invade, so the stool has no blood or pus cells.",
+   "clinical": "The commonest cause of traveller's diarrhoea and a major cause of watery diarrhoea in Indian children, acquired from contaminated food and water. It usually settles in 1-5 days.",
+   "treatment": "ORS and continued feeding. Mild traveller's diarrhoea needs no antibiotic; for severe or disabling cases in South Asia a single dose of azithromycin is preferred because fluoroquinolone resistance is common. Adults with non-bloody, afebrile diarrhoea may take loperamide for symptom relief."
+  },
+  "cholera": {
+   "mechanism": "Vibrio cholerae O1 or O139, a comma-shaped Gram-negative rod with darting motility, colonises the small intestine using toxin-coregulated pili. The A subunit of cholera toxin ADP-ribosylates Gs-alpha and locks adenylate cyclase on; high cAMP opens CFTR chloride channels and blocks sodium absorption, but sodium-glucose co-transport (SGLT1) keeps working, which is why ORS works.",
+   "clinical": "Sudden, painless, profuse 'rice-water' stools with vomiting and leg cramps; an adult can lose up to about a litre an hour and die of hypovolaemic shock within hours. Outbreaks follow floods and crowding with unsafe water. The germ is very acid-sensitive, so the infectious dose is high.",
+   "treatment": "Rapid rehydration: IV Ringer's lactate for severe dehydration (WHO Plan C), then ORS. For moderate to severe cases an antibiotic shortens diarrhoea and shedding: single-dose doxycycline is first-line for all ages (GTFCC), with single-dose azithromycin as the alternative; ciprofloxacin is less reliable because of resistance. Zinc for children under 5. Prevention: safe water, sanitation and two doses of killed oral cholera vaccine."
+  },
+  "shigella": {
+   "mechanism": "A non-motile Gram-negative rod that survives stomach acid well (10-100 bacteria can infect). It crosses the colon through M cells, kills the macrophages that engulf it by pyroptosis (caspase-1 inflammasome, IL-1beta release), invades colonic cells from their base and spreads from cell to cell on actin tails. Shigella dysenteriae type 1 also makes Shiga toxin.",
+   "clinical": "Bacillary dysentery, a colitis: fever, cramps, tenesmus and frequent small stools with blood and mucus; the stool is full of neutrophils (pus cells) and red cells. Complications include dehydration, seizures in young children, haemolytic uraemic syndrome, toxic megacolon and reactive arthritis.",
+   "treatment": "ORS and feeding plus an antibiotic chosen by local susceptibility: in India azithromycin or ceftriaxone (cefixime is also used), because fluoroquinolone resistance is common. Never antimotility drugs such as loperamide. Hand-washing with soap stops spread."
+  },
+  "typhoid": {
+   "mechanism": "Salmonella enterica serovar Typhi, a Gram-negative rod that infects only humans. It crosses the ileum through M cells over Peyer's patches, survives inside macrophages and spreads through lymph and blood to the liver, spleen, bone marrow and gallbladder. Its Vi capsule resists complement; macrophages kill it only after Th1 cells activate them with interferon-gamma.",
+   "clinical": "Enteric fever: step-ladder fever for 1-3 weeks, headache, coated tongue, abdominal pain, relative bradycardia and hepatosplenomegaly. Third-week complications include ileal bleeding and perforation. Blood culture is the test of choice early (bone marrow culture is most sensitive); the Widal test is unreliable in endemic areas. Gallbladder carriers keep it spreading.",
+   "treatment": "Ceftriaxone for severe or complicated disease; oral azithromycin (or cefixime) for uncomplicated disease; adjust to the blood culture result. Fluoroquinolones must not be used empirically in India because most strains are non-susceptible. Extensively drug-resistant typhoid (resistant to ceftriaxone and fluoroquinolones, mainly reported from Pakistan) is treated with azithromycin or a carbapenem. Prevention: typhoid conjugate vaccine, safe water and food."
+  },
+  "amoeba": {
+   "mechanism": "Entamoeba histolytica, a protozoan. Swallowed cysts release trophozoites that attach to the colon with a galactose-binding lectin and kill host cells, including neutrophils, on contact, producing flask-shaped ulcers. Trophozoites can travel through the portal vein to the liver.",
+   "clinical": "Amoebic dysentery (gradual onset, bloody mucoid stools, often less fever than shigellosis) or amoebic liver abscess, usually a single abscess in the right lobe with fever, right upper abdominal pain and tender hepatomegaly. Trophozoites containing red cells in stool distinguish it from the harmless E. dispar; serology and ultrasound help in liver abscess.",
+   "treatment": "Metronidazole (or tinidazole) kills tissue trophozoites; it must be followed by a luminal agent (paromomycin or diloxanide furoate) to clear gut cysts. Most liver abscesses respond to drugs alone; aspiration is for large, left-lobe or non-responding abscesses. Prevention: safe water and food hygiene."
+  },
+  "amoeba_cyst": {
+   "mechanism": "The tough, four-nucleated resting form of E. histolytica passed in stool. Cysts survive stomach acid and the chlorine levels used in routine water treatment, and are the infective form for the next person.",
+   "clinical": "Many people pass cysts without symptoms; they can still spread infection and may later develop invasive disease. In the game, cysts left behind after metronidazole represent the risk of relapse.",
+   "treatment": "A luminal amoebicide: paromomycin (a poorly absorbed aminoglycoside) or diloxanide furoate. Metronidazole is well absorbed and does not reliably clear cysts from the lumen."
+  },
+  "hpylori": {
+   "mechanism": "A spiral, flagellated Gram-negative rod that lives under the gastric mucus. Urease turns urea into ammonia to buffer acid around it, and adhesins and toxins (CagA, VacA) keep the mucosa chronically inflamed.",
+   "clinical": "Infects a large share of Indian adults, usually from childhood. Most have silent gastritis, but it causes duodenal and gastric ulcers and is a group 1 carcinogen (gastric adenocarcinoma, MALT lymphoma). Diagnosis: urea breath test, stool antigen test or biopsy urease test; confirm cure with a breath or stool test at least 4 weeks after treatment.",
+   "treatment": "Always a 14-day combination with a PPI. Bismuth quadruple therapy (PPI + bismuth + tetracycline + metronidazole) is preferred where clarithromycin resistance is high or unknown, as in much of India; PPI + amoxicillin + clarithromycin only where clarithromycin resistance is low or the strain is proven susceptible. Never a single antibiotic. Rescue regimens depend on the previous treatment."
+  },
+  "cdiff": {
+   "mechanism": "Clostridioides difficile, a spore-forming anaerobic Gram-positive rod. Spores survive acid, alcohol hand rub and hospital surfaces; when antibiotics remove the normal flora (and the secondary bile acids it makes), spores germinate in the colon. Toxins A and B glucosylate Rho GTPases, killing colonocytes and forming pseudomembranes.",
+   "clinical": "Three or more unformed stools in 24 hours during or after antibiotics or a hospital stay, with fever, cramps and leucocytosis. Severe disease: white cell count of 15,000/µL or more, or creatinine above 1.5 mg/dL; fulminant disease adds shock, ileus or megacolon. Recurrence is common. Risks: recent antibiotics, older age, hospital stay and acid suppression.",
+   "treatment": "Stop the culprit antibiotic where possible. Oral fidaxomicin (preferred) or oral vancomycin for 10 days; metronidazole only for non-severe disease when neither is available. Fulminant disease: high-dose oral vancomycin plus IV metronidazole and surgical review. Multiple recurrences: faecal microbiota transplantation. No loperamide; contact precautions and soap-and-water hand-washing."
+  },
+  "candida": {
+   "mechanism": "Candida albicans, a yeast that normally lives in the mouth, gut and vagina. The bacterial flora keeps it in check (colonisation resistance); broad-spectrum antibiotics, steroids, diabetes and immune suppression let it overgrow and, rarely, invade.",
+   "clinical": "In the gut after antibiotics it is almost always colonisation, not a cause of diarrhoea. Real disease: oral thrush, oesophageal candidiasis (HIV or immunosuppression), vulvovaginal candidiasis, and candidaemia in ICU patients with central lines.",
+   "treatment": "For gut Candida after antibiotics: stop unnecessary antibiotics and let the flora recover; no antifungal is needed. Oral thrush: topical nystatin or clotrimazole (fluconazole if severe). Oesophageal candidiasis: oral fluconazole. Candidaemia: an echinocandin first, and remove central lines."
+  },
+  "worm": {
+   "mechanism": "Ascaris lumbricoides, the large roundworm. Eggs from faecally contaminated soil are swallowed; larvae hatch, migrate through the liver and lungs (Loeffler syndrome with eosinophilia), are coughed up and swallowed, and mature in the small intestine, where adult worms compete for nutrients.",
+   "clinical": "Light infections are silent. Heavy loads in children cause poor growth, abdominal pain and sometimes intestinal obstruction or worms entering the bile or pancreatic duct. Soil-transmitted worms together contribute to undernutrition and, with hookworm, anaemia. Diagnosis: eggs in stool.",
+   "treatment": "Single-dose albendazole 400 mg (200 mg for ages 1-2), or mebendazole. National Deworming Day treats everyone aged 1-19 on 10 February and 10 August. Sanitation, hand-washing and footwear (against hookworm) prevent reinfection."
+  }
+ },
+ "buildings": {
+  "core": {
+   "biology": "Bone marrow is the factory of the immune system: its haematopoietic stem cells make neutrophils, monocytes (which become tissue macrophages), lymphocytes and the rest of the blood. In the game it is the headquarters and the attacker's main target."
+  },
+  "acid_moat": {
+   "biology": "Parietal cells secrete hydrochloric acid, keeping fasting gastric pH around 1-2. Acid kills many swallowed germs, so acid tolerance sets the infectious dose: cholera needs about 10^8 bacteria, Shigella only 10-100. H. pylori survives with urease, and spores, cysts and worm eggs pass unharmed. Proton pump inhibitors and antacids weaken this barrier."
+  },
+  "mucus_wall": {
+   "biology": "Goblet cells secrete mucins (mainly MUC2) that form a gel over the epithelium. Mucus traps microbes, holds IgA and antimicrobial peptides, and is swept along by peristalsis; the inner colonic mucus layer is almost free of bacteria."
+  },
+  "villi_wall": {
+   "biology": "The small-intestinal epithelium is a single layer of enterocytes sealed by tight junctions (claudins and occludin) and folded into villi for absorption. Enterotoxins from cholera, ETEC and rotavirus turn it into a secreting surface, which is why toxin germs make it leak. The colon has no villi."
+  },
+  "flora_garden": {
+   "biology": "Trillions of resident bacteria, mostly anaerobes in the colon, provide colonisation resistance: they occupy niches, compete for nutrients, make bacteriocins and short-chain fatty acids, and convert primary bile acids into secondary bile acids that inhibit C. difficile germination. They also ferment fibre into butyrate, the main fuel of colonocytes. Broad-spectrum antibiotics deplete them for weeks to months."
+  },
+  "paneth_tower": {
+   "biology": "Paneth cells at the base of small-intestinal crypts release alpha-defensins, lysozyme and other antimicrobial peptides that disrupt bacterial membranes and protect the crypt stem cells. They act mainly against bacteria."
+  },
+  "iga_cannon": {
+   "biology": "Plasma cells in the lamina propria make dimeric IgA, which the polymeric immunoglobulin receptor carries across the epithelium as secretory IgA. It binds toxins and microbes in the lumen and blocks their attachment ('immune exclusion') without triggering inflammation. Vaccines boost these antibodies."
+  },
+  "macrophage_tower": {
+   "biology": "Tissue macrophages engulf and kill microbes and present antigens to T cells. Resting macrophages cannot kill S. Typhi, which survives inside them, until Th1 cells activate them with interferon-gamma. Shigella escapes the phagosome and kills macrophages by pyroptosis, so macrophages fare poorly against it."
+  },
+  "neutrophil_barracks": {
+   "biology": "Neutrophils pour out of the blood in response to IL-8 and IL-1 at sites of bacterial invasion, where they phagocytose, release granules and cast extracellular traps. They are the pus cells of bacillary dysentery and also fight Candida. Enteric fever is linked with low neutrophil counts, and E. histolytica kills neutrophils on contact."
+  },
+  "kupffer_gate": {
+   "biology": "Kupffer cells are resident macrophages lining the liver sinusoids. Venous blood from the intestine passes through the liver in the portal vein, so they filter bacteria and debris before they reach the general circulation. S. Typhi and E. histolytica reach the liver by this route."
+  },
+  "peristalsis": {
+   "biology": "Coordinated waves of smooth-muscle contraction, controlled by the enteric nervous system, move gut contents aborally, towards the anus. Between meals the migrating motor complex sweeps the small intestine clean. Diarrhoea itself helps flush pathogens out, one reason why antimotility drugs can harm in invasive infections."
+  },
+  "ors_station": {
+   "biology": "Low-osmolarity ORS contains, per litre, sodium 75, chloride 65, glucose 75, potassium 20 and citrate 10 mmol (245 mOsm/L). Glucose and sodium are absorbed together by SGLT1, which keeps working even when toxins drive secretion, and water follows. Zinc for children under 5 (20 mg daily, 10 mg under 6 months, for 10-14 days) shortens and lessens diarrhoea."
+  },
+  "iv_drip": {
+   "biology": "Ringer's lactate is a balanced crystalloid (per litre about sodium 130, potassium 4, chloride 109, calcium 1.5 and lactate 28 mmol) that replaces salt and base losses. WHO Plan C gives 100 ml/kg: from 12 months of age 30 ml/kg in 30 minutes then 70 ml/kg in 2.5 hours; in infants 30 ml/kg in 1 hour then 70 ml/kg in 5 hours. ORS starts as soon as the patient can drink."
+  },
+  "drug_battery": {
+   "biology": "Stands for a course of one antimicrobial. Each drug helps only against germs within its spectrum; firing it at the wrong germ, or when no antibiotic is needed, still exposes the patient's flora and selects resistance. The prescription list is the doctor's decision about whom to treat."
+  },
+  "peyers_patch": {
+   "biology": "Organised lymphoid follicles in the ileal wall. M cells in the overlying epithelium sample gut antigens and hand them to dendritic cells, which prime T cells and IgA-switching B cells. Typhoid and Shigella exploit M cells to cross the gut wall. Memory B and T cells made here give faster, stronger responses on re-exposure."
+  },
+  "mitochondria": {
+   "biology": "Mitochondria make ATP by oxidative phosphorylation, and activated immune cells need a great deal of it to divide and kill. In the game ATP pays for buildings and for every drug shot."
+  },
+  "nutrient_absorber": {
+   "biology": "The small intestine absorbs digested food across its huge villous surface. Worms and repeated diarrhoea reduce absorption and contribute to undernutrition in children. In the game nutrients pay for buildings, research and germ armies."
+  },
+  "pharmacy_lab": {
+   "biology": "The hospital formulary and antimicrobial stewardship programme decide which drugs are stocked and when they may be used, guided by national guidelines (ICMR) and local antibiograms. In the game it researches new drugs."
+  },
+  "vaccine_lab": {
+   "biology": "Vaccines train adaptive immunity before the germ arrives. India's Universal Immunisation Programme includes rotavirus vaccine; typhoid conjugate vaccine is recommended by the Indian Academy of Pediatrics and used in public campaigns; oral cholera vaccine is used in outbreaks and high-risk areas. All give partial protection."
+  }
+ },
+ "drugs": {
+  "ceftriaxone": {
+   "mechanism": "Third-generation cephalosporin (beta-lactam): binds penicillin-binding proteins and blocks peptidoglycan cross-linking, so the cell wall fails and the bacterium lyses. Bactericidal; its long half-life allows once-daily dosing.",
+   "uses": "Severe or complicated enteric fever; severe shigellosis or dysentery needing hospital care; invasive Gram-negative infections, meningitis and gonorrhoea. It is not used for cholera, and ETEC diarrhoea needs no antibiotic at all.",
+   "cautions": "A WHO 'Watch' antibiotic: strong selection of ESBL-producing bacteria and a high C. difficile risk. Can cause biliary sludge (calcium-ceftriaxone precipitate); never given with IV calcium solutions to neonates; hypersensitivity reactions."
+  },
+  "azithromycin": {
+   "mechanism": "Macrolide: binds the 50S ribosomal subunit and blocks protein synthesis. It concentrates inside cells and tissues and has a very long half-life, so short courses or single doses work.",
+   "uses": "Uncomplicated enteric fever, shigellosis, Campylobacter, severe traveller's diarrhoea in South Asia, and the single-dose alternative to doxycycline for cholera. It is not part of any H. pylori regimen (clarithromycin is the regimen macrolide).",
+   "cautions": "A WHO 'Watch' antibiotic; macrolide resistance is rising in Shigella and Campylobacter. QT prolongation, gastrointestinal upset, and a link with pyloric stenosis in very young infants. Used alone against H. pylori it selects macrolide (clarithromycin) resistance."
+  },
+  "fluoroquinolone": {
+   "mechanism": "Ciprofloxacin inhibits bacterial DNA gyrase and topoisomerase IV, trapping them on DNA and causing lethal double-strand breaks. Bactericidal and well absorbed by mouth.",
+   "uses": "Once the mainstay for typhoid, dysentery and traveller's diarrhoea; in India now limited by resistance. Most S. Typhi and many Shigella are non-susceptible, so it is not an empirical choice for enteric fever or dysentery. Still used for other infections when the organism is susceptible.",
+   "cautions": "A WHO 'Watch' antibiotic. Tendinitis and tendon rupture, QT prolongation, low or high blood sugar, nervous-system effects and aortic aneurysm warnings; avoided in children and pregnancy when alternatives exist. High C. difficile risk. Absorption falls if taken with antacids, iron, calcium or zinc."
+  },
+  "doxycycline": {
+   "mechanism": "Tetracycline: binds the 30S ribosomal subunit and stops aminoacyl-tRNA attaching (bacteriostatic). Well absorbed, with a long half-life.",
+   "uses": "Cholera: a single oral dose (300 mg in adults) is first-line for all ages, including children and pregnant women (GTFCC). Also scrub typhus and other rickettsial infections, leptospirosis, brucellosis and acne. In H. pylori quadruple therapy, tetracycline itself, not doxycycline, is recommended.",
+   "cautions": "Pill oesophagitis (swallow upright with plenty of water), photosensitivity, and chelation by milk, antacids, iron and zinc. Long courses are avoided in pregnancy and in children under 8 (tooth staining); short courses such as the single cholera dose are acceptable. A WHO 'Access' antibiotic with a low C. difficile risk."
+  },
+  "metronidazole": {
+   "mechanism": "Nitroimidazole prodrug: anaerobic bacteria and protozoa reduce its nitro group to toxic radicals that break their DNA. It is active only against anaerobes and some protozoa (Entamoeba, Giardia, Trichomonas), not against aerobic gut pathogens such as Shigella or Salmonella.",
+   "uses": "Invasive amoebiasis (colitis, liver abscess), giardiasis, anaerobic infections, and as part of H. pylori bismuth quadruple therapy. For C. difficile only when fidaxomicin and oral vancomycin are unavailable (non-severe disease), or intravenously alongside oral vancomycin in fulminant disease.",
+   "cautions": "Metallic taste, nausea, a disulfiram-like reaction with alcohol, and peripheral neuropathy on long courses; interacts with warfarin. It does not clear amoebic cysts from the lumen, so a luminal agent must follow. H. pylori metronidazole resistance is very high in India. A WHO 'Access' antibiotic."
+  },
+  "luminal_agent": {
+   "mechanism": "Drugs that stay in the gut lumen. Paromomycin is a poorly absorbed aminoglycoside acting on the 30S ribosome; diloxanide furoate is split in the gut to diloxanide, which kills luminal amoebae.",
+   "uses": "After metronidazole for any invasive amoebiasis, and on its own for people passing E. histolytica cysts without symptoms, to clear luminal cysts and prevent relapse and spread.",
+   "cautions": "Flatulence and gastrointestinal upset; paromomycin can cause diarrhoea and, if absorbed through badly ulcerated mucosa, aminoglycoside toxicity. Availability varies, so check the hospital pharmacy."
+  },
+  "vanco_fidaxo": {
+   "mechanism": "Oral vancomycin is a glycopeptide that blocks cell-wall synthesis by binding D-Ala-D-Ala; given by mouth it is not absorbed and reaches high levels in the colon. Fidaxomicin is a narrow-spectrum macrocyclic antibiotic that inhibits bacterial RNA polymerase and largely spares the normal anaerobic flora.",
+   "uses": "C. difficile infection: fidaxomicin 200 mg twice daily for 10 days (preferred, fewer recurrences) or oral vancomycin 125 mg four times daily for 10 days. Intravenous vancomycin does not reach the colon and is not used for C. difficile.",
+   "cautions": "Fidaxomicin is expensive and not always available in India; oral vancomycin can be prepared from the IV powder. Oral vancomycin still disturbs the flora and selects vancomycin-resistant enterococci. Use only for confirmed or strongly suspected C. difficile."
+  },
+  "hpylori_combo": {
+   "mechanism": "A regimen, not one drug. The PPI raises gastric pH so acid-labile antibiotics work and H. pylori enters an antibiotic-sensitive growth phase; two or three antimicrobials act together so resistance to one does not let the germ escape. Bismuth adds a direct antibacterial effect.",
+   "uses": "H. pylori-positive peptic ulcer, gastric MALT lymphoma, and other indications for eradication. Bismuth quadruple therapy (PPI + bismuth + tetracycline + metronidazole for 14 days) where clarithromycin resistance is high or unknown, including most of India; PPI + amoxicillin + clarithromycin for 14 days only where clarithromycin resistance is low or susceptibility is proven. Confirm cure with a urea breath or stool antigen test at least 4 weeks later.",
+   "cautions": "Missed doses and short courses cause failure and resistance. Bismuth blackens the stool and tongue; avoid alcohol with metronidazole; tetracycline is avoided in pregnancy and young children. Long-term PPI use raises the risk of enteric infections and C. difficile, so stop the PPI when it is no longer needed."
+  },
+  "albendazole": {
+   "mechanism": "Benzimidazole: binds worm beta-tubulin and blocks microtubule formation, so the worm cannot take up glucose and slowly dies. Poorly absorbed, which suits intestinal worms (a fatty meal increases absorption for tissue infections).",
+   "uses": "A single 400 mg dose (200 mg for ages 1-2) for roundworm, hookworm and whipworm, and mass deworming on National Deworming Day for everyone aged 1-19. Longer courses for neurocysticercosis and hydatid disease.",
+   "cautions": "Avoid in the first trimester of pregnancy; children who are ill on deworming day are treated later (mop-up day). Mild abdominal pain and nausea, especially with heavy worm loads. Prolonged high-dose courses need liver and blood-count monitoring. It does not affect bacteria, so it causes no flora damage."
+  },
+  "antifungal": {
+   "mechanism": "Azoles such as fluconazole inhibit fungal lanosterol 14-alpha-demethylase and block ergosterol synthesis; echinocandins such as caspofungin and micafungin block beta-1,3-glucan synthesis in the fungal cell wall. Neither acts on bacteria.",
+   "uses": "Oral thrush (topical agents, or fluconazole if severe), oesophageal candidiasis (fluconazole), candidaemia (an echinocandin first) and vulvovaginal candidiasis. Not for Candida found in stool after antibiotics, which is colonisation.",
+   "cautions": "Fluconazole inhibits liver CYP enzymes (interactions with warfarin, sulfonylureas and some statins), can prolong the QT interval and raise liver enzymes. Unnecessary azole use selects azole-resistant Candida species."
+  }
+ },
+ "vaccines": {
+  "rotavirus": "Rotavac and Rotasiil are live oral vaccines given at 6, 10 and 14 weeks under India's Universal Immunisation Programme. In Indian trials they prevented roughly 36-56% of severe rotavirus gastroenteritis in early childhood (Rotavac 56% in the first year), and breakthrough illness is usually milder. Protection is partial and wanes, so ORS and zinc are still needed. In the game: 55% (vaccinated Rotavirus germs have 27% less health and drain 55% less).",
+  "typhoid": "Typhoid conjugate vaccine (for example Typbar-TCV) is a single injection from 6 months of age. It gave about 80% protection in children in Nepal (Shakya et al., NEJM 2019); protection lasts several years but is not lifelong, and it does not prevent paratyphoid fever. The older Vi polysaccharide vaccine works only from 2 years of age and gives shorter protection. In the game: 80% (vaccinated Typhoid germs have 40% less health).",
+  "cholera": "Killed whole-cell oral cholera vaccine (for example Shanchol or Euvichol-Plus) is given as two oral doses at least 14 days apart from 1 year of age. In Kolkata it gave about 65% protection over 5 years (Bhattacharya et al., Lancet Infect Dis 2013), with extra herd protection at high coverage. It is used in outbreaks and high-risk areas and does not replace safe water. In the game: 65% (vaccinated Cholera germs have 32% less health and drain 65% less)."
+ },
+ "corrections": [
+  {
+   "area": "Vaccines",
+   "plan": "'Vaccines protect for good'; rotavirus vaccine gives 'permanent protection'.",
+   "now": "Vaccines are partial: rotavirus 55%, typhoid conjugate 80%, oral cholera 65%. They reduce germ health and fluid drain; vaccinated germs still attack.",
+   "why": "No enteric vaccine gives lifelong or complete protection (Bhandari 2014; Shakya 2019; Bhattacharya 2013)."
+  },
+  {
+   "area": "Severe dehydration",
+   "plan": "'Only ORS refills' the hydration meter.",
+   "now": "Below 25% hydration ORS works at 20%; a new IV Ringer's Lactate Stand switches on and runs until 50%.",
+   "why": "Severe dehydration and shock need IV Ringer's lactate (WHO Plan C); teaching ORS alone for every case would teach a lethal error."
+  },
+  {
+   "area": "Zinc",
+   "plan": "ORS + zinc bundled for every patient.",
+   "now": "Zinc (ORS station level 3) works only in child cases; adult cases get no zinc effect. ORS is the low-osmolarity formula.",
+   "why": "Zinc is recommended for children under 5; there is no proven benefit in adults (WHO/UNICEF 2004)."
+  },
+  {
+   "area": "Cholera drug of choice",
+   "plan": "Doxycycline and azithromycin listed as interchangeable; the quiz answer was undefined.",
+   "now": "Single-dose doxycycline is first-line for all ages; azithromycin is the alternative; ceftriaxone is not a cholera drug.",
+   "why": "GTFCC 2018 guidance."
+  },
+  {
+   "area": "H. pylori and azithromycin",
+   "plan": "Azithromycin cell marked N*** with a footnote naming clarithromycin.",
+   "now": "Plain N. Clarithromycin, amoxicillin, tetracycline and metronidazole work only inside a regimen; azithromycin is in no regimen.",
+   "why": "The footnote sat on the wrong drug and taught that azithromycin is an H. pylori drug."
+  },
+  {
+   "area": "H. pylori regimen",
+   "plan": "'PPI + two antibiotics'.",
+   "now": "One regimen battery: levels 1-2 clarithromycin triple therapy, level 3+ bismuth quadruple therapy, which halves regimen resistance. Single antibiotics on H. pylori raise regimen resistance.",
+   "why": "Maastricht VI and ACG 2024 prefer 14-day bismuth quadruple therapy where clarithromycin resistance exceeds 15% or is unknown, which covers India."
+  },
+  {
+   "area": "PPI side effects",
+   "plan": "The PPI is required but has no cost.",
+   "now": "While the regimen's PPI is active the Acid Moat does 30% damage and antibiotic collateral to the flora is 1.5 times higher.",
+   "why": "Acid suppression raises susceptibility to enteric infections and C. difficile."
+  },
+  {
+   "area": "C. difficile and metronidazole",
+   "plan": "Metronidazole = P (partly effective).",
+   "now": "Metronidazole = X (active but not indicated, 50%, counts as unnecessary); fidaxomicin/oral vancomycin = Y.",
+   "why": "IDSA/SHEA 2021: metronidazole only if fidaxomicin and oral vancomycin are unavailable."
+  },
+  {
+   "area": "Shigella and macrophages",
+   "plan": "Shigella is weak against macrophages.",
+   "now": "Shigella does double damage to Macrophage Towers, macrophages do only 60% to Shigella, and neutrophils do 150%.",
+   "why": "Shigella kills macrophages by pyroptosis; neutrophils are the cells of dysentery."
+  },
+  {
+   "area": "Typhoid and macrophages",
+   "plan": "Macrophage Tower listed as a defence against Typhoid.",
+   "now": "Macrophages do 30% to Typhoid until T cells are researched (then 150%); Kupffer Gate 250%; neutrophils 60%; neutrophils only 40% against Amoeba.",
+   "why": "S. Typhi survives in resting macrophages until Th1 cells activate them; amoebae lyse neutrophils."
+  },
+  {
+   "area": "Candida",
+   "plan": "Candida Creeper is a deployable germ treated with an antifungal.",
+   "now": "Candida cannot be deployed; it appears only when antibiotics destroy the flora, healthy flora kills it, and the antifungal is X (active but not indicated).",
+   "why": "Candida in stool after antibiotics is colonisation; no guideline treats it with antifungals."
+  },
+  {
+   "area": "Matrix meaning",
+   "plan": "Symbols only; ETEC/ceftriaxone N** 'not needed'.",
+   "now": "Numeric matrix: Y 100%, P a per-cell value, X 50% and unnecessary, N 0%. ORS is information only. Any antibiotic shot at Rotavirus or ETEC is unnecessary.",
+   "why": "N wrongly taught that ceftriaxone cannot kill E. coli; the lesson is that it is not indicated."
+  },
+  {
+   "area": "Acid Moat",
+   "plan": "Equally effective against every germ except H. pylori.",
+   "now": "Damage by acid tolerance: Cholera 200%, ETEC 140%, Rotavirus 120%, Typhoid 100%, Candida 40%, Shigella 20%, H. pylori, spores, cysts and worm eggs 0%.",
+   "why": "Acid tolerance determines the infectious dose (cholera about 10^8, Shigella 10-100)."
+  },
+  {
+   "area": "Fluoroquinolones in India",
+   "plan": "Typhoid/fluoroquinolone = P*.",
+   "now": "P at only 10% for Typhoid; Shigella 30%; Cholera 50%.",
+   "why": "Most Indian S. Typhi isolates are fluoroquinolone non-susceptible; ciprofloxacin must not be used empirically (ICMR)."
+  },
+  {
+   "area": "Amoebiasis",
+   "plan": "Metronidazole = Y; no luminal agent.",
+   "now": "Every Amoeba Blob killed leaves an Amoeba Cyst; a new luminal amoebicide battery (diloxanide furoate/paromomycin) clears cysts; metronidazole does only 20% to cysts.",
+   "why": "Tissue amoebicides do not clear luminal cysts; without a luminal agent the infection relapses."
+  },
+  {
+   "area": "Collateral damage",
+   "plan": "'Broad-spectrum' never defined.",
+   "now": "Per-drug flora damage: ceftriaxone 5, ciprofloxacin 4, regimen 3, azithromycin 2, doxycycline, metronidazole, oral vancomycin/fidaxomicin and luminal agent 1, albendazole and antifungal 0.",
+   "why": "C. difficile risk differs greatly between antibiotics."
+  },
+  {
+   "area": "Stop-Flow (loperamide)",
+   "plan": "Available in every case; trap applies to 'invasive germs' in one place and Shigella/Amoeba/C. difficile in another.",
+   "now": "Locked in child cases; the Shigella case is now a 24-year-old adult; Shigella, Amoeba and C. difficile are trapped; Stop-Flow never refills hydration.",
+   "why": "WHO: no antimotility drugs for children with acute diarrhoea; avoid in dysentery and C. difficile."
+  },
+  {
+   "area": "Peristalsis",
+   "plan": "'Pushes germs back'.",
+   "now": "A flush that damages free-floating germs in the small intestine; invasive germs take half, worms 30%.",
+   "why": "Peristalsis moves contents towards the anus, not back to the mouth."
+  },
+  {
+   "area": "Villi Wall and Shigella",
+   "plan": "Shigella 'invades the villi wall'.",
+   "now": "Villi Walls are allowed only in the small intestine; Shigella does double damage to colon walls.",
+   "why": "Shigellosis is a colitis and the colon has no villi."
+  },
+  {
+   "area": "Deworming day",
+   "plan": "'Bases that use albendazole on time' get a bonus.",
+   "now": "Modelled on National Deworming Day (10 February and 10 August, ages 1-19, albendazole 400 mg or 200 mg at 1-2 years).",
+   "why": "Teach the real programme."
+  },
+  {
+   "area": "Immune memory",
+   "plan": "'Recognised faster', no effect defined.",
+   "now": "Needs a Peyer's Patch; at least 5 kills of a type in one defence gives a stack; +10% per stack, maximum 3.",
+   "why": "A rule must have a measurable effect and an anatomical basis."
+  },
+  {
+   "area": "Herd immunity",
+   "plan": "Clan vaccination gives 'herd immunity' with no numbers.",
+   "now": "Indirect protection = efficacy x min(1, coverage/60%) x 50%, combined with direct protection, multiplayer and clan wars only, capped at 90%.",
+   "why": "Herd protection shields unvaccinated members but is never complete."
+  },
+  {
+   "area": "Defender decisions",
+   "plan": "Automatic defence with no way to choose targets.",
+   "now": "Battery prescriptions (germ checklist), ATP cost per shot, and an automatic Stop-Flow policy for offline defence.",
+   "why": "Without prescriptions the stewardship rules could not work."
+  },
+  {
+   "area": "Scoring and awards",
+   "plan": "Score added stars, %, seconds and boosts with no weights; Best Steward and Best Defender had no data.",
+   "now": "Weighted attack score, dehydration collapse = 3 stars, walls excluded from %, three scored Defence Trials in the league, and defined award formulas.",
+   "why": "The skills the game teaches are defender skills; they must be measured."
+  },
+  {
+   "area": "Germ colours",
+   "plan": "Red/green/purple for four groups.",
+   "now": "Six groups (Gram-negative, Gram-positive, virus, fungus, protozoa, helminth) in the colour-blind-safe Okabe-Ito palette with shape glyphs.",
+   "why": "Protozoa and helminths had no group, and red/green fails for colour-blind players."
+  },
+  {
+   "area": "Hosting and data",
+   "plan": "'Data stays in India'.",
+   "now": "Hosted on Render in Singapore; the privacy notice says so; minimum data, guardian consent for under-18s, self-service deletion, purge after the event.",
+   "why": "Render has no Indian region; DPDP Act 2023 sections 8, 9 and 16."
+  },
+  {
+   "area": "Technology",
+   "plan": "Godot 4 client with a Python server simulation.",
+   "now": "HTML5 canvas web app (installable PWA) with a Python authoritative simulation and an exact JavaScript mirror proved identical by automated parity tests.",
+   "why": "Runs in every browser on Render without a separate build; two simulations in different languages drift unless tested."
+  },
+  {
+   "area": "Paid items",
+   "plan": "'Paid items are never allowed in competition.'",
+   "now": "There are no paid items in any mode.",
+   "why": "No store exists; the sentence implied one."
+  }
+ ],
+ "references": [
+  "World Health Organization. The Treatment of Diarrhoea: A Manual for Physicians and Other Senior Health Workers, 4th revision. WHO, 2005.",
+  "WHO/UNICEF. Joint Statement: Clinical Management of Acute Diarrhoea (low-osmolarity ORS and zinc), 2004.",
+  "Global Task Force on Cholera Control (GTFCC). Technical note: Use of antibiotics for the treatment and control of cholera, 2018.",
+  "Johnson S, et al. Clinical Practice Guideline by IDSA and SHEA: 2021 Focused Update Guidelines on Management of Clostridioides difficile Infection in Adults. Clin Infect Dis 2021.",
+  "Malfertheiner P, et al. Management of Helicobacter pylori infection: the Maastricht VI/Florence consensus report. Gut 2022.",
+  "Chey WD, et al. ACG Clinical Guideline: Treatment of Helicobacter pylori Infection. Am J Gastroenterol 2024.",
+  "Indian Council of Medical Research. Treatment Guidelines for Antimicrobial Use in Common Syndromes (latest edition).",
+  "Ministry of Health and Family Welfare, Government of India. National Deworming Day Operational Guidelines.",
+  "Ministry of Health and Family Welfare, Government of India. Universal Immunisation Programme: rotavirus vaccine operational guidelines.",
+  "Bhandari N, et al. Efficacy of a monovalent human-bovine (116E) rotavirus vaccine in Indian infants: a randomised, double-blind, placebo-controlled trial. Lancet 2014.",
+  "Shakya M, et al. Phase 3 Efficacy Analysis of a Typhoid Conjugate Vaccine Trial in Nepal. N Engl J Med 2019.",
+  "Bhattacharya SK, et al. 5 year efficacy of a bivalent killed whole-cell oral cholera vaccine in Kolkata, India: a cluster-randomised, double-blind, placebo-controlled trial. Lancet Infect Dis 2013.",
+  "World Health Organization. Typhoid vaccines: WHO position paper. Wkly Epidemiol Rec 2018.",
+  "Indian Academy of Pediatrics. IAP guidelines on management of acute diarrhoea and IAP Advisory Committee on Vaccines and Immunization Practices recommendations.",
+  "Riddle MS, et al. Guidelines for the prevention and treatment of travelers' diarrhea: a graded expert panel report. J Travel Med 2017.",
+  "Shane AL, et al. 2017 IDSA Clinical Practice Guidelines for the Diagnosis and Management of Infectious Diarrhea. Clin Infect Dis 2017.",
+  "Pappas PG, et al. Clinical Practice Guideline for the Management of Candidiasis: 2016 Update by IDSA. Clin Infect Dis 2016.",
+  "World Health Organization. The WHO AWaRe (Access, Watch, Reserve) Antibiotic Book, 2022, and AWaRe classification 2023.",
+  "Government of India. National Action Plan on Antimicrobial Resistance (NAP-AMR), 2017.",
+  "Digital Personal Data Protection Act, 2023 (India), and the Digital Personal Data Protection Rules, 2025."
+ ],
+ "disclaimer": "Body Bastion is an educational game. Germs, drugs, immune cells and treatments are simplified for the game: numbers such as vaccine efficacy, resistance and damage are teaching approximations, not clinical data. Nothing in the game is medical advice or a substitute for current national guidelines, local antibiograms, senior clinical advice or the judgement of a treating doctor. Doses are quoted for learning only. The content is being reviewed by faculty of pharmacology, microbiology, medicine and paediatrics; please report any error to the organisers.",
+ "privacy": "BODY BASTION PRIVACY NOTICE (version 2026-10-v1)\n\nThis notice explains what personal data Body Bastion collects, why, and your rights under India's Digital Personal Data Protection Act, 2023 (DPDP Act) and the rules made under it. Please read it before you register. By ticking the consent box you agree to the processing described here for the purposes stated.\n\n1. Who is responsible (Data Fiduciary)\nThe Body Bastion organising team, Department of Pharmacology, Maulana Azad Medical College (MAMC), New Delhi, acting through the Body Bastion project lead, decides why and how your data is used. The project lead also acts as Grievance Officer. Contact: bodybastion.privacy@example.org.\n\n2. Why we use your data (purpose)\nOnly to run the Body Bastion game and its competitions: creating and approving your account, letting you play, verifying battles, ranking players, colleges and clans, preventing cheating, announcing results and awarding prizes and certificates. We do not sell your data, show advertisements, or use your data for marketing.\n\n3. What we collect\n- Account details: a username (handle) and password (stored only in hashed form, never readable by us), the display name you choose, your college, your course and year, and optionally an email address.\n- Age confirmation: whether you are 18 or older. If you are under 18: your parent or guardian's name and email address, to obtain their consent.\n- Gameplay data: your base layout, resources, research, battles (commands, results and scores), clan membership, answers to knowledge questions, and flags raised by the anti-cheating checks.\n- Classroom groups: group names chosen by the teacher's students (no accounts or personal details are needed).\n- Technical data: the login token stored in your browser so you stay signed in, and the hosting provider's short-lived security logs (IP address, browser type, time of request). We use no advertising or tracking cookies and no third-party analytics.\n\n4. Who can see it\n- Other players, the public leaderboards and the projector screen show your display name or handle, your college, your clan and your game results. Choose a display name you are happy to make public.\n- Organisers, competition observers and administrators can see your account details to approve accounts, review suspicious battles and run the event.\n- Teachers see the results of classroom groups in their own sessions.\n- Our hosting provider (Render) stores and processes the data on our behalf as a Data Processor. We share data with no one else unless the law requires it.\n\n5. Where it is processed\nOn Render's servers in Singapore. The DPDP Act (section 16) allows transfer outside India unless the Government has restricted that country; Singapore is not restricted.\n\n6. Legal basis: your consent\nWe process your data on the basis of your consent, given at registration. We record the version of this notice you accepted and the time. You may withdraw consent at any time by deleting your account (section 9); withdrawal does not affect processing already done.\n\n7. Players under 18\nIf you are under 18 you may register only with the verifiable consent of a parent or lawful guardian. You must give their name and email; the organisers may contact them and will not approve the account until consent is confirmed. We do not track or behaviourally monitor children, do not target advertising at anyone, and show under-18 players only by handle or display name and college.\n\n8. How long we keep it\nUntil the competition has ended and results are final, plus a reasonable period of up to 90 days for appeals, certificates and prize distribution. After that the organisers erase all player accounts and gameplay data. Only anonymous totals that cannot identify anyone (for example, how many shots were unnecessary across all players) may be kept for teaching and reports. Your data will not be used for research publications without separate consent and ethics approval.\n\n9. Deleting your account\nYou can delete your account at any time from your profile (\"Delete my account\"). This immediately erases your account and gameplay data from the live database; backups held by the host are overwritten in their normal cycle. Guest data is erased at the end of the event.\n\n10. Your rights\nUnder the DPDP Act you have the right to:\n- access a summary of your personal data and how it is processed;\n- correct, complete or update inaccurate or incomplete data;\n- erase your data (see section 9);\n- grievance redressal: write to the Grievance Officer at bodybastion.privacy@example.org; we will respond within 30 days at the latest;\n- nominate another person to exercise these rights if you die or become unable to act.\nIf you are not satisfied with our response you may complain to the Data Protection Board of India. Please give accurate information and do not file false complaints.\n\n11. Security\nPasswords are hashed, connections use HTTPS, administrator access is restricted, and every battle is checked on the server. If a personal data breach occurs we will inform affected users and the Data Protection Board as the law requires.\n\n12. Changes\nIf this notice changes, the version number will change and we will ask for your consent again before further processing.\n",
+ "privacyVersion": "2026-10-v1",
+ "credits": "Body Bastion: a game of gut immunity, infection and antibiotics. Concept and medical design: Department of Pharmacology, Maulana Azad Medical College, New Delhi, with the MAMC Gaming Society. Programming, content drafting and balancing were done with the help of AI assistants under the direction and review of the project team. Medical content is subject to faculty review. All artwork is drawn procedurally in code and all sounds are synthesized in the browser; no third-party art, sound or music assets are used. Built with open-source software including Python, FastAPI, Starlette, Uvicorn, Pydantic, SQLAlchemy, psycopg and segno, each used under its own licence (MIT, BSD or LGPL). There are no paid items or advertisements in Body Bastion."
+}

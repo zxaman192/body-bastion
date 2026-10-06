@@ -1,0 +1,5003 @@
+{
+ "version": "1.2.0",
+ "tps": 10,
+ "maxTicks": 1800,
+ "hydrationMax": 100000,
+ "levelPct": [
+  100,
+  120,
+  140,
+  160,
+  180
+ ],
+ "upgradeCostPct": [
+  100,
+  160,
+  250,
+  380,
+  550
+ ],
+ "contact": 20,
+ "map": {
+  "width": 24,
+  "height": 15,
+  "tile": 100,
+  "path": [
+   [
+    1,
+    2
+   ],
+   [
+    5,
+    2
+   ],
+   [
+    5,
+    5
+   ],
+   [
+    8,
+    5
+   ],
+   [
+    8,
+    2
+   ],
+   [
+    11,
+    2
+   ],
+   [
+    11,
+    6
+   ],
+   [
+    14,
+    6
+   ],
+   [
+    14,
+    2
+   ],
+   [
+    21,
+    2
+   ],
+   [
+    21,
+    12
+   ],
+   [
+    13,
+    12
+   ]
+  ],
+  "zones": [
+   {
+    "key": "stomach",
+    "name": "Stomach",
+    "s0": 0,
+    "s1": 1000,
+    "color": "#f4c7b0"
+   },
+   {
+    "key": "si",
+    "name": "Small intestine",
+    "s0": 1000,
+    "s1": 2700,
+    "color": "#f3dfa2"
+   },
+   {
+    "key": "colon",
+    "name": "Colon",
+    "s0": 2700,
+    "s1": 4000,
+    "color": "#cfe8c4"
+   },
+   {
+    "key": "liver",
+    "name": "Liver gate",
+    "s0": 4000,
+    "s1": 4800,
+    "color": "#e9b8b4"
+   },
+   {
+    "key": "core",
+    "name": "Core",
+    "s0": 4800,
+    "s1": 5201,
+    "color": "#dccbef"
+   }
+  ],
+  "sites": [
+   {
+    "id": "MOAT",
+    "kind": "moat",
+    "zone": "stomach",
+    "x": 2,
+    "y": 3
+   },
+   {
+    "id": "W1",
+    "kind": "wall",
+    "zone": "stomach",
+    "s": 300
+   },
+   {
+    "id": "A1",
+    "kind": "slot",
+    "zone": "stomach",
+    "x": 2,
+    "y": 1
+   },
+   {
+    "id": "A2",
+    "kind": "slot",
+    "zone": "stomach",
+    "x": 4,
+    "y": 1
+   },
+   {
+    "id": "A3",
+    "kind": "slot",
+    "zone": "stomach",
+    "x": 3,
+    "y": 3
+   },
+   {
+    "id": "A4",
+    "kind": "slot",
+    "zone": "stomach",
+    "x": 6,
+    "y": 3
+   },
+   {
+    "id": "W2",
+    "kind": "wall",
+    "zone": "stomach",
+    "s": 800
+   },
+   {
+    "id": "A5",
+    "kind": "slot",
+    "zone": "stomach",
+    "x": 4,
+    "y": 6
+   },
+   {
+    "id": "A6",
+    "kind": "slot",
+    "zone": "stomach",
+    "x": 7,
+    "y": 6
+   },
+   {
+    "id": "B1",
+    "kind": "slot",
+    "zone": "si",
+    "x": 9,
+    "y": 1
+   },
+   {
+    "id": "B2",
+    "kind": "slot",
+    "zone": "si",
+    "x": 10,
+    "y": 1
+   },
+   {
+    "id": "B3",
+    "kind": "slot",
+    "zone": "si",
+    "x": 9,
+    "y": 4
+   },
+   {
+    "id": "B4",
+    "kind": "slot",
+    "zone": "si",
+    "x": 10,
+    "y": 4
+   },
+   {
+    "id": "W3",
+    "kind": "wall",
+    "zone": "si",
+    "s": 1400
+   },
+   {
+    "id": "W4",
+    "kind": "wall",
+    "zone": "si",
+    "s": 1800
+   },
+   {
+    "id": "PERI",
+    "kind": "peristalsis",
+    "zone": "si",
+    "x": 12,
+    "y": 5
+   },
+   {
+    "id": "B5",
+    "kind": "slot",
+    "zone": "si",
+    "x": 12,
+    "y": 3
+   },
+   {
+    "id": "B6",
+    "kind": "slot",
+    "zone": "si",
+    "x": 13,
+    "y": 4
+   },
+   {
+    "id": "B7",
+    "kind": "slot",
+    "zone": "si",
+    "x": 10,
+    "y": 7
+   },
+   {
+    "id": "B8",
+    "kind": "slot",
+    "zone": "si",
+    "x": 12,
+    "y": 7
+   },
+   {
+    "id": "W5",
+    "kind": "wall",
+    "zone": "si",
+    "s": 2200
+   },
+   {
+    "id": "W6",
+    "kind": "wall",
+    "zone": "si",
+    "s": 2500
+   },
+   {
+    "id": "B9",
+    "kind": "slot",
+    "zone": "si",
+    "x": 15,
+    "y": 4
+   },
+   {
+    "id": "B10",
+    "kind": "slot",
+    "zone": "si",
+    "x": 15,
+    "y": 6
+   },
+   {
+    "id": "C1",
+    "kind": "slot",
+    "zone": "colon",
+    "x": 16,
+    "y": 1
+   },
+   {
+    "id": "C4",
+    "kind": "slot",
+    "zone": "colon",
+    "x": 16,
+    "y": 3
+   },
+   {
+    "id": "W7",
+    "kind": "wall",
+    "zone": "colon",
+    "s": 3000
+   },
+   {
+    "id": "C2",
+    "kind": "slot",
+    "zone": "colon",
+    "x": 18,
+    "y": 1
+   },
+   {
+    "id": "C5",
+    "kind": "slot",
+    "zone": "colon",
+    "x": 18,
+    "y": 3
+   },
+   {
+    "id": "W8",
+    "kind": "wall",
+    "zone": "colon",
+    "s": 3300
+   },
+   {
+    "id": "C3",
+    "kind": "slot",
+    "zone": "colon",
+    "x": 20,
+    "y": 1
+   },
+   {
+    "id": "C7",
+    "kind": "slot",
+    "zone": "colon",
+    "x": 22,
+    "y": 4
+   },
+   {
+    "id": "C6",
+    "kind": "slot",
+    "zone": "colon",
+    "x": 20,
+    "y": 5
+   },
+   {
+    "id": "W9",
+    "kind": "wall",
+    "zone": "colon",
+    "s": 3700
+   },
+   {
+    "id": "C8",
+    "kind": "slot",
+    "zone": "colon",
+    "x": 22,
+    "y": 7
+   },
+   {
+    "id": "D1",
+    "kind": "slot",
+    "zone": "liver",
+    "x": 20,
+    "y": 9
+   },
+   {
+    "id": "W10",
+    "kind": "wall",
+    "zone": "liver",
+    "s": 4200
+   },
+   {
+    "id": "D2",
+    "kind": "slot",
+    "zone": "liver",
+    "x": 22,
+    "y": 11
+   },
+   {
+    "id": "D3",
+    "kind": "slot",
+    "zone": "liver",
+    "x": 19,
+    "y": 11
+   },
+   {
+    "id": "KUPF",
+    "kind": "kupffer",
+    "zone": "liver",
+    "s": 4600
+   },
+   {
+    "id": "D4",
+    "kind": "slot",
+    "zone": "liver",
+    "x": 18,
+    "y": 13
+   },
+   {
+    "id": "D5",
+    "kind": "slot",
+    "zone": "liver",
+    "x": 20,
+    "y": 13
+   },
+   {
+    "id": "E3",
+    "kind": "slot",
+    "zone": "core",
+    "x": 15,
+    "y": 11
+   },
+   {
+    "id": "E4",
+    "kind": "slot",
+    "zone": "core",
+    "x": 16,
+    "y": 13
+   },
+   {
+    "id": "W11",
+    "kind": "wall",
+    "zone": "core",
+    "s": 5000
+   },
+   {
+    "id": "E5",
+    "kind": "slot",
+    "zone": "core",
+    "x": 14,
+    "y": 13
+   },
+   {
+    "id": "E2",
+    "kind": "slot",
+    "zone": "core",
+    "x": 13,
+    "y": 10
+   },
+   {
+    "id": "CORE",
+    "kind": "core",
+    "zone": "core",
+    "x": 12,
+    "y": 12
+   },
+   {
+    "id": "E1",
+    "kind": "slot",
+    "zone": "core",
+    "x": 11,
+    "y": 10
+   },
+   {
+    "id": "E6",
+    "kind": "slot",
+    "zone": "core",
+    "x": 12,
+    "y": 14
+   },
+   {
+    "id": "E7",
+    "kind": "slot",
+    "zone": "core",
+    "x": 10,
+    "y": 13
+   },
+   {
+    "id": "E8",
+    "kind": "slot",
+    "zone": "core",
+    "x": 10,
+    "y": 11
+   }
+  ]
+ },
+ "groups": {
+  "gneg": {
+   "name": "Gram-negative bacterium",
+   "color": "#D55E00",
+   "glyph": "rod"
+  },
+  "gpos": {
+   "name": "Gram-positive bacterium",
+   "color": "#CC79A7",
+   "glyph": "spore-rod"
+  },
+  "virus": {
+   "name": "Virus",
+   "color": "#009E73",
+   "glyph": "wheel"
+  },
+  "fungus": {
+   "name": "Fungus",
+   "color": "#F0E442",
+   "glyph": "budding"
+  },
+  "protozoa": {
+   "name": "Protozoan parasite",
+   "color": "#E69F00",
+   "glyph": "blob"
+  },
+  "helminth": {
+   "name": "Helminth (worm)",
+   "color": "#8B5A2B",
+   "glyph": "worm"
+  }
+ },
+ "units": [
+  {
+   "key": "rotavirus",
+   "name": "Rotavirus Wave",
+   "real": "Rotavirus",
+   "group": "virus",
+   "deployable": true,
+   "space": 1,
+   "spawnCount": 2,
+   "hp": 55,
+   "speed": 11,
+   "dmg": 2,
+   "interval": 10,
+   "reach": 100,
+   "behaviour": "march",
+   "drain": 30,
+   "acid": 120,
+   "vsWallPct": 100,
+   "tags": [
+    "toxin"
+   ],
+   "unlock": 0,
+   "ability": "Fast wave that drains hydration (NSP4 enterotoxin, villus damage). Antibiotics are useless against a virus.",
+   "weak": "ORS (zinc for children under 5); IgA; rotavirus vaccine roughly halves severe attacks but does not stop all attacks",
+   "antibioticsNotNeeded": true
+  },
+  {
+   "key": "etec",
+   "name": "ETEC Swarm",
+   "real": "Enterotoxigenic Escherichia coli",
+   "group": "gneg",
+   "deployable": true,
+   "space": 1,
+   "spawnCount": 3,
+   "hp": 50,
+   "speed": 9,
+   "dmg": 3,
+   "interval": 10,
+   "reach": 100,
+   "behaviour": "march",
+   "drain": 14,
+   "acid": 140,
+   "vsWallPct": 100,
+   "tags": [
+    "toxin"
+   ],
+   "unlock": 0,
+   "ability": "Many small units; heat-labile and heat-stable toxins drain hydration.",
+   "weak": "ORS; antibiotics usually not needed (azithromycin only for severe traveller's diarrhoea)",
+   "antibioticsNotNeeded": true
+  },
+  {
+   "key": "cholera",
+   "name": "Cholera Flood",
+   "real": "Vibrio cholerae O1/O139",
+   "group": "gneg",
+   "deployable": true,
+   "space": 1,
+   "spawnCount": 1,
+   "hp": 70,
+   "speed": 8,
+   "dmg": 4,
+   "interval": 10,
+   "reach": 100,
+   "behaviour": "march",
+   "drain": 40,
+   "acid": 200,
+   "vsWallPct": 100,
+   "tags": [
+    "toxin"
+   ],
+   "unlock": 0,
+   "ability": "Cholera toxin (cAMP rise, chloride secretion) drains hydration very fast; little direct damage. Very acid-sensitive.",
+   "weak": "ORS, with IV Ringer's lactate for severe dehydration; single-dose doxycycline (azithromycin alternative) for moderate-severe cases; oral cholera vaccine (about 65%, 3-5 years)"
+  },
+  {
+   "key": "shigella",
+   "name": "Shigella Raider",
+   "real": "Shigella spp.",
+   "group": "gneg",
+   "deployable": true,
+   "space": 2,
+   "spawnCount": 1,
+   "hp": 150,
+   "speed": 7,
+   "dmg": 30,
+   "interval": 8,
+   "reach": 150,
+   "behaviour": "raider",
+   "drain": 10,
+   "acid": 20,
+   "vsWallPct": 120,
+   "tags": [
+    "toxin",
+    "invasive",
+    "trapped"
+   ],
+   "unlock": 0,
+   "ability": "Invades the colon epithelium (double damage to colon walls; bacillary dysentery is a colitis). Kills macrophages by pyroptosis (double damage to Macrophage Towers). Acid-tolerant: 10-100 bacteria can infect.",
+   "weak": "Azithromycin or ceftriaxone; neutrophils. Never Stop-Flow (loperamide). Ciprofloxacin often fails in India (resistance).",
+   "zoneWallPct": {
+    "colon": 200
+   },
+   "vsBuildingPct": {
+    "macrophage_tower": 200
+   }
+  },
+  {
+   "key": "typhoid",
+   "name": "Typhoid Stalker",
+   "real": "Salmonella enterica serovar Typhi",
+   "group": "gneg",
+   "deployable": true,
+   "space": 3,
+   "spawnCount": 1,
+   "hp": 230,
+   "speed": 6,
+   "dmg": 22,
+   "interval": 10,
+   "reach": 130,
+   "behaviour": "stalker",
+   "drain": 0,
+   "acid": 100,
+   "vsWallPct": 100,
+   "tags": [
+    "invasive"
+   ],
+   "unlock": 5,
+   "ability": "Crosses the gut wall through Peyer's patches, survives inside macrophages and heads for the liver and blood. Fluoroquinolone resistance is common in India.",
+   "weak": "Ceftriaxone or azithromycin (fluoroquinolones usually fail in India); Kupffer cells; macrophages only after T-cell activation; typhoid conjugate vaccine (about 80% protection, not lifelong)"
+  },
+  {
+   "key": "amoeba",
+   "name": "Amoeba Blob",
+   "real": "Entamoeba histolytica",
+   "group": "protozoa",
+   "deployable": true,
+   "space": 3,
+   "spawnCount": 1,
+   "hp": 280,
+   "speed": 4,
+   "dmg": 32,
+   "interval": 12,
+   "reach": 130,
+   "behaviour": "slipper",
+   "drain": 0,
+   "acid": 0,
+   "vsWallPct": 100,
+   "tags": [
+    "invasive",
+    "trapped"
+   ],
+   "unlock": 6,
+   "ability": "Slow; squeezes through walls and heads for the liver gate, where it does double damage (amoebic liver abscess). Lyses neutrophils. When killed it leaves a cyst behind unless a luminal agent clears it.",
+   "weak": "Metronidazole for the invasive trophozoite, then a luminal agent (diloxanide furoate or paromomycin) for the cysts; activated macrophages; Kupffer cells"
+  },
+  {
+   "key": "amoeba_cyst",
+   "name": "Amoeba Cyst",
+   "real": "Entamoeba histolytica cyst",
+   "group": "protozoa",
+   "deployable": false,
+   "space": 0,
+   "spawnCount": 1,
+   "hp": 60,
+   "speed": 3,
+   "dmg": 2,
+   "interval": 10,
+   "reach": 100,
+   "behaviour": "march",
+   "drain": 0,
+   "acid": 0,
+   "vsWallPct": 100,
+   "tags": [],
+   "unlock": 99,
+   "ability": "Left behind when an Amoeba Blob dies. Cysts sit in the gut lumen behind a tough wall: immune cells and tissue drugs barely touch them, so the infection relapses unless a luminal agent clears them.",
+   "weak": "Luminal agent (diloxanide furoate or paromomycin)"
+  },
+  {
+   "key": "hpylori",
+   "name": "H. pylori Driller",
+   "real": "Helicobacter pylori",
+   "group": "gneg",
+   "deployable": true,
+   "space": 2,
+   "spawnCount": 1,
+   "hp": 320,
+   "speed": 4,
+   "dmg": 16,
+   "interval": 12,
+   "reach": 150,
+   "behaviour": "driller",
+   "drain": 0,
+   "acid": 0,
+   "vsWallPct": 100,
+   "tags": [],
+   "unlock": 7,
+   "ability": "Urease neutralises acid, so the Acid Moat cannot hurt it. Drills the stomach (double damage there, half elsewhere) and evades immune cells.",
+   "weak": "Combination therapy only: PPI + two antibiotics together. A single antibiotic alone breeds resistance."
+  },
+  {
+   "key": "candida",
+   "name": "Candida Creeper",
+   "real": "Candida albicans",
+   "group": "fungus",
+   "deployable": false,
+   "space": 0,
+   "spawnCount": 1,
+   "hp": 170,
+   "speed": 5,
+   "dmg": 18,
+   "interval": 10,
+   "reach": 150,
+   "behaviour": "raider",
+   "drain": 0,
+   "acid": 40,
+   "vsWallPct": 100,
+   "tags": [],
+   "unlock": 99,
+   "ability": "Cannot be deployed. Overgrows when broad-spectrum antibiotics wipe out the gut flora; with no healthy flora it is 60% stronger. Healthy flora kills it (colonisation resistance).",
+   "weak": "Rebuilding the Gut Flora Garden and stopping the culprit antibiotic. Candida in stool is usually colonisation: antifungals are for thrush or invasive candidiasis, not for gut Candida after antibiotics."
+  },
+  {
+   "key": "worm",
+   "name": "Worm Titan",
+   "real": "Ascaris lumbricoides",
+   "group": "helminth",
+   "deployable": true,
+   "space": 5,
+   "spawnCount": 1,
+   "hp": 900,
+   "speed": 3,
+   "dmg": 55,
+   "interval": 15,
+   "reach": 150,
+   "behaviour": "raider",
+   "drain": 0,
+   "acid": 0,
+   "vsWallPct": 150,
+   "tags": [],
+   "unlock": 9,
+   "ability": "Big slow tank that steals nutrients while it lives in the intestine; barely moved by peristalsis.",
+   "weak": "Albendazole; deworming day"
+  },
+  {
+   "key": "cdiff",
+   "name": "C. diff Phantom",
+   "real": "Clostridioides difficile",
+   "group": "gpos",
+   "deployable": false,
+   "space": 0,
+   "spawnCount": 1,
+   "hp": 240,
+   "speed": 6,
+   "dmg": 20,
+   "interval": 10,
+   "reach": 150,
+   "behaviour": "raider",
+   "drain": 20,
+   "acid": 0,
+   "vsWallPct": 100,
+   "tags": [
+    "toxin",
+    "trapped"
+   ],
+   "unlock": 99,
+   "ability": "Cannot be deployed. Appears when broad-spectrum antibiotics destroy the defender's gut flora (toxins A and B, pseudomembranous colitis).",
+   "weak": "Oral fidaxomicin or vancomycin (metronidazole only if neither is available); stop the culprit antibiotic; rebuild the flora; never loperamide"
+  }
+ ],
+ "drugs": [
+  {
+   "key": "ceftriaxone",
+   "name": "Ceftriaxone",
+   "cls": "3rd-generation cephalosporin",
+   "color": "#3e7bfa",
+   "dmg": 42,
+   "interval": 14,
+   "range": 380,
+   "atp": 2,
+   "collateral": 5,
+   "broad": true
+  },
+  {
+   "key": "azithromycin",
+   "name": "Azithromycin",
+   "cls": "Macrolide",
+   "color": "#12a594",
+   "dmg": 34,
+   "interval": 12,
+   "range": 380,
+   "atp": 2,
+   "collateral": 2,
+   "broad": true
+  },
+  {
+   "key": "fluoroquinolone",
+   "name": "Ciprofloxacin (fluoroquinolone)",
+   "cls": "Fluoroquinolone",
+   "color": "#f1a10d",
+   "dmg": 38,
+   "interval": 12,
+   "range": 380,
+   "atp": 2,
+   "collateral": 4,
+   "broad": true
+  },
+  {
+   "key": "doxycycline",
+   "name": "Doxycycline",
+   "cls": "Tetracycline",
+   "color": "#c2a400",
+   "dmg": 34,
+   "interval": 12,
+   "range": 380,
+   "atp": 1,
+   "collateral": 1,
+   "broad": true
+  },
+  {
+   "key": "metronidazole",
+   "name": "Metronidazole",
+   "cls": "Nitroimidazole",
+   "color": "#8e4ec6",
+   "dmg": 38,
+   "interval": 12,
+   "range": 380,
+   "atp": 1,
+   "collateral": 1,
+   "broad": true
+  },
+  {
+   "key": "luminal_agent",
+   "name": "Luminal amoebicide (diloxanide furoate / paromomycin)",
+   "cls": "Luminal amoebicide",
+   "color": "#b07aa1",
+   "dmg": 40,
+   "interval": 12,
+   "range": 380,
+   "atp": 1,
+   "collateral": 1,
+   "broad": false
+  },
+  {
+   "key": "vanco_fidaxo",
+   "name": "Oral vancomycin / fidaxomicin",
+   "cls": "Oral glycopeptide / macrocyclic",
+   "color": "#d6409f",
+   "dmg": 46,
+   "interval": 14,
+   "range": 380,
+   "atp": 3,
+   "collateral": 1,
+   "broad": false
+  },
+  {
+   "key": "hpylori_combo",
+   "name": "H. pylori regimen (L1-2: PPI + clarithromycin + amoxicillin; L3+: bismuth quadruple)",
+   "cls": "Combination therapy",
+   "color": "#5f8f1f",
+   "dmg": 70,
+   "interval": 18,
+   "range": 380,
+   "atp": 3,
+   "collateral": 3,
+   "broad": true,
+   "ppiTicks": 50,
+   "quadrupleFromLevel": 3
+  },
+  {
+   "key": "albendazole",
+   "name": "Albendazole",
+   "cls": "Benzimidazole anthelmintic",
+   "color": "#8a5a2b",
+   "dmg": 160,
+   "interval": 20,
+   "range": 380,
+   "atp": 1,
+   "collateral": 0,
+   "broad": false
+  },
+  {
+   "key": "antifungal",
+   "name": "Antifungal (fluconazole / echinocandin)",
+   "cls": "Azole antifungal",
+   "color": "#8d8d8d",
+   "dmg": 40,
+   "interval": 12,
+   "range": 380,
+   "atp": 2,
+   "collateral": 0,
+   "broad": false
+  }
+ ],
+ "matrixColumns": [
+  "ors",
+  "ceftriaxone",
+  "azithromycin",
+  "fluoroquinolone",
+  "doxycycline",
+  "metronidazole",
+  "luminal_agent",
+  "vanco_fidaxo",
+  "hpylori_combo",
+  "albendazole",
+  "antifungal"
+ ],
+ "matrix": {
+  "typhoid": {
+   "ors": "S",
+   "ceftriaxone": "Y",
+   "azithromycin": "Y",
+   "fluoroquinolone": "P",
+   "doxycycline": "N",
+   "metronidazole": "N",
+   "luminal_agent": "N",
+   "vanco_fidaxo": "N",
+   "hpylori_combo": "N",
+   "albendazole": "N",
+   "antifungal": "N"
+  },
+  "cholera": {
+   "ors": "Y",
+   "ceftriaxone": "N",
+   "azithromycin": "Y",
+   "fluoroquinolone": "P",
+   "doxycycline": "Y",
+   "metronidazole": "N",
+   "luminal_agent": "N",
+   "vanco_fidaxo": "N",
+   "hpylori_combo": "N",
+   "albendazole": "N",
+   "antifungal": "N"
+  },
+  "shigella": {
+   "ors": "S",
+   "ceftriaxone": "Y",
+   "azithromycin": "Y",
+   "fluoroquinolone": "P",
+   "doxycycline": "N",
+   "metronidazole": "N",
+   "luminal_agent": "N",
+   "vanco_fidaxo": "N",
+   "hpylori_combo": "N",
+   "albendazole": "N",
+   "antifungal": "N"
+  },
+  "etec": {
+   "ors": "Y",
+   "ceftriaxone": "X",
+   "azithromycin": "P",
+   "fluoroquinolone": "P",
+   "doxycycline": "N",
+   "metronidazole": "N",
+   "luminal_agent": "N",
+   "vanco_fidaxo": "N",
+   "hpylori_combo": "N",
+   "albendazole": "N",
+   "antifungal": "N"
+  },
+  "hpylori": {
+   "ors": "-",
+   "ceftriaxone": "N",
+   "azithromycin": "N",
+   "fluoroquinolone": "N",
+   "doxycycline": "N",
+   "metronidazole": "N",
+   "luminal_agent": "N",
+   "vanco_fidaxo": "N",
+   "hpylori_combo": "Y",
+   "albendazole": "N",
+   "antifungal": "N"
+  },
+  "cdiff": {
+   "ors": "S",
+   "ceftriaxone": "N",
+   "azithromycin": "N",
+   "fluoroquinolone": "N",
+   "doxycycline": "N",
+   "metronidazole": "X",
+   "luminal_agent": "N",
+   "vanco_fidaxo": "Y",
+   "hpylori_combo": "N",
+   "albendazole": "N",
+   "antifungal": "N"
+  },
+  "amoeba": {
+   "ors": "S",
+   "ceftriaxone": "N",
+   "azithromycin": "N",
+   "fluoroquinolone": "N",
+   "doxycycline": "N",
+   "metronidazole": "Y",
+   "luminal_agent": "N",
+   "vanco_fidaxo": "N",
+   "hpylori_combo": "N",
+   "albendazole": "N",
+   "antifungal": "N"
+  },
+  "amoeba_cyst": {
+   "ors": "-",
+   "ceftriaxone": "N",
+   "azithromycin": "N",
+   "fluoroquinolone": "N",
+   "doxycycline": "N",
+   "metronidazole": "P",
+   "luminal_agent": "Y",
+   "vanco_fidaxo": "N",
+   "hpylori_combo": "N",
+   "albendazole": "N",
+   "antifungal": "N"
+  },
+  "rotavirus": {
+   "ors": "Y",
+   "ceftriaxone": "N",
+   "azithromycin": "N",
+   "fluoroquinolone": "N",
+   "doxycycline": "N",
+   "metronidazole": "N",
+   "luminal_agent": "N",
+   "vanco_fidaxo": "N",
+   "hpylori_combo": "N",
+   "albendazole": "N",
+   "antifungal": "N"
+  },
+  "worm": {
+   "ors": "-",
+   "ceftriaxone": "N",
+   "azithromycin": "N",
+   "fluoroquinolone": "N",
+   "doxycycline": "N",
+   "metronidazole": "N",
+   "luminal_agent": "N",
+   "vanco_fidaxo": "N",
+   "hpylori_combo": "N",
+   "albendazole": "Y",
+   "antifungal": "N"
+  },
+  "candida": {
+   "ors": "-",
+   "ceftriaxone": "N",
+   "azithromycin": "N",
+   "fluoroquinolone": "N",
+   "doxycycline": "N",
+   "metronidazole": "N",
+   "luminal_agent": "N",
+   "vanco_fidaxo": "N",
+   "hpylori_combo": "N",
+   "albendazole": "N",
+   "antifungal": "X"
+  }
+ },
+ "effectPct": {
+  "Y": 100,
+  "P": 50,
+  "X": 50,
+  "N": 0,
+  "S": 0,
+  "-": 0
+ },
+ "hpyloriSingleDrugPressure": {
+  "azithromycin": 5,
+  "metronidazole": 3,
+  "fluoroquinolone": 3,
+  "doxycycline": 2
+ },
+ "buildings": [
+  {
+   "key": "core",
+   "name": "Bone Marrow Core",
+   "cat": "core",
+   "sites": [
+    "core"
+   ],
+   "zones": null,
+   "hpByLevel": [
+    3000,
+    3800,
+    4700,
+    5800,
+    7000
+   ],
+   "cost": [
+    0,
+    0
+   ],
+   "maxCount": [
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "desc": "Source of all immune cells. Headquarters: its level unlocks other buildings and raises storage and army size. Destroying it is a star."
+  },
+  {
+   "key": "acid_moat",
+   "name": "Acid Moat",
+   "cat": "special",
+   "sites": [
+    "moat"
+   ],
+   "zones": null,
+   "hp": 900,
+   "cost": [
+    250,
+    100
+   ],
+   "maxCount": [
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "dmg": 2,
+   "interval": 14,
+   "s0": 0,
+   "s1": 1000,
+   "desc": "Gastric acid damages every germ in the stomach. Strong against acid-sensitive cholera; weak against acid-tolerant Shigella; useless against H. pylori (urease). PPIs weaken it."
+  },
+  {
+   "key": "mucus_wall",
+   "name": "Mucus Wall",
+   "cat": "wall",
+   "sites": [
+    "wall"
+   ],
+   "zones": null,
+   "hp": 380,
+   "cost": [
+    80,
+    40
+   ],
+   "maxCount": [
+    4,
+    5,
+    6,
+    7,
+    8
+   ],
+   "attackerDmgPct": 80,
+   "desc": "Mucus layer from goblet cells. Cheap wall; sticky mucus reduces the damage germs do to it."
+  },
+  {
+   "key": "villi_wall",
+   "name": "Villi Wall",
+   "cat": "wall",
+   "sites": [
+    "wall"
+   ],
+   "zones": [
+    "si"
+   ],
+   "hp": 820,
+   "cost": [
+    200,
+    120
+   ],
+   "maxCount": [
+    0,
+    2,
+    3,
+    4,
+    5
+   ],
+   "leak": 10,
+   "leakRange": 300,
+   "desc": "Small-intestine epithelium with tight junctions. Strong wall, but toxin germs nearby make it leak fluid (extra hydration loss)."
+  },
+  {
+   "key": "flora_garden",
+   "name": "Gut Flora Garden",
+   "cat": "wall",
+   "sites": [
+    "wall"
+   ],
+   "zones": [
+    "colon"
+   ],
+   "hp": 650,
+   "cost": [
+    150,
+    250
+   ],
+   "maxCount": [
+    1,
+    1,
+    2,
+    2,
+    3
+   ],
+   "regen": 1,
+   "nutrientBonusPct": 10,
+   "desc": "Normal microbiota: a living colon wall (colonisation resistance) that regrows when antibiotics stop and boosts nutrients. While healthy it kills C. difficile and Candida in the colon. Broad-spectrum antibiotic fire damages it; if it dies after antibiotic damage, C. difficile and Candida appear.",
+   "regenQuietTicks": 150,
+   "colonisationEvery": 10,
+   "colonisationDmg": 12,
+   "colonisationTargets": [
+    "cdiff",
+    "candida"
+   ]
+  },
+  {
+   "key": "paneth_tower",
+   "name": "Paneth Cell Tower",
+   "cat": "tower",
+   "sites": [
+    "slot"
+   ],
+   "zones": null,
+   "hp": 420,
+   "cost": [
+    300,
+    150
+   ],
+   "maxCount": [
+    2,
+    3,
+    3,
+    4,
+    4
+   ],
+   "dmg": 9,
+   "interval": 4,
+   "range": 260,
+   "factors": {
+    "gneg": 100,
+    "gpos": 100,
+    "virus": 20,
+    "fungus": 50,
+    "protozoa": 40,
+    "helminth": 10
+   },
+   "desc": "Defensins from small-intestinal crypts. Rapid fire against bacteria.",
+   "unitPct": {
+    "amoeba_cyst": 0
+   }
+  },
+  {
+   "key": "iga_cannon",
+   "name": "IgA Antibody Cannon",
+   "cat": "tower",
+   "sites": [
+    "slot"
+   ],
+   "zones": null,
+   "hp": 460,
+   "cost": [
+    450,
+    250
+   ],
+   "maxCount": [
+    1,
+    2,
+    2,
+    3,
+    3
+   ],
+   "dmg": 22,
+   "interval": 12,
+   "range": 480,
+   "neutraliseTicks": 60,
+   "neutralisedDrainPct": 40,
+   "vaccinatedPct": 200,
+   "factors": {
+    "gneg": 100,
+    "gpos": 100,
+    "virus": 100,
+    "fungus": 60,
+    "protozoa": 60,
+    "helminth": 20
+   },
+   "desc": "Secretory IgA from plasma cells. Long range; neutralises toxins (hit germs drain less); double damage against germs the base is vaccinated against.",
+   "unitPct": {
+    "amoeba_cyst": 0
+   }
+  },
+  {
+   "key": "macrophage_tower",
+   "name": "Macrophage Tower",
+   "cat": "tower",
+   "sites": [
+    "slot"
+   ],
+   "zones": null,
+   "hp": 520,
+   "cost": [
+    400,
+    200
+   ],
+   "maxCount": [
+    1,
+    2,
+    2,
+    3,
+    3
+   ],
+   "dmg": 34,
+   "interval": 10,
+   "range": 200,
+   "factors": {
+    "gneg": 100,
+    "gpos": 100,
+    "virus": 30,
+    "fungus": 100,
+    "protozoa": 120,
+    "helminth": 20
+   },
+   "unitPct": {
+    "shigella": 60,
+    "amoeba": 150,
+    "typhoid": 30,
+    "amoeba_cyst": 0
+   },
+   "tcellTyphoidPct": 150,
+   "desc": "Lamina propria macrophages engulf germs. Typhoid survives inside resting macrophages until T cells activate them (interferon-gamma); Shigella kills macrophages by pyroptosis."
+  },
+  {
+   "key": "neutrophil_barracks",
+   "name": "Neutrophil Barracks",
+   "cat": "tower",
+   "splash": true,
+   "sites": [
+    "slot"
+   ],
+   "zones": null,
+   "hp": 560,
+   "cost": [
+    550,
+    300
+   ],
+   "maxCount": [
+    0,
+    1,
+    2,
+    2,
+    3
+   ],
+   "dmg": 16,
+   "interval": 18,
+   "range": 240,
+   "factors": {
+    "gneg": 100,
+    "gpos": 100,
+    "virus": 20,
+    "fungus": 130,
+    "protozoa": 80,
+    "helminth": 30
+   },
+   "desc": "Releases a neutrophil swarm that hits every germ in range. Key defence against Shigella (the pus cells of dysentery) and Candida; weak against Typhoid and Amoeba (amoebae lyse neutrophils).",
+   "unitPct": {
+    "shigella": 150,
+    "typhoid": 60,
+    "amoeba": 40,
+    "amoeba_cyst": 0
+   }
+  },
+  {
+   "key": "kupffer_gate",
+   "name": "Kupffer Cell Gate",
+   "cat": "special",
+   "blocks": true,
+   "sites": [
+    "kupffer"
+   ],
+   "zones": null,
+   "hp": 1500,
+   "cost": [
+    900,
+    600
+   ],
+   "maxCount": [
+    0,
+    0,
+    1,
+    1,
+    1
+   ],
+   "dmg": 28,
+   "interval": 8,
+   "range": 260,
+   "factors": {
+    "gneg": 100,
+    "gpos": 100,
+    "virus": 30,
+    "fungus": 100,
+    "protozoa": 100,
+    "helminth": 20
+   },
+   "unitPct": {
+    "typhoid": 250,
+    "amoeba": 250,
+    "amoeba_cyst": 0
+   },
+   "desc": "Liver macrophages on the portal route: a gate that blocks every germ, with triple strength against Typhoid and Amoeba. Last line before the blood."
+  },
+  {
+   "key": "peristalsis",
+   "name": "Peristalsis Conveyor",
+   "cat": "special",
+   "sites": [
+    "peristalsis"
+   ],
+   "zones": null,
+   "hp": 700,
+   "cost": [
+    500,
+    300
+   ],
+   "maxCount": [
+    0,
+    1,
+    1,
+    1,
+    1
+   ],
+   "intervalByLevel": [
+    36,
+    32,
+    28,
+    24,
+    20
+   ],
+   "s0": 1000,
+   "s1": 2700,
+   "desc": "Gut movement flushes germs out of the body (diarrhoea is partly a defence): regular flush damage to every free-floating germ in the small intestine. Invasive germs attached to the wall take half. Stop-Flow (loperamide) switches it off.",
+   "flushByLevel": [
+    20,
+    26,
+    32,
+    40,
+    50
+   ],
+   "invasiveFlushPct": 50,
+   "wormFlushPct": 30
+  },
+  {
+   "key": "ors_station",
+   "name": "ORS + Zinc Station",
+   "cat": "support",
+   "sites": [
+    "slot"
+   ],
+   "zones": null,
+   "hp": 500,
+   "cost": [
+    300,
+    200
+   ],
+   "maxCount": [
+    1,
+    1,
+    2,
+    2,
+    2
+   ],
+   "refillByLevel": [
+    80,
+    110,
+    140,
+    180,
+    220
+   ],
+   "zincFromLevel": 3,
+   "zincDrainPct": 85,
+   "desc": "Low-osmolarity ORS refills hydration: the main treatment for watery diarrhoea. It cannot keep up in severe dehydration (below 25% it works at only 20%) - that needs IV fluids. Level 3 adds zinc for children under 5 (less fluid loss).",
+   "severeBelowPct": 25,
+   "severeOrsPct": 20
+  },
+  {
+   "key": "iv_drip",
+   "name": "IV Ringer's Lactate Stand",
+   "cat": "support",
+   "sites": [
+    "slot"
+   ],
+   "zones": null,
+   "hp": 450,
+   "cost": [
+    500,
+    300
+   ],
+   "maxCount": [
+    0,
+    1,
+    1,
+    2,
+    2
+   ],
+   "refillByLevel": [
+    300,
+    350,
+    400,
+    450,
+    500
+   ],
+   "triggerBelowPct": 25,
+   "stopAbovePct": 50,
+   "maxActiveTicks": 120,
+   "cooldown": 300,
+   "desc": "Severe dehydration and shock need intravenous Ringer's lactate (WHO Plan C). Switches on automatically when hydration falls below 25% and runs until 50%."
+  },
+  {
+   "key": "drug_battery",
+   "name": "Drug Battery",
+   "cat": "battery",
+   "sites": [
+    "slot"
+   ],
+   "zones": null,
+   "hp": 450,
+   "cost": [
+    400,
+    150
+   ],
+   "maxCount": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "desc": "Fires one researched drug at the germs it is prescribed for. Strong against susceptible germs, useless (and resistance-breeding) against the rest. Each shot costs ATP. Broad-spectrum drugs damage the gut flora."
+  },
+  {
+   "key": "peyers_patch",
+   "name": "Peyer's Patch",
+   "cat": "lab",
+   "sites": [
+    "slot"
+   ],
+   "zones": [
+    "si"
+   ],
+   "hp": 600,
+   "cost": [
+    600,
+    400
+   ],
+   "maxCount": [
+    0,
+    1,
+    1,
+    1,
+    1
+   ],
+   "memoryPctPerStack": 10,
+   "memoryMaxStacks": 3,
+   "desc": "Gut lymphoid tissue. Research T cells here. While it stands, immune memory makes towers stronger against germs the base has beaten before.",
+   "memoryKillsNeeded": 5
+  },
+  {
+   "key": "mitochondria",
+   "name": "Mitochondria Plant",
+   "cat": "resource",
+   "sites": [
+    "slot"
+   ],
+   "zones": null,
+   "hp": 400,
+   "cost": [
+    200,
+    100
+   ],
+   "maxCount": [
+    1,
+    2,
+    2,
+    3,
+    3
+   ],
+   "produce": "atp",
+   "perHourByLevel": [
+    240,
+    320,
+    420,
+    540,
+    700
+   ],
+   "desc": "Makes ATP over time."
+  },
+  {
+   "key": "nutrient_absorber",
+   "name": "Nutrient Absorber",
+   "cat": "resource",
+   "sites": [
+    "slot"
+   ],
+   "zones": null,
+   "hp": 400,
+   "cost": [
+    150,
+    150
+   ],
+   "maxCount": [
+    1,
+    2,
+    2,
+    3,
+    3
+   ],
+   "produce": "nutrients",
+   "perHourByLevel": [
+    200,
+    270,
+    350,
+    450,
+    580
+   ],
+   "desc": "Absorbs nutrients over time."
+  },
+  {
+   "key": "pharmacy_lab",
+   "name": "Pharmacy Lab",
+   "cat": "lab",
+   "sites": [
+    "slot"
+   ],
+   "zones": null,
+   "hp": 500,
+   "cost": [
+    300,
+    200
+   ],
+   "maxCount": [
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "desc": "The formulary: research new drugs and rapid diagnostics."
+  },
+  {
+   "key": "vaccine_lab",
+   "name": "Vaccine Lab",
+   "cat": "lab",
+   "sites": [
+    "slot"
+   ],
+   "zones": null,
+   "hp": 500,
+   "cost": [
+    700,
+    500
+   ],
+   "maxCount": [
+    0,
+    1,
+    1,
+    1,
+    1
+   ],
+   "desc": "Research vaccines that give lasting (but not complete) protection against one germ."
+  }
+ ],
+ "core": {
+  "upgradeCost": [
+   [
+    0,
+    0
+   ],
+   [
+    1800,
+    1200
+   ],
+   [
+    3500,
+    2600
+   ],
+   [
+    6000,
+    4500
+   ],
+   [
+    9500,
+    7000
+   ]
+  ],
+  "storage": [
+   3000,
+   6000,
+   10000,
+   15000,
+   22000
+  ],
+  "armySpace": [
+   20,
+   26,
+   32,
+   38,
+   45
+  ]
+ },
+ "research": [
+  {
+   "key": "ceftriaxone",
+   "kind": "drug",
+   "lab": "pharmacy_lab",
+   "labLevel": 1,
+   "cost": [
+    600,
+    300
+   ],
+   "name": "Ceftriaxone",
+   "requiresLevel": 0
+  },
+  {
+   "key": "fluoroquinolone",
+   "kind": "drug",
+   "lab": "pharmacy_lab",
+   "labLevel": 1,
+   "cost": [
+    500,
+    250
+   ],
+   "name": "Ciprofloxacin",
+   "requiresLevel": 0
+  },
+  {
+   "key": "metronidazole",
+   "kind": "drug",
+   "lab": "pharmacy_lab",
+   "labLevel": 1,
+   "cost": [
+    500,
+    250
+   ],
+   "name": "Metronidazole",
+   "requiresLevel": 0
+  },
+  {
+   "key": "luminal_agent",
+   "kind": "drug",
+   "lab": "pharmacy_lab",
+   "labLevel": 1,
+   "cost": [
+    500,
+    300
+   ],
+   "name": "Luminal amoebicide",
+   "requiresLevel": 6
+  },
+  {
+   "key": "antifungal",
+   "kind": "drug",
+   "lab": "pharmacy_lab",
+   "labLevel": 2,
+   "cost": [
+    700,
+    400
+   ],
+   "name": "Antifungal",
+   "requiresLevel": 0
+  },
+  {
+   "key": "vanco_fidaxo",
+   "kind": "drug",
+   "lab": "pharmacy_lab",
+   "labLevel": 2,
+   "cost": [
+    900,
+    500
+   ],
+   "name": "Oral vancomycin / fidaxomicin",
+   "requiresLevel": 8
+  },
+  {
+   "key": "hpylori_combo",
+   "kind": "drug",
+   "lab": "pharmacy_lab",
+   "labLevel": 3,
+   "cost": [
+    1200,
+    700
+   ],
+   "name": "H. pylori combination therapy",
+   "requiresLevel": 7
+  },
+  {
+   "key": "vaccine_rotavirus",
+   "kind": "vaccine",
+   "germ": "rotavirus",
+   "lab": "vaccine_lab",
+   "labLevel": 1,
+   "cost": [
+    800,
+    600
+   ],
+   "name": "Rotavirus vaccine (Rotavac / Rotasiil)",
+   "requiresLevel": 1
+  },
+  {
+   "key": "vaccine_typhoid",
+   "kind": "vaccine",
+   "germ": "typhoid",
+   "lab": "vaccine_lab",
+   "labLevel": 2,
+   "cost": [
+    1000,
+    700
+   ],
+   "name": "Typhoid conjugate vaccine",
+   "requiresLevel": 5
+  },
+  {
+   "key": "vaccine_cholera",
+   "kind": "vaccine",
+   "germ": "cholera",
+   "lab": "vaccine_lab",
+   "labLevel": 2,
+   "cost": [
+    1000,
+    700
+   ],
+   "name": "Oral cholera vaccine (2 doses)",
+   "requiresLevel": 3
+  },
+  {
+   "key": "tcells",
+   "kind": "flag",
+   "lab": "peyers_patch",
+   "labLevel": 1,
+   "cost": [
+    1200,
+    800
+   ],
+   "name": "T helper cells",
+   "desc": "Th1 cells (interferon-gamma) activate macrophages so they kill intracellular Typhoid.",
+   "requiresLevel": 0
+  }
+ ],
+ "vaccines": {
+  "rotavirus": {
+   "efficacy": 55,
+   "note": "Indian rotavirus vaccines prevent roughly half to 60% of severe rotavirus gastroenteritis in infancy; protection is partial and wanes."
+  },
+  "typhoid": {
+   "efficacy": 80,
+   "note": "Typhoid conjugate vaccine efficacy about 80% in field trials; protection lasts several years, not for life."
+  },
+  "cholera": {
+   "efficacy": 65,
+   "note": "Two-dose killed oral cholera vaccine gives about 65% protection lasting around 3-5 years."
+  }
+ },
+ "herd": {
+  "coverageFullPct": 60,
+  "indirectSharePct": 50,
+  "cap": 90
+ },
+ "unitMods": {
+  "vaccinatedHpLossHalfEfficacy": true,
+  "attackBoostHpPct": 110,
+  "defenceBoostDmgPct": 110,
+  "overgrowthPct": 160,
+  "dewormedWormHpPct": 70,
+  "quorumSpeedPct": 140,
+  "quorumDmgPct": 130,
+  "trappedDmgPct": 150,
+  "trappedRegen": 2,
+  "passWallSpeedPct": 50,
+  "passWallWindow": 50,
+  "drillerStomachPct": 200,
+  "drillerElsewherePct": 50,
+  "drillerImmunePct": 50,
+  "stalkerCorePct": 200,
+  "slipperLiverPct": 200,
+  "biofilmDrugPct": 30,
+  "biofilmImmunePct": 60,
+  "ppiAcidPct": 30,
+  "wormStealEvery": 5,
+  "ppiCollateralPct": 150
+ },
+ "spells": [
+  {
+   "key": "contaminated_water",
+   "name": "Contaminated Water",
+   "duration": 50,
+   "radius": 0,
+   "desc": "For 5 seconds every deployment brings one extra germ (faecal-oral spread)."
+  },
+  {
+   "key": "quorum_sensing",
+   "name": "Quorum Sensing",
+   "duration": 60,
+   "radius": 400,
+   "desc": "Germs near the target coordinate: +40% speed and +30% damage for 6 seconds."
+  },
+  {
+   "key": "immune_evasion",
+   "name": "Immune Evasion",
+   "duration": 40,
+   "radius": 400,
+   "desc": "Germs near the target cannot be targeted by immune cells for 4 seconds (drugs still hit them)."
+  },
+  {
+   "key": "biofilm_dome",
+   "name": "Biofilm Dome",
+   "duration": 80,
+   "radius": 300,
+   "desc": "A shield: germs inside take 70% less drug damage and 40% less immune damage for 8 seconds. Biofilms tolerate antibiotics."
+  }
+ ],
+ "stopflow": {
+  "duration": 80,
+  "cooldown": 250,
+  "drainPct": 60,
+  "lockedForChild": true
+ },
+ "resistance": {
+  "pointsPerR": 20,
+  "cap": 90,
+  "decayPerHour": 2,
+  "variantAt": 50,
+  "variantNames": {
+   "fluoroquinolone": "FQ-resistant",
+   "ceftriaxone": "ESBL",
+   "azithromycin": "macrolide-resistant",
+   "doxycycline": "tetracycline-resistant",
+   "metronidazole": "metronidazole-resistant",
+   "vanco_fidaxo": "reduced-susceptibility",
+   "hpylori_combo": "clarithromycin-resistant",
+   "albendazole": "benzimidazole-tolerant",
+   "antifungal": "azole-resistant",
+   "luminal_agent": "reduced-susceptibility"
+  }
+ },
+ "flora": {
+  "collateralHp": 6,
+  "noGardenEvery": 40,
+  "cdiffPerCollapse": 2,
+  "candidaPerCollapse": 1
+ },
+ "economy": {
+  "startResources": [
+   1200,
+   900
+  ],
+  "trainingNutrientsPerSpace": 15,
+  "sellRefundPct": 50,
+  "campaignSellRefundPct": 50
+ },
+ "trophies": {
+  "winPerStar": 10,
+  "lossOnZero": 8,
+  "start": 0
+ },
+ "loot": {
+  "pctBase": 5,
+  "pctPerStar": 10,
+  "cap": 2000,
+  "botLoot": [
+   300,
+   250
+  ]
+ },
+ "shieldMinutes": 20,
+ "deworming": {
+  "nutrients": 500,
+  "atpCost": 50,
+  "hours": 24
+ },
+ "scoring": {
+  "star": 1000,
+  "pct": 10,
+  "secLeft": 2,
+  "boost": 150,
+  "trial": {
+   "survive": 1000,
+   "perHydrationPct": 5,
+   "steward": 300,
+   "perUnnecessary": 30,
+   "perResistancePoint": 2,
+   "perObjective": 150
+  }
+ },
+ "battleTimeoutMinutes": 10,
+ "questionSeconds": 20,
+ "starter": {
+  "coreLevel": 1,
+  "layout": {
+   "CORE": {
+    "b": "core",
+    "lv": 1
+   },
+   "MOAT": {
+    "b": "acid_moat",
+    "lv": 1
+   },
+   "W3": {
+    "b": "mucus_wall",
+    "lv": 1
+   },
+   "B3": {
+    "b": "paneth_tower",
+    "lv": 1
+   },
+   "C4": {
+    "b": "drug_battery",
+    "lv": 1,
+    "drug": "azithromycin",
+    "rx": []
+   },
+   "E1": {
+    "b": "ors_station",
+    "lv": 1
+   },
+   "E6": {
+    "b": "pharmacy_lab",
+    "lv": 1
+   },
+   "E7": {
+    "b": "nutrient_absorber",
+    "lv": 1
+   },
+   "E8": {
+    "b": "mitochondria",
+    "lv": 1
+   }
+  },
+  "drugs": [
+   "azithromycin",
+   "doxycycline",
+   "albendazole"
+  ],
+  "units": [
+   "rotavirus",
+   "etec",
+   "cholera",
+   "shigella"
+  ]
+ },
+ "campaign": [
+  {
+   "id": 1,
+   "germ": "rotavirus",
+   "title": "Child with watery diarrhoea",
+   "case": "Aarav, 14 months, from a Delhi slum: 3 days of watery diarrhoea and vomiting, sunken eyes, drinks eagerly. Stool has no blood. Rotavirus antigen positive.",
+   "best": "ORS + zinc only; no antibiotic. Rotavirus vaccine prevents most severe cases.",
+   "coreLevel": 2,
+   "budget": 900,
+   "maxTicks": 1500,
+   "layout": {
+    "CORE": {
+     "b": "core",
+     "lv": 2
+    },
+    "MOAT": {
+     "b": "acid_moat",
+     "lv": 1
+    },
+    "W3": {
+     "b": "mucus_wall",
+     "lv": 1
+    },
+    "B3": {
+     "b": "paneth_tower",
+     "lv": 1
+    },
+    "E8": {
+     "b": "mitochondria",
+     "lv": 1
+    }
+   },
+   "allowed": [
+    "ors_station",
+    "drug_battery",
+    "iga_cannon",
+    "paneth_tower",
+    "mucus_wall"
+   ],
+   "allowedDrugs": [
+    "azithromycin",
+    "ceftriaxone"
+   ],
+   "allowedVaccines": [],
+   "research": {
+    "tcells": false
+   },
+   "resistance": {},
+   "memory": {},
+   "waves": [
+    {
+     "t": 30,
+     "u": "rotavirus",
+     "n": 8,
+     "gap": 8
+    },
+    {
+     "t": 330,
+     "u": "rotavirus",
+     "n": 10,
+     "gap": 6
+    },
+    {
+     "t": 700,
+     "u": "rotavirus",
+     "n": 14,
+     "gap": 5
+    }
+   ],
+   "objectives": [
+    {
+     "key": "survive"
+    },
+    {
+     "key": "max_unnecessary",
+     "n": 0
+    },
+    {
+     "key": "min_hydration",
+     "pct": 40
+    }
+   ],
+   "rewards": [
+    400,
+    300
+   ],
+   "patient": "child",
+   "atp": 700
+  },
+  {
+   "id": 2,
+   "germ": "etec",
+   "title": "Traveller's diarrhoea",
+   "case": "A 22-year-old exchange student, 4 days after arriving in India, has 5 loose watery stools a day with cramps. No fever, no blood, passing urine normally.",
+   "best": "ORS. Antibiotics only if severe (azithromycin); most cases settle on their own.",
+   "coreLevel": 2,
+   "budget": 900,
+   "maxTicks": 1500,
+   "layout": {
+    "CORE": {
+     "b": "core",
+     "lv": 2
+    },
+    "MOAT": {
+     "b": "acid_moat",
+     "lv": 1
+    },
+    "W1": {
+     "b": "mucus_wall",
+     "lv": 1
+    },
+    "B3": {
+     "b": "paneth_tower",
+     "lv": 1
+    }
+   },
+   "allowed": [
+    "ors_station",
+    "drug_battery",
+    "paneth_tower",
+    "iga_cannon",
+    "mucus_wall"
+   ],
+   "allowedDrugs": [
+    "azithromycin",
+    "fluoroquinolone",
+    "ceftriaxone"
+   ],
+   "allowedVaccines": [],
+   "research": {
+    "tcells": false
+   },
+   "resistance": {},
+   "memory": {},
+   "waves": [
+    {
+     "t": 30,
+     "u": "etec",
+     "n": 10,
+     "gap": 6
+    },
+    {
+     "t": 380,
+     "u": "etec",
+     "n": 12,
+     "gap": 5
+    },
+    {
+     "t": 800,
+     "u": "etec",
+     "n": 16,
+     "gap": 4
+    }
+   ],
+   "objectives": [
+    {
+     "key": "survive"
+    },
+    {
+     "key": "max_shots",
+     "n": 0
+    },
+    {
+     "key": "min_hydration",
+     "pct": 50
+    }
+   ],
+   "rewards": [
+    400,
+    300
+   ],
+   "patient": "adult",
+   "atp": 700
+  },
+  {
+   "id": 3,
+   "germ": "cholera",
+   "title": "Cholera outbreak after floods",
+   "case": "After monsoon floods in a relief camp, a 30-year-old man has profuse 'rice-water' stools, vomiting and leg cramps. He is drowsy with very sunken eyes. Stool shows darting motile comma-shaped bacteria.",
+   "best": "IV Ringer's lactate for severe dehydration, then ORS; a single dose of doxycycline (azithromycin as the alternative) for moderate-to-severe cases; oral cholera vaccine (2 doses) for the camp.",
+   "coreLevel": 3,
+   "budget": 1300,
+   "maxTicks": 1500,
+   "layout": {
+    "CORE": {
+     "b": "core",
+     "lv": 3
+    },
+    "MOAT": {
+     "b": "acid_moat",
+     "lv": 2
+    },
+    "W3": {
+     "b": "mucus_wall",
+     "lv": 1
+    },
+    "W4": {
+     "b": "mucus_wall",
+     "lv": 1
+    },
+    "B3": {
+     "b": "paneth_tower",
+     "lv": 2
+    },
+    "E1": {
+     "b": "ors_station",
+     "lv": 1
+    }
+   },
+   "allowed": [
+    "ors_station",
+    "iv_drip",
+    "drug_battery",
+    "iga_cannon",
+    "paneth_tower"
+   ],
+   "allowedDrugs": [
+    "doxycycline",
+    "azithromycin",
+    "ceftriaxone",
+    "fluoroquinolone"
+   ],
+   "allowedVaccines": [
+    "cholera"
+   ],
+   "vaccineCost": 300,
+   "research": {
+    "tcells": false
+   },
+   "resistance": {},
+   "memory": {},
+   "waves": [
+    {
+     "t": 20,
+     "u": "cholera",
+     "n": 12,
+     "gap": 5
+    },
+    {
+     "t": 300,
+     "u": "cholera",
+     "n": 16,
+     "gap": 4
+    },
+    {
+     "t": 650,
+     "u": "cholera",
+     "n": 20,
+     "gap": 3
+    }
+   ],
+   "objectives": [
+    {
+     "key": "survive"
+    },
+    {
+     "key": "killed_with",
+     "drugs": [
+      "doxycycline",
+      "azithromycin"
+     ],
+     "n": 5
+    },
+    {
+     "key": "vaccinated",
+     "germ": "cholera"
+    }
+   ],
+   "rewards": [
+    500,
+    400
+   ],
+   "patient": "adult",
+   "atp": 700
+  },
+  {
+   "id": 4,
+   "germ": "shigella",
+   "title": "Bacillary dysentery",
+   "case": "A 24-year-old engineering student has fever, abdominal cramps, tenesmus and frequent small stools with blood and mucus. He asks the pharmacist for loperamide to 'stop the motions' before an exam.",
+   "best": "Azithromycin (ceftriaxone if severe) and ORS. Never antimotility drugs (loperamide) in dysentery. Ciprofloxacin often fails in India because of resistance. Neutrophils, not macrophages, fight Shigella.",
+   "coreLevel": 3,
+   "budget": 1300,
+   "maxTicks": 1600,
+   "layout": {
+    "CORE": {
+     "b": "core",
+     "lv": 3
+    },
+    "MOAT": {
+     "b": "acid_moat",
+     "lv": 2
+    },
+    "PERI": {
+     "b": "peristalsis",
+     "lv": 1
+    },
+    "W3": {
+     "b": "villi_wall",
+     "lv": 1
+    },
+    "W5": {
+     "b": "mucus_wall",
+     "lv": 1
+    },
+    "B3": {
+     "b": "paneth_tower",
+     "lv": 2
+    },
+    "E1": {
+     "b": "ors_station",
+     "lv": 1
+    }
+   },
+   "allowed": [
+    "drug_battery",
+    "neutrophil_barracks",
+    "macrophage_tower",
+    "ors_station",
+    "mucus_wall"
+   ],
+   "allowedDrugs": [
+    "azithromycin",
+    "ceftriaxone",
+    "fluoroquinolone",
+    "metronidazole"
+   ],
+   "allowedVaccines": [],
+   "research": {
+    "tcells": false
+   },
+   "resistance": {
+    "fluoroquinolone": 60
+   },
+   "memory": {},
+   "waves": [
+    {
+     "t": 30,
+     "u": "shigella",
+     "n": 4,
+     "gap": 20
+    },
+    {
+     "t": 450,
+     "u": "shigella",
+     "n": 6,
+     "gap": 15
+    },
+    {
+     "t": 900,
+     "u": "shigella",
+     "n": 6,
+     "gap": 12
+    }
+   ],
+   "objectives": [
+    {
+     "key": "survive"
+    },
+    {
+     "key": "no_stopflow"
+    },
+    {
+     "key": "max_unnecessary",
+     "n": 3
+    }
+   ],
+   "rewards": [
+    500,
+    400
+   ],
+   "patient": "adult",
+   "atp": 700
+  },
+  {
+   "id": 5,
+   "germ": "typhoid",
+   "title": "Enteric fever",
+   "case": "A 19-year-old hostel student has had a step-ladder fever for 9 days, headache, a coated tongue and a relative bradycardia. Blood culture grows Salmonella Typhi resistant to ciprofloxacin.",
+   "best": "Ceftriaxone or azithromycin by susceptibility; ciprofloxacin usually fails in India. Protect the liver gate. Typhoid conjugate vaccine protects about 80%, for several years.",
+   "coreLevel": 3,
+   "budget": 1500,
+   "maxTicks": 1700,
+   "layout": {
+    "CORE": {
+     "b": "core",
+     "lv": 3
+    },
+    "MOAT": {
+     "b": "acid_moat",
+     "lv": 2
+    },
+    "KUPF": {
+     "b": "kupffer_gate",
+     "lv": 1
+    },
+    "W3": {
+     "b": "mucus_wall",
+     "lv": 1
+    },
+    "B5": {
+     "b": "macrophage_tower",
+     "lv": 2
+    },
+    "E1": {
+     "b": "ors_station",
+     "lv": 1
+    }
+   },
+   "allowed": [
+    "drug_battery",
+    "macrophage_tower",
+    "iga_cannon",
+    "ors_station"
+   ],
+   "allowedDrugs": [
+    "ceftriaxone",
+    "azithromycin",
+    "fluoroquinolone"
+   ],
+   "allowedVaccines": [
+    "typhoid"
+   ],
+   "vaccineCost": 350,
+   "research": {
+    "tcells": false
+   },
+   "resistance": {
+    "fluoroquinolone": 70
+   },
+   "memory": {},
+   "waves": [
+    {
+     "t": 30,
+     "u": "typhoid",
+     "n": 3,
+     "gap": 30
+    },
+    {
+     "t": 500,
+     "u": "typhoid",
+     "n": 4,
+     "gap": 25
+    },
+    {
+     "t": 1000,
+     "u": "typhoid",
+     "n": 4,
+     "gap": 20
+    }
+   ],
+   "objectives": [
+    {
+     "key": "survive"
+    },
+    {
+     "key": "building_standing",
+     "site": "KUPF"
+    },
+    {
+     "key": "vaccinated",
+     "germ": "typhoid"
+    }
+   ],
+   "rewards": [
+    600,
+    500
+   ],
+   "patient": "adult",
+   "atp": 700
+  },
+  {
+   "id": 6,
+   "germ": "amoeba",
+   "title": "Amoebic dysentery and liver abscess",
+   "case": "A 35-year-old man had bloody diarrhoea a month ago; now he has fever and right upper abdominal pain with tender hepatomegaly. Ultrasound shows a single liver abscess. Serology for Entamoeba histolytica is positive.",
+   "best": "Metronidazole, followed by a luminal agent (paromomycin or diloxanide furoate) to clear the gut cysts. Protect the liver gate.",
+   "coreLevel": 3,
+   "budget": 1400,
+   "maxTicks": 1700,
+   "layout": {
+    "CORE": {
+     "b": "core",
+     "lv": 3
+    },
+    "MOAT": {
+     "b": "acid_moat",
+     "lv": 1
+    },
+    "KUPF": {
+     "b": "kupffer_gate",
+     "lv": 1
+    },
+    "W3": {
+     "b": "mucus_wall",
+     "lv": 1
+    },
+    "W7": {
+     "b": "flora_garden",
+     "lv": 1
+    },
+    "E1": {
+     "b": "ors_station",
+     "lv": 1
+    }
+   },
+   "allowed": [
+    "drug_battery",
+    "macrophage_tower",
+    "neutrophil_barracks",
+    "ors_station"
+   ],
+   "allowedDrugs": [
+    "metronidazole",
+    "luminal_agent",
+    "ceftriaxone",
+    "azithromycin"
+   ],
+   "allowedVaccines": [],
+   "research": {
+    "tcells": false
+   },
+   "resistance": {},
+   "memory": {},
+   "waves": [
+    {
+     "t": 30,
+     "u": "amoeba",
+     "n": 3,
+     "gap": 40
+    },
+    {
+     "t": 550,
+     "u": "amoeba",
+     "n": 3,
+     "gap": 30
+    },
+    {
+     "t": 1000,
+     "u": "amoeba",
+     "n": 4,
+     "gap": 25
+    }
+   ],
+   "objectives": [
+    {
+     "key": "survive"
+    },
+    {
+     "key": "building_standing",
+     "site": "KUPF"
+    },
+    {
+     "key": "killed_with",
+     "drugs": [
+      "luminal_agent"
+     ],
+     "n": 3
+    }
+   ],
+   "rewards": [
+    600,
+    500
+   ],
+   "patient": "adult",
+   "atp": 700
+  },
+  {
+   "id": 7,
+   "germ": "hpylori",
+   "title": "Peptic ulcer",
+   "case": "A 45-year-old man has burning epigastric pain that wakes him at night and improves with food. Endoscopy shows a duodenal ulcer; rapid urease test is positive.",
+   "best": "Combination therapy: PPI + two antibiotics together (triple therapy), or bismuth quadruple therapy where clarithromycin resistance is high. One antibiotic alone fails and breeds resistance.",
+   "coreLevel": 4,
+   "budget": 1600,
+   "maxTicks": 1700,
+   "layout": {
+    "CORE": {
+     "b": "core",
+     "lv": 4
+    },
+    "MOAT": {
+     "b": "acid_moat",
+     "lv": 3
+    },
+    "W1": {
+     "b": "mucus_wall",
+     "lv": 2
+    },
+    "W2": {
+     "b": "mucus_wall",
+     "lv": 2
+    },
+    "A3": {
+     "b": "paneth_tower",
+     "lv": 2
+    },
+    "E1": {
+     "b": "ors_station",
+     "lv": 1
+    }
+   },
+   "allowed": [
+    "drug_battery",
+    "paneth_tower",
+    "iga_cannon",
+    "mucus_wall"
+   ],
+   "allowedDrugs": [
+    "hpylori_combo",
+    "azithromycin",
+    "metronidazole",
+    "ceftriaxone"
+   ],
+   "allowedVaccines": [],
+   "research": {
+    "tcells": false
+   },
+   "resistance": {},
+   "memory": {},
+   "waves": [
+    {
+     "t": 30,
+     "u": "hpylori",
+     "n": 3,
+     "gap": 40
+    },
+    {
+     "t": 600,
+     "u": "hpylori",
+     "n": 4,
+     "gap": 30
+    }
+   ],
+   "objectives": [
+    {
+     "key": "survive"
+    },
+    {
+     "key": "killed_with",
+     "drugs": [
+      "hpylori_combo"
+     ],
+     "n": 3
+    },
+    {
+     "key": "max_stat",
+     "stat": "hpyloriSingleDrugHits",
+     "n": 0
+    }
+   ],
+   "rewards": [
+    700,
+    600
+   ],
+   "patient": "adult",
+   "atp": 700
+  },
+  {
+   "id": 8,
+   "germ": "cdiff",
+   "title": "Diarrhoea after broad-spectrum antibiotics",
+   "case": "A 68-year-old woman on ceftriaxone and ciprofloxacin for 10 days after surgery develops fever, leucocytosis and foul watery diarrhoea. Stool test for C. difficile toxin is positive.",
+   "best": "Stop the culprit antibiotics, give oral fidaxomicin or vancomycin (not metronidazole when these are available), rehydrate, and let the flora recover. No loperamide.",
+   "coreLevel": 4,
+   "budget": 1500,
+   "maxTicks": 1700,
+   "layout": {
+    "CORE": {
+     "b": "core",
+     "lv": 4
+    },
+    "MOAT": {
+     "b": "acid_moat",
+     "lv": 2
+    },
+    "W3": {
+     "b": "mucus_wall",
+     "lv": 2
+    },
+    "W7": {
+     "b": "flora_garden",
+     "lv": 1
+    },
+    "W8": {
+     "b": "flora_garden",
+     "lv": 1
+    },
+    "B3": {
+     "b": "drug_battery",
+     "lv": 2,
+     "drug": "ceftriaxone",
+     "rx": [
+      "etec",
+      "shigella"
+     ]
+    },
+    "C4": {
+     "b": "drug_battery",
+     "lv": 2,
+     "drug": "fluoroquinolone",
+     "rx": [
+      "etec",
+      "shigella"
+     ]
+    },
+    "E1": {
+     "b": "ors_station",
+     "lv": 2
+    }
+   },
+   "allowed": [
+    "drug_battery",
+    "flora_garden",
+    "ors_station",
+    "neutrophil_barracks"
+   ],
+   "allowedDrugs": [
+    "vanco_fidaxo",
+    "metronidazole",
+    "antifungal",
+    "ceftriaxone"
+   ],
+   "allowedVaccines": [],
+   "research": {
+    "tcells": false
+   },
+   "resistance": {},
+   "memory": {},
+   "waves": [
+    {
+     "t": 30,
+     "u": "cdiff",
+     "n": 3,
+     "gap": 30
+    },
+    {
+     "t": 250,
+     "u": "etec",
+     "n": 4,
+     "gap": 20
+    },
+    {
+     "t": 600,
+     "u": "cdiff",
+     "n": 3,
+     "gap": 30
+    },
+    {
+     "t": 1000,
+     "u": "cdiff",
+     "n": 3,
+     "gap": 25
+    }
+   ],
+   "objectives": [
+    {
+     "key": "survive"
+    },
+    {
+     "key": "killed_with",
+     "drugs": [
+      "vanco_fidaxo"
+     ],
+     "n": 2
+    },
+    {
+     "key": "max_stat",
+     "stat": "collateral",
+     "n": 40
+    }
+   ],
+   "rewards": [
+    700,
+    600
+   ],
+   "patient": "adult",
+   "atp": 700
+  },
+  {
+   "id": 9,
+   "germ": "worm",
+   "title": "School child with worms",
+   "case": "A 9-year-old school child is pale and thin, with poor appetite and vague abdominal pain; a round worm was passed in the stool last week. Haemoglobin is 9 g/dL.",
+   "best": "Single-dose albendazole 400 mg (200 mg for ages 1-2); National Deworming Day (10 February and 10 August, ages 1-19); iron for anaemia; hand-washing and sanitation.",
+   "coreLevel": 4,
+   "budget": 1500,
+   "maxTicks": 1800,
+   "layout": {
+    "CORE": {
+     "b": "core",
+     "lv": 4
+    },
+    "MOAT": {
+     "b": "acid_moat",
+     "lv": 2
+    },
+    "PERI": {
+     "b": "peristalsis",
+     "lv": 2
+    },
+    "W3": {
+     "b": "villi_wall",
+     "lv": 2
+    },
+    "W5": {
+     "b": "villi_wall",
+     "lv": 2
+    },
+    "B5": {
+     "b": "paneth_tower",
+     "lv": 2
+    },
+    "E1": {
+     "b": "ors_station",
+     "lv": 1
+    }
+   },
+   "allowed": [
+    "drug_battery",
+    "macrophage_tower",
+    "mucus_wall",
+    "villi_wall"
+   ],
+   "allowedDrugs": [
+    "albendazole",
+    "metronidazole",
+    "ceftriaxone"
+   ],
+   "allowedVaccines": [],
+   "research": {
+    "tcells": false
+   },
+   "resistance": {},
+   "memory": {},
+   "waves": [
+    {
+     "t": 30,
+     "u": "worm",
+     "n": 2,
+     "gap": 60
+    },
+    {
+     "t": 700,
+     "u": "worm",
+     "n": 3,
+     "gap": 50
+    }
+   ],
+   "objectives": [
+    {
+     "key": "survive"
+    },
+    {
+     "key": "killed_with",
+     "drugs": [
+      "albendazole"
+     ],
+     "n": 3
+    },
+    {
+     "key": "max_stat",
+     "stat": "wormStolen",
+     "n": 300
+    }
+   ],
+   "rewards": [
+    800,
+    700
+   ],
+   "patient": "child",
+   "atp": 700
+  },
+  {
+   "id": 10,
+   "germ": "mixed",
+   "title": "Boss level: outbreak in a hostel mess",
+   "case": "Forty students fall ill within two days after a hostel mess feast: some with watery diarrhoea, some with bloody stools, two with high fever. Water samples show faecal contamination.",
+   "best": "Hydration for everyone; the right drug for each germ; no unnecessary antibiotics; vaccination and safe water for the hostel.",
+   "coreLevel": 5,
+   "budget": 2600,
+   "maxTicks": 1800,
+   "layout": {
+    "CORE": {
+     "b": "core",
+     "lv": 5
+    },
+    "MOAT": {
+     "b": "acid_moat",
+     "lv": 3
+    },
+    "PERI": {
+     "b": "peristalsis",
+     "lv": 2
+    },
+    "KUPF": {
+     "b": "kupffer_gate",
+     "lv": 2
+    },
+    "W3": {
+     "b": "villi_wall",
+     "lv": 2
+    },
+    "W7": {
+     "b": "flora_garden",
+     "lv": 2
+    },
+    "B3": {
+     "b": "paneth_tower",
+     "lv": 3
+    },
+    "E1": {
+     "b": "ors_station",
+     "lv": 2
+    }
+   },
+   "allowed": [
+    "ors_station",
+    "iv_drip",
+    "drug_battery",
+    "iga_cannon",
+    "macrophage_tower",
+    "neutrophil_barracks",
+    "paneth_tower",
+    "mucus_wall",
+    "villi_wall"
+   ],
+   "allowedDrugs": [
+    "azithromycin",
+    "ceftriaxone",
+    "doxycycline",
+    "metronidazole",
+    "luminal_agent",
+    "fluoroquinolone"
+   ],
+   "allowedVaccines": [
+    "cholera",
+    "typhoid"
+   ],
+   "vaccineCost": 350,
+   "research": {
+    "tcells": true
+   },
+   "resistance": {
+    "fluoroquinolone": 60
+   },
+   "memory": {},
+   "waves": [
+    {
+     "t": 20,
+     "u": "rotavirus",
+     "n": 4,
+     "gap": 10
+    },
+    {
+     "t": 120,
+     "u": "cholera",
+     "n": 8,
+     "gap": 6
+    },
+    {
+     "t": 400,
+     "u": "shigella",
+     "n": 4,
+     "gap": 20
+    },
+    {
+     "t": 650,
+     "u": "etec",
+     "n": 5,
+     "gap": 10
+    },
+    {
+     "t": 900,
+     "u": "typhoid",
+     "n": 3,
+     "gap": 30
+    },
+    {
+     "t": 1150,
+     "u": "amoeba",
+     "n": 2,
+     "gap": 40
+    },
+    {
+     "t": 1300,
+     "u": "cholera",
+     "n": 8,
+     "gap": 5
+    }
+   ],
+   "objectives": [
+    {
+     "key": "survive"
+    },
+    {
+     "key": "max_unnecessary",
+     "n": 10
+    },
+    {
+     "key": "min_hydration",
+     "pct": 30
+    }
+   ],
+   "rewards": [
+    1200,
+    1000
+   ],
+   "patient": "adult",
+   "atp": 700
+  }
+ ],
+ "tournament": {
+  "army": {
+   "cholera": 10,
+   "rotavirus": 4,
+   "etec": 4,
+   "shigella": 8,
+   "typhoid": 3,
+   "amoeba": 2,
+   "hpylori": 1,
+   "worm": 2
+  },
+  "spells": {
+   "contaminated_water": 1,
+   "quorum_sensing": 1,
+   "immune_evasion": 1,
+   "biofilm_dome": 1
+  },
+  "bases": [
+   {
+    "id": "T1",
+    "name": "Clean Canteen",
+    "difficulty": 1,
+    "coreLevel": 1,
+    "research": {
+     "tcells": false
+    },
+    "vaccines": {},
+    "resistance": {},
+    "memory": {},
+    "policy": {
+     "stopflow_at": 0
+    },
+    "layout": {
+     "CORE": {
+      "b": "core",
+      "lv": 1
+     },
+     "MOAT": {
+      "b": "acid_moat",
+      "lv": 1
+     },
+     "W1": {
+      "b": "mucus_wall",
+      "lv": 1
+     },
+     "W3": {
+      "b": "mucus_wall",
+      "lv": 1
+     },
+     "B3": {
+      "b": "paneth_tower",
+      "lv": 1
+     },
+     "C4": {
+      "b": "drug_battery",
+      "lv": 1,
+      "drug": "azithromycin",
+      "rx": [
+       "rotavirus",
+       "etec",
+       "cholera",
+       "shigella",
+       "typhoid"
+      ]
+     },
+     "E1": {
+      "b": "ors_station",
+      "lv": 1
+     },
+     "E6": {
+      "b": "pharmacy_lab",
+      "lv": 1
+     },
+     "E7": {
+      "b": "nutrient_absorber",
+      "lv": 1
+     },
+     "E8": {
+      "b": "mitochondria",
+      "lv": 1
+     }
+    },
+    "atp": 650
+   },
+   {
+    "id": "T2",
+    "name": "Roadside Chaat Stall",
+    "difficulty": 2,
+    "coreLevel": 2,
+    "research": {
+     "tcells": false
+    },
+    "vaccines": {},
+    "resistance": {},
+    "memory": {},
+    "policy": {
+     "stopflow_at": 0
+    },
+    "layout": {
+     "CORE": {
+      "b": "core",
+      "lv": 2
+     },
+     "MOAT": {
+      "b": "acid_moat",
+      "lv": 1
+     },
+     "W1": {
+      "b": "mucus_wall",
+      "lv": 1
+     },
+     "W3": {
+      "b": "mucus_wall",
+      "lv": 1
+     },
+     "W7": {
+      "b": "flora_garden",
+      "lv": 1
+     },
+     "A3": {
+      "b": "paneth_tower",
+      "lv": 1
+     },
+     "B3": {
+      "b": "paneth_tower",
+      "lv": 2
+     },
+     "D3": {
+      "b": "iga_cannon",
+      "lv": 1
+     },
+     "C4": {
+      "b": "drug_battery",
+      "lv": 1,
+      "drug": "azithromycin",
+      "rx": [
+       "rotavirus",
+       "etec",
+       "cholera",
+       "shigella",
+       "typhoid"
+      ]
+     },
+     "E1": {
+      "b": "ors_station",
+      "lv": 1
+     },
+     "E6": {
+      "b": "pharmacy_lab",
+      "lv": 1
+     },
+     "E7": {
+      "b": "nutrient_absorber",
+      "lv": 1
+     },
+     "E8": {
+      "b": "mitochondria",
+      "lv": 1
+     }
+    },
+    "atp": 800
+   },
+   {
+    "id": "T3",
+    "name": "Village Well",
+    "difficulty": 3,
+    "coreLevel": 2,
+    "research": {
+     "tcells": false
+    },
+    "vaccines": {},
+    "resistance": {},
+    "memory": {},
+    "policy": {
+     "stopflow_at": 0
+    },
+    "layout": {
+     "CORE": {
+      "b": "core",
+      "lv": 2
+     },
+     "MOAT": {
+      "b": "acid_moat",
+      "lv": 2
+     },
+     "PERI": {
+      "b": "peristalsis",
+      "lv": 1
+     },
+     "W1": {
+      "b": "mucus_wall",
+      "lv": 2
+     },
+     "W3": {
+      "b": "villi_wall",
+      "lv": 1
+     },
+     "W5": {
+      "b": "mucus_wall",
+      "lv": 1
+     },
+     "W7": {
+      "b": "flora_garden",
+      "lv": 1
+     },
+     "A3": {
+      "b": "paneth_tower",
+      "lv": 2
+     },
+     "B3": {
+      "b": "paneth_tower",
+      "lv": 2
+     },
+     "B5": {
+      "b": "macrophage_tower",
+      "lv": 1
+     },
+     "D3": {
+      "b": "iga_cannon",
+      "lv": 2
+     },
+     "C4": {
+      "b": "drug_battery",
+      "lv": 1,
+      "drug": "azithromycin",
+      "rx": [
+       "rotavirus",
+       "etec",
+       "cholera",
+       "shigella",
+       "typhoid"
+      ]
+     },
+     "A4": {
+      "b": "drug_battery",
+      "lv": 1,
+      "drug": "doxycycline",
+      "rx": [
+       "rotavirus",
+       "etec",
+       "cholera"
+      ]
+     },
+     "E1": {
+      "b": "ors_station",
+      "lv": 2
+     },
+     "E6": {
+      "b": "pharmacy_lab",
+      "lv": 1
+     },
+     "E7": {
+      "b": "nutrient_absorber",
+      "lv": 1
+     },
+     "E8": {
+      "b": "mitochondria",
+      "lv": 1
+     },
+     "E2": {
+      "b": "mitochondria",
+      "lv": 1
+     }
+    },
+    "atp": 950
+   },
+   {
+    "id": "T4",
+    "name": "Hostel Mess",
+    "difficulty": 4,
+    "coreLevel": 3,
+    "research": {
+     "tcells": false
+    },
+    "vaccines": {
+     "cholera": 65
+    },
+    "resistance": {
+     "fluoroquinolone": 30
+    },
+    "memory": {},
+    "policy": {
+     "stopflow_at": 0
+    },
+    "layout": {
+     "CORE": {
+      "b": "core",
+      "lv": 3
+     },
+     "MOAT": {
+      "b": "acid_moat",
+      "lv": 2
+     },
+     "PERI": {
+      "b": "peristalsis",
+      "lv": 2
+     },
+     "KUPF": {
+      "b": "kupffer_gate",
+      "lv": 1
+     },
+     "W1": {
+      "b": "mucus_wall",
+      "lv": 2
+     },
+     "W3": {
+      "b": "villi_wall",
+      "lv": 2
+     },
+     "W5": {
+      "b": "mucus_wall",
+      "lv": 2
+     },
+     "W7": {
+      "b": "flora_garden",
+      "lv": 2
+     },
+     "A3": {
+      "b": "paneth_tower",
+      "lv": 2
+     },
+     "B3": {
+      "b": "paneth_tower",
+      "lv": 3
+     },
+     "B5": {
+      "b": "macrophage_tower",
+      "lv": 2
+     },
+     "B7": {
+      "b": "iga_cannon",
+      "lv": 2
+     },
+     "D3": {
+      "b": "iga_cannon",
+      "lv": 2
+     },
+     "C4": {
+      "b": "drug_battery",
+      "lv": 2,
+      "drug": "azithromycin",
+      "rx": [
+       "typhoid",
+       "cholera",
+       "shigella"
+      ]
+     },
+     "A4": {
+      "b": "drug_battery",
+      "lv": 2,
+      "drug": "doxycycline",
+      "rx": [
+       "cholera"
+      ]
+     },
+     "D1": {
+      "b": "drug_battery",
+      "lv": 1,
+      "drug": "ceftriaxone",
+      "rx": [
+       "typhoid",
+       "shigella"
+      ]
+     },
+     "E1": {
+      "b": "ors_station",
+      "lv": 2
+     },
+     "E3": {
+      "b": "ors_station",
+      "lv": 1
+     },
+     "E6": {
+      "b": "pharmacy_lab",
+      "lv": 2
+     },
+     "E5": {
+      "b": "vaccine_lab",
+      "lv": 1
+     },
+     "E7": {
+      "b": "nutrient_absorber",
+      "lv": 2
+     },
+     "E8": {
+      "b": "mitochondria",
+      "lv": 2
+     }
+    },
+    "atp": 1100
+   },
+   {
+    "id": "T5",
+    "name": "Flooded Relief Camp",
+    "difficulty": 5,
+    "coreLevel": 3,
+    "research": {
+     "tcells": false
+    },
+    "vaccines": {
+     "cholera": 65,
+     "rotavirus": 55
+    },
+    "resistance": {},
+    "memory": {},
+    "policy": {
+     "stopflow_at": 0
+    },
+    "layout": {
+     "CORE": {
+      "b": "core",
+      "lv": 3
+     },
+     "MOAT": {
+      "b": "acid_moat",
+      "lv": 3
+     },
+     "PERI": {
+      "b": "peristalsis",
+      "lv": 2
+     },
+     "KUPF": {
+      "b": "kupffer_gate",
+      "lv": 2
+     },
+     "W1": {
+      "b": "mucus_wall",
+      "lv": 3
+     },
+     "W3": {
+      "b": "villi_wall",
+      "lv": 2
+     },
+     "W4": {
+      "b": "villi_wall",
+      "lv": 2
+     },
+     "W7": {
+      "b": "flora_garden",
+      "lv": 2
+     },
+     "W8": {
+      "b": "flora_garden",
+      "lv": 2
+     },
+     "A3": {
+      "b": "paneth_tower",
+      "lv": 3
+     },
+     "B3": {
+      "b": "paneth_tower",
+      "lv": 3
+     },
+     "B5": {
+      "b": "macrophage_tower",
+      "lv": 2
+     },
+     "C5": {
+      "b": "neutrophil_barracks",
+      "lv": 2
+     },
+     "B7": {
+      "b": "iga_cannon",
+      "lv": 3
+     },
+     "D3": {
+      "b": "iga_cannon",
+      "lv": 2
+     },
+     "C4": {
+      "b": "drug_battery",
+      "lv": 2,
+      "drug": "doxycycline",
+      "rx": [
+       "cholera"
+      ]
+     },
+     "A4": {
+      "b": "drug_battery",
+      "lv": 2,
+      "drug": "azithromycin",
+      "rx": [
+       "typhoid",
+       "cholera",
+       "shigella"
+      ]
+     },
+     "D1": {
+      "b": "drug_battery",
+      "lv": 2,
+      "drug": "ceftriaxone",
+      "rx": [
+       "typhoid",
+       "shigella"
+      ]
+     },
+     "E1": {
+      "b": "ors_station",
+      "lv": 3
+     },
+     "E3": {
+      "b": "ors_station",
+      "lv": 2
+     },
+     "E6": {
+      "b": "pharmacy_lab",
+      "lv": 2
+     },
+     "E5": {
+      "b": "vaccine_lab",
+      "lv": 2
+     },
+     "B9": {
+      "b": "peyers_patch",
+      "lv": 1
+     },
+     "E7": {
+      "b": "nutrient_absorber",
+      "lv": 2
+     },
+     "E8": {
+      "b": "mitochondria",
+      "lv": 2
+     },
+     "E4": {
+      "b": "iv_drip",
+      "lv": 1
+     }
+    },
+    "atp": 1250
+   },
+   {
+    "id": "T6",
+    "name": "District Hospital Ward",
+    "difficulty": 6,
+    "coreLevel": 4,
+    "research": {
+     "tcells": false
+    },
+    "vaccines": {
+     "typhoid": 80
+    },
+    "resistance": {
+     "ceftriaxone": 20
+    },
+    "memory": {},
+    "policy": {
+     "stopflow_at": 0
+    },
+    "layout": {
+     "CORE": {
+      "b": "core",
+      "lv": 4
+     },
+     "MOAT": {
+      "b": "acid_moat",
+      "lv": 2
+     },
+     "PERI": {
+      "b": "peristalsis",
+      "lv": 2
+     },
+     "KUPF": {
+      "b": "kupffer_gate",
+      "lv": 2
+     },
+     "W1": {
+      "b": "mucus_wall",
+      "lv": 2
+     },
+     "W2": {
+      "b": "mucus_wall",
+      "lv": 2
+     },
+     "W3": {
+      "b": "villi_wall",
+      "lv": 2
+     },
+     "W5": {
+      "b": "villi_wall",
+      "lv": 2
+     },
+     "W7": {
+      "b": "flora_garden",
+      "lv": 2
+     },
+     "W8": {
+      "b": "flora_garden",
+      "lv": 2
+     },
+     "A3": {
+      "b": "paneth_tower",
+      "lv": 2
+     },
+     "B3": {
+      "b": "paneth_tower",
+      "lv": 3
+     },
+     "B6": {
+      "b": "paneth_tower",
+      "lv": 2
+     },
+     "B5": {
+      "b": "macrophage_tower",
+      "lv": 2
+     },
+     "D4": {
+      "b": "macrophage_tower",
+      "lv": 2
+     },
+     "C5": {
+      "b": "neutrophil_barracks",
+      "lv": 2
+     },
+     "B7": {
+      "b": "iga_cannon",
+      "lv": 2
+     },
+     "D3": {
+      "b": "iga_cannon",
+      "lv": 2
+     },
+     "C4": {
+      "b": "drug_battery",
+      "lv": 2,
+      "drug": "azithromycin",
+      "rx": [
+       "typhoid",
+       "cholera",
+       "shigella"
+      ]
+     },
+     "A4": {
+      "b": "drug_battery",
+      "lv": 2,
+      "drug": "doxycycline",
+      "rx": [
+       "cholera"
+      ]
+     },
+     "D1": {
+      "b": "drug_battery",
+      "lv": 2,
+      "drug": "ceftriaxone",
+      "rx": [
+       "typhoid",
+       "shigella"
+      ]
+     },
+     "C6": {
+      "b": "drug_battery",
+      "lv": 1,
+      "drug": "metronidazole",
+      "rx": [
+       "amoeba"
+      ]
+     },
+     "E1": {
+      "b": "ors_station",
+      "lv": 2
+     },
+     "E3": {
+      "b": "ors_station",
+      "lv": 2
+     },
+     "E6": {
+      "b": "pharmacy_lab",
+      "lv": 2
+     },
+     "E5": {
+      "b": "vaccine_lab",
+      "lv": 1
+     },
+     "B9": {
+      "b": "peyers_patch",
+      "lv": 1
+     },
+     "E7": {
+      "b": "nutrient_absorber",
+      "lv": 2
+     },
+     "E8": {
+      "b": "mitochondria",
+      "lv": 2
+     },
+     "E4": {
+      "b": "iv_drip",
+      "lv": 1
+     }
+    },
+    "atp": 1400
+   },
+   {
+    "id": "T7",
+    "name": "Pilgrimage Fairground",
+    "difficulty": 7,
+    "coreLevel": 4,
+    "research": {
+     "tcells": true
+    },
+    "vaccines": {
+     "typhoid": 80,
+     "cholera": 65
+    },
+    "resistance": {},
+    "memory": {
+     "shigella": 1,
+     "cholera": 1
+    },
+    "policy": {
+     "stopflow_at": 0
+    },
+    "layout": {
+     "CORE": {
+      "b": "core",
+      "lv": 4
+     },
+     "MOAT": {
+      "b": "acid_moat",
+      "lv": 3
+     },
+     "PERI": {
+      "b": "peristalsis",
+      "lv": 2
+     },
+     "KUPF": {
+      "b": "kupffer_gate",
+      "lv": 2
+     },
+     "W1": {
+      "b": "mucus_wall",
+      "lv": 3
+     },
+     "W2": {
+      "b": "mucus_wall",
+      "lv": 2
+     },
+     "W3": {
+      "b": "villi_wall",
+      "lv": 2
+     },
+     "W4": {
+      "b": "villi_wall",
+      "lv": 2
+     },
+     "W6": {
+      "b": "mucus_wall",
+      "lv": 2
+     },
+     "W7": {
+      "b": "flora_garden",
+      "lv": 2
+     },
+     "W8": {
+      "b": "flora_garden",
+      "lv": 2
+     },
+     "W10": {
+      "b": "mucus_wall",
+      "lv": 2
+     },
+     "A3": {
+      "b": "paneth_tower",
+      "lv": 3
+     },
+     "B3": {
+      "b": "paneth_tower",
+      "lv": 3
+     },
+     "B6": {
+      "b": "paneth_tower",
+      "lv": 2
+     },
+     "B5": {
+      "b": "macrophage_tower",
+      "lv": 2
+     },
+     "D4": {
+      "b": "macrophage_tower",
+      "lv": 3
+     },
+     "C5": {
+      "b": "neutrophil_barracks",
+      "lv": 2
+     },
+     "B7": {
+      "b": "iga_cannon",
+      "lv": 3
+     },
+     "D3": {
+      "b": "iga_cannon",
+      "lv": 2
+     },
+     "C4": {
+      "b": "drug_battery",
+      "lv": 2,
+      "drug": "azithromycin",
+      "rx": [
+       "typhoid",
+       "cholera",
+       "shigella"
+      ]
+     },
+     "A4": {
+      "b": "drug_battery",
+      "lv": 2,
+      "drug": "doxycycline",
+      "rx": [
+       "cholera"
+      ]
+     },
+     "D1": {
+      "b": "drug_battery",
+      "lv": 2,
+      "drug": "ceftriaxone",
+      "rx": [
+       "typhoid",
+       "shigella"
+      ]
+     },
+     "C6": {
+      "b": "drug_battery",
+      "lv": 2,
+      "drug": "metronidazole",
+      "rx": [
+       "amoeba"
+      ]
+     },
+     "E1": {
+      "b": "ors_station",
+      "lv": 3
+     },
+     "E3": {
+      "b": "ors_station",
+      "lv": 2
+     },
+     "E6": {
+      "b": "pharmacy_lab",
+      "lv": 2
+     },
+     "E5": {
+      "b": "vaccine_lab",
+      "lv": 2
+     },
+     "B9": {
+      "b": "peyers_patch",
+      "lv": 2
+     },
+     "E7": {
+      "b": "nutrient_absorber",
+      "lv": 2
+     },
+     "E8": {
+      "b": "mitochondria",
+      "lv": 2
+     },
+     "E4": {
+      "b": "iv_drip",
+      "lv": 1
+     }
+    },
+    "atp": 1550
+   },
+   {
+    "id": "T8",
+    "name": "Metro Food Court",
+    "difficulty": 8,
+    "coreLevel": 5,
+    "research": {
+     "tcells": true
+    },
+    "vaccines": {
+     "typhoid": 80,
+     "cholera": 65,
+     "rotavirus": 55
+    },
+    "resistance": {},
+    "memory": {
+     "shigella": 1,
+     "cholera": 1
+    },
+    "policy": {
+     "stopflow_at": 0
+    },
+    "layout": {
+     "CORE": {
+      "b": "core",
+      "lv": 5
+     },
+     "MOAT": {
+      "b": "acid_moat",
+      "lv": 3
+     },
+     "PERI": {
+      "b": "peristalsis",
+      "lv": 3
+     },
+     "KUPF": {
+      "b": "kupffer_gate",
+      "lv": 3
+     },
+     "W1": {
+      "b": "mucus_wall",
+      "lv": 3
+     },
+     "W2": {
+      "b": "mucus_wall",
+      "lv": 3
+     },
+     "W3": {
+      "b": "villi_wall",
+      "lv": 3
+     },
+     "W4": {
+      "b": "villi_wall",
+      "lv": 3
+     },
+     "W5": {
+      "b": "villi_wall",
+      "lv": 2
+     },
+     "W6": {
+      "b": "mucus_wall",
+      "lv": 3
+     },
+     "W7": {
+      "b": "flora_garden",
+      "lv": 3
+     },
+     "W8": {
+      "b": "flora_garden",
+      "lv": 3
+     },
+     "W10": {
+      "b": "mucus_wall",
+      "lv": 3
+     },
+     "A3": {
+      "b": "paneth_tower",
+      "lv": 3
+     },
+     "B3": {
+      "b": "paneth_tower",
+      "lv": 4
+     },
+     "B6": {
+      "b": "paneth_tower",
+      "lv": 3
+     },
+     "C1": {
+      "b": "paneth_tower",
+      "lv": 3
+     },
+     "B5": {
+      "b": "macrophage_tower",
+      "lv": 3
+     },
+     "D4": {
+      "b": "macrophage_tower",
+      "lv": 3
+     },
+     "C5": {
+      "b": "neutrophil_barracks",
+      "lv": 3
+     },
+     "B10": {
+      "b": "neutrophil_barracks",
+      "lv": 2
+     },
+     "B7": {
+      "b": "iga_cannon",
+      "lv": 3
+     },
+     "D3": {
+      "b": "iga_cannon",
+      "lv": 3
+     },
+     "C4": {
+      "b": "drug_battery",
+      "lv": 3,
+      "drug": "azithromycin",
+      "rx": [
+       "typhoid",
+       "cholera",
+       "shigella"
+      ]
+     },
+     "A4": {
+      "b": "drug_battery",
+      "lv": 3,
+      "drug": "doxycycline",
+      "rx": [
+       "cholera"
+      ]
+     },
+     "D1": {
+      "b": "drug_battery",
+      "lv": 3,
+      "drug": "ceftriaxone",
+      "rx": [
+       "typhoid",
+       "shigella"
+      ]
+     },
+     "C6": {
+      "b": "drug_battery",
+      "lv": 2,
+      "drug": "metronidazole",
+      "rx": [
+       "amoeba"
+      ]
+     },
+     "A2": {
+      "b": "drug_battery",
+      "lv": 2,
+      "drug": "hpylori_combo",
+      "rx": [
+       "hpylori"
+      ]
+     },
+     "E1": {
+      "b": "ors_station",
+      "lv": 3
+     },
+     "E3": {
+      "b": "ors_station",
+      "lv": 3
+     },
+     "E6": {
+      "b": "pharmacy_lab",
+      "lv": 3
+     },
+     "E5": {
+      "b": "vaccine_lab",
+      "lv": 2
+     },
+     "B9": {
+      "b": "peyers_patch",
+      "lv": 2
+     },
+     "E7": {
+      "b": "nutrient_absorber",
+      "lv": 2
+     },
+     "E8": {
+      "b": "mitochondria",
+      "lv": 2
+     },
+     "E4": {
+      "b": "iv_drip",
+      "lv": 1
+     }
+    },
+    "atp": 1700
+   },
+   {
+    "id": "T9",
+    "name": "Teaching Hospital",
+    "difficulty": 9,
+    "coreLevel": 5,
+    "research": {
+     "tcells": true
+    },
+    "vaccines": {
+     "typhoid": 80,
+     "cholera": 65,
+     "rotavirus": 55
+    },
+    "resistance": {},
+    "memory": {},
+    "policy": {
+     "stopflow_at": 0
+    },
+    "layout": {
+     "CORE": {
+      "b": "core",
+      "lv": 5
+     },
+     "MOAT": {
+      "b": "acid_moat",
+      "lv": 3
+     },
+     "PERI": {
+      "b": "peristalsis",
+      "lv": 3
+     },
+     "KUPF": {
+      "b": "kupffer_gate",
+      "lv": 2
+     },
+     "W1": {
+      "b": "mucus_wall",
+      "lv": 3
+     },
+     "W2": {
+      "b": "mucus_wall",
+      "lv": 3
+     },
+     "W3": {
+      "b": "villi_wall",
+      "lv": 3
+     },
+     "W4": {
+      "b": "villi_wall",
+      "lv": 2
+     },
+     "W5": {
+      "b": "villi_wall",
+      "lv": 2
+     },
+     "W6": {
+      "b": "villi_wall",
+      "lv": 2
+     },
+     "W7": {
+      "b": "flora_garden",
+      "lv": 3
+     },
+     "W8": {
+      "b": "flora_garden",
+      "lv": 2
+     },
+     "W10": {
+      "b": "mucus_wall",
+      "lv": 3
+     },
+     "A3": {
+      "b": "paneth_tower",
+      "lv": 2
+     },
+     "B3": {
+      "b": "paneth_tower",
+      "lv": 2
+     },
+     "B6": {
+      "b": "paneth_tower",
+      "lv": 2
+     },
+     "C1": {
+      "b": "paneth_tower",
+      "lv": 2
+     },
+     "B5": {
+      "b": "macrophage_tower",
+      "lv": 2
+     },
+     "D4": {
+      "b": "macrophage_tower",
+      "lv": 2
+     },
+     "C2": {
+      "b": "macrophage_tower",
+      "lv": 2
+     },
+     "C5": {
+      "b": "neutrophil_barracks",
+      "lv": 2
+     },
+     "B10": {
+      "b": "neutrophil_barracks",
+      "lv": 2
+     },
+     "B7": {
+      "b": "iga_cannon",
+      "lv": 2
+     },
+     "D3": {
+      "b": "iga_cannon",
+      "lv": 2
+     },
+     "A6": {
+      "b": "iga_cannon",
+      "lv": 2
+     },
+     "C4": {
+      "b": "drug_battery",
+      "lv": 2,
+      "drug": "azithromycin",
+      "rx": [
+       "typhoid",
+       "cholera",
+       "shigella"
+      ]
+     },
+     "A4": {
+      "b": "drug_battery",
+      "lv": 2,
+      "drug": "doxycycline",
+      "rx": [
+       "cholera"
+      ]
+     },
+     "D1": {
+      "b": "drug_battery",
+      "lv": 2,
+      "drug": "ceftriaxone",
+      "rx": [
+       "typhoid",
+       "shigella"
+      ]
+     },
+     "C6": {
+      "b": "drug_battery",
+      "lv": 2,
+      "drug": "metronidazole",
+      "rx": [
+       "amoeba"
+      ]
+     },
+     "A2": {
+      "b": "drug_battery",
+      "lv": 2,
+      "drug": "hpylori_combo",
+      "rx": [
+       "hpylori"
+      ]
+     },
+     "E1": {
+      "b": "ors_station",
+      "lv": 3
+     },
+     "E3": {
+      "b": "ors_station",
+      "lv": 3
+     },
+     "E6": {
+      "b": "pharmacy_lab",
+      "lv": 3
+     },
+     "E5": {
+      "b": "vaccine_lab",
+      "lv": 2
+     },
+     "B9": {
+      "b": "peyers_patch",
+      "lv": 2
+     },
+     "E7": {
+      "b": "nutrient_absorber",
+      "lv": 2
+     },
+     "E8": {
+      "b": "mitochondria",
+      "lv": 2
+     },
+     "E4": {
+      "b": "iv_drip",
+      "lv": 2
+     }
+    },
+    "atp": 1850
+   },
+   {
+    "id": "T10",
+    "name": "AIIMS Grand Bastion",
+    "difficulty": 10,
+    "coreLevel": 5,
+    "research": {
+     "tcells": true
+    },
+    "vaccines": {
+     "typhoid": 80,
+     "cholera": 65,
+     "rotavirus": 55
+    },
+    "resistance": {},
+    "memory": {},
+    "policy": {
+     "stopflow_at": 0
+    },
+    "layout": {
+     "CORE": {
+      "b": "core",
+      "lv": 5
+     },
+     "MOAT": {
+      "b": "acid_moat",
+      "lv": 3
+     },
+     "PERI": {
+      "b": "peristalsis",
+      "lv": 3
+     },
+     "KUPF": {
+      "b": "kupffer_gate",
+      "lv": 2
+     },
+     "W1": {
+      "b": "mucus_wall",
+      "lv": 3
+     },
+     "W2": {
+      "b": "mucus_wall",
+      "lv": 3
+     },
+     "W3": {
+      "b": "villi_wall",
+      "lv": 3
+     },
+     "W4": {
+      "b": "villi_wall",
+      "lv": 3
+     },
+     "W5": {
+      "b": "villi_wall",
+      "lv": 3
+     },
+     "W6": {
+      "b": "villi_wall",
+      "lv": 3
+     },
+     "W7": {
+      "b": "flora_garden",
+      "lv": 3
+     },
+     "W8": {
+      "b": "flora_garden",
+      "lv": 3
+     },
+     "W9": {
+      "b": "flora_garden",
+      "lv": 3
+     },
+     "W10": {
+      "b": "mucus_wall",
+      "lv": 3
+     },
+     "W11": {
+      "b": "mucus_wall",
+      "lv": 3
+     },
+     "A3": {
+      "b": "paneth_tower",
+      "lv": 2
+     },
+     "B3": {
+      "b": "paneth_tower",
+      "lv": 2
+     },
+     "B6": {
+      "b": "paneth_tower",
+      "lv": 2
+     },
+     "C1": {
+      "b": "paneth_tower",
+      "lv": 2
+     },
+     "B5": {
+      "b": "macrophage_tower",
+      "lv": 2
+     },
+     "D4": {
+      "b": "macrophage_tower",
+      "lv": 2
+     },
+     "C2": {
+      "b": "macrophage_tower",
+      "lv": 2
+     },
+     "C5": {
+      "b": "neutrophil_barracks",
+      "lv": 2
+     },
+     "B10": {
+      "b": "neutrophil_barracks",
+      "lv": 2
+     },
+     "D5": {
+      "b": "neutrophil_barracks",
+      "lv": 2
+     },
+     "B7": {
+      "b": "iga_cannon",
+      "lv": 2
+     },
+     "D3": {
+      "b": "iga_cannon",
+      "lv": 2
+     },
+     "A6": {
+      "b": "iga_cannon",
+      "lv": 2
+     },
+     "C4": {
+      "b": "drug_battery",
+      "lv": 2,
+      "drug": "azithromycin",
+      "rx": [
+       "typhoid",
+       "cholera",
+       "shigella"
+      ]
+     },
+     "A4": {
+      "b": "drug_battery",
+      "lv": 2,
+      "drug": "doxycycline",
+      "rx": [
+       "cholera"
+      ]
+     },
+     "D1": {
+      "b": "drug_battery",
+      "lv": 2,
+      "drug": "ceftriaxone",
+      "rx": [
+       "typhoid",
+       "shigella"
+      ]
+     },
+     "C6": {
+      "b": "drug_battery",
+      "lv": 2,
+      "drug": "metronidazole",
+      "rx": [
+       "amoeba"
+      ]
+     },
+     "A2": {
+      "b": "drug_battery",
+      "lv": 2,
+      "drug": "hpylori_combo",
+      "rx": [
+       "hpylori"
+      ]
+     },
+     "E1": {
+      "b": "ors_station",
+      "lv": 3
+     },
+     "E3": {
+      "b": "ors_station",
+      "lv": 3
+     },
+     "E6": {
+      "b": "pharmacy_lab",
+      "lv": 3
+     },
+     "E5": {
+      "b": "vaccine_lab",
+      "lv": 3
+     },
+     "B9": {
+      "b": "peyers_patch",
+      "lv": 3
+     },
+     "E7": {
+      "b": "nutrient_absorber",
+      "lv": 3
+     },
+     "E8": {
+      "b": "mitochondria",
+      "lv": 3
+     },
+     "E4": {
+      "b": "iv_drip",
+      "lv": 2
+     }
+    },
+    "atp": 2000
+   }
+  ]
+ },
+ "bots": [
+  {
+   "id": "bot1",
+   "name": "Dr Bot's Clinic",
+   "base": "T1",
+   "trophies": 0
+  },
+  {
+   "id": "bot2",
+   "name": "Juice Corner",
+   "base": "T2",
+   "trophies": 60
+  },
+  {
+   "id": "bot3",
+   "name": "Mohalla Tap",
+   "base": "T2",
+   "trophies": 120
+  },
+  {
+   "id": "bot4",
+   "name": "Sugarcane Stall",
+   "base": "T3",
+   "trophies": 200
+  },
+  {
+   "id": "bot5",
+   "name": "Night Market",
+   "base": "T3",
+   "trophies": 300
+  },
+  {
+   "id": "bot6",
+   "name": "Railway Pantry",
+   "base": "T4",
+   "trophies": 420
+  },
+  {
+   "id": "bot7",
+   "name": "Wedding Feast",
+   "base": "T5",
+   "trophies": 560
+  },
+  {
+   "id": "bot8",
+   "name": "Hilltop Spring",
+   "base": "T5",
+   "trophies": 700
+  },
+  {
+   "id": "bot9",
+   "name": "Civil Hospital",
+   "base": "T6",
+   "trophies": 850
+  },
+  {
+   "id": "bot10",
+   "name": "Kumbh Camp",
+   "base": "T7",
+   "trophies": 1000
+  },
+  {
+   "id": "bot11",
+   "name": "Tech Park Cafe",
+   "base": "T8",
+   "trophies": 1200
+  },
+  {
+   "id": "bot12",
+   "name": "Medical College",
+   "base": "T9",
+   "trophies": 1450
+  }
+ ],
+ "matrixPct": {
+  "typhoid": {
+   "fluoroquinolone": 10
+  },
+  "shigella": {
+   "fluoroquinolone": 30
+  },
+  "cholera": {
+   "fluoroquinolone": 50
+  },
+  "etec": {
+   "ceftriaxone": 50,
+   "azithromycin": 60,
+   "fluoroquinolone": 40
+  },
+  "cdiff": {
+   "metronidazole": 50
+  },
+  "amoeba_cyst": {
+   "metronidazole": 20
+  },
+  "candida": {
+   "antifungal": 50
+  }
+ },
+ "matrixLegend": {
+  "Y": "Effective and indicated",
+  "P": "Partly effective (often because of resistance in India); exact value per cell in matrixPct",
+  "X": "Active against the germ but NOT indicated: does some damage, counts as an unnecessary antibiotic shot",
+  "N": "Not effective: the shot is wasted and breeds resistance",
+  "S": "Supportive (ORS always helps)",
+  "-": "Not relevant"
+ },
+ "matrixNotes": {
+  "typhoid.fluoroquinolone": "Most Salmonella Typhi in India are fluoroquinolone non-susceptible; ciprofloxacin should not be used empirically.",
+  "shigella.fluoroquinolone": "Fluoroquinolone resistance in Shigella is common in India.",
+  "etec": "Antibiotics are generally not needed; ORS is the treatment. Azithromycin only for severe traveller's diarrhoea.",
+  "hpylori": "Clarithromycin, amoxicillin, tetracycline and metronidazole work only inside a full regimen (PPI-based triple therapy or bismuth quadruple therapy); any one alone fails and selects resistance. Azithromycin is not part of any standard regimen.",
+  "cdiff.metronidazole": "Metronidazole is no longer recommended for C. difficile; use only if oral vancomycin and fidaxomicin are unavailable (IDSA/SHEA 2021).",
+  "amoeba": "Metronidazole kills invasive trophozoites; a luminal agent is still needed to clear cysts and prevent relapse.",
+  "candida.antifungal": "Candida in stool after antibiotics is usually colonisation, not infection; antifungals are for thrush or invasive candidiasis.",
+  "cholera": "Single-dose doxycycline is first-line (GTFCC 2018, all ages); azithromycin is the alternative."
+ },
+ "pressure": {
+  "Y": 1,
+  "P": 3,
+  "X": 5,
+  "N": 5
+ },
+ "amoebaCyst": {
+  "perDeath": 1
+ },
+ "seed": {
+  "modulus": 2147483647,
+  "multiplier": 48271
+ },
+ "defenderAtp": {
+  "multiplayerCap": 1500,
+  "default": 800
+ },
+ "antiCheat": {
+  "realtimeSlackSeconds": 8,
+  "realtimeFactorPct": 90
+ },
+ "trials": [
+  {
+   "id": "D1",
+   "name": "Monsoon diarrhoea clinic",
+   "patient": "adult",
+   "brief": "Watery diarrhoea from cholera, ETEC and rotavirus. Rehydrate first; use antibiotics only where they help.",
+   "coreLevel": 3,
+   "budget": 1200,
+   "atp": 600,
+   "maxTicks": 1700,
+   "layout": {
+    "CORE": {
+     "b": "core",
+     "lv": 3
+    },
+    "MOAT": {
+     "b": "acid_moat",
+     "lv": 2
+    },
+    "W1": {
+     "b": "mucus_wall",
+     "lv": 2
+    },
+    "W3": {
+     "b": "villi_wall",
+     "lv": 2
+    },
+    "W7": {
+     "b": "flora_garden",
+     "lv": 2
+    },
+    "B3": {
+     "b": "paneth_tower",
+     "lv": 2
+    },
+    "E1": {
+     "b": "ors_station",
+     "lv": 1
+    }
+   },
+   "allowed": [
+    "ors_station",
+    "iv_drip",
+    "drug_battery",
+    "iga_cannon",
+    "paneth_tower",
+    "mucus_wall"
+   ],
+   "allowedDrugs": [
+    "doxycycline",
+    "azithromycin",
+    "ceftriaxone",
+    "fluoroquinolone"
+   ],
+   "allowedVaccines": [],
+   "research": {
+    "tcells": false
+   },
+   "resistance": {
+    "fluoroquinolone": 40
+   },
+   "memory": {},
+   "waves": [
+    {
+     "t": 20,
+     "u": "rotavirus",
+     "n": 8,
+     "gap": 8
+    },
+    {
+     "t": 200,
+     "u": "cholera",
+     "n": 14,
+     "gap": 5
+    },
+    {
+     "t": 600,
+     "u": "etec",
+     "n": 10,
+     "gap": 8
+    },
+    {
+     "t": 1000,
+     "u": "cholera",
+     "n": 18,
+     "gap": 4
+    }
+   ],
+   "objectives": [
+    {
+     "key": "survive"
+    },
+    {
+     "key": "min_hydration",
+     "pct": 40
+    },
+    {
+     "key": "killed_with",
+     "drugs": [
+      "doxycycline",
+      "azithromycin"
+     ],
+     "n": 6
+    },
+    {
+     "key": "max_unnecessary",
+     "n": 5
+    }
+   ]
+  },
+  {
+   "id": "D2",
+   "name": "Dysentery ward",
+   "patient": "adult",
+   "brief": "Bloody diarrhoea from Shigella and Amoeba, on a ward that over-uses ceftriaxone. Choose the right drugs, protect the flora, and never stop the flow.",
+   "coreLevel": 4,
+   "budget": 1800,
+   "atp": 650,
+   "maxTicks": 1800,
+   "layout": {
+    "CORE": {
+     "b": "core",
+     "lv": 4
+    },
+    "MOAT": {
+     "b": "acid_moat",
+     "lv": 2
+    },
+    "PERI": {
+     "b": "peristalsis",
+     "lv": 2
+    },
+    "KUPF": {
+     "b": "kupffer_gate",
+     "lv": 3
+    },
+    "W3": {
+     "b": "mucus_wall",
+     "lv": 2
+    },
+    "W7": {
+     "b": "flora_garden",
+     "lv": 2
+    },
+    "C4": {
+     "b": "drug_battery",
+     "lv": 2,
+     "drug": "ceftriaxone",
+     "rx": [
+      "shigella",
+      "etec",
+      "amoeba"
+     ]
+    },
+    "E1": {
+     "b": "ors_station",
+     "lv": 2
+    }
+   },
+   "allowed": [
+    "drug_battery",
+    "neutrophil_barracks",
+    "macrophage_tower",
+    "ors_station",
+    "flora_garden"
+   ],
+   "allowedDrugs": [
+    "azithromycin",
+    "ceftriaxone",
+    "metronidazole",
+    "luminal_agent",
+    "vanco_fidaxo",
+    "fluoroquinolone"
+   ],
+   "allowedVaccines": [],
+   "research": {
+    "tcells": false
+   },
+   "resistance": {
+    "fluoroquinolone": 60
+   },
+   "memory": {},
+   "waves": [
+    {
+     "t": 30,
+     "u": "shigella",
+     "n": 5,
+     "gap": 15
+    },
+    {
+     "t": 380,
+     "u": "amoeba",
+     "n": 3,
+     "gap": 30
+    },
+    {
+     "t": 650,
+     "u": "shigella",
+     "n": 6,
+     "gap": 12
+    },
+    {
+     "t": 1000,
+     "u": "amoeba",
+     "n": 4,
+     "gap": 25
+    },
+    {
+     "t": 1250,
+     "u": "shigella",
+     "n": 6,
+     "gap": 10
+    }
+   ],
+   "objectives": [
+    {
+     "key": "survive"
+    },
+    {
+     "key": "no_stopflow"
+    },
+    {
+     "key": "killed_with",
+     "drugs": [
+      "luminal_agent"
+     ],
+     "n": 2
+    },
+    {
+     "key": "max_unnecessary",
+     "n": 0
+    }
+   ]
+  },
+  {
+   "id": "D3",
+   "name": "Fever and pain clinic",
+   "patient": "adult",
+   "brief": "Enteric fever, a peptic ulcer and a worm load in the same week. Match each germ to its drug.",
+   "coreLevel": 4,
+   "budget": 1500,
+   "atp": 700,
+   "maxTicks": 1800,
+   "layout": {
+    "CORE": {
+     "b": "core",
+     "lv": 4
+    },
+    "MOAT": {
+     "b": "acid_moat",
+     "lv": 3
+    },
+    "KUPF": {
+     "b": "kupffer_gate",
+     "lv": 2
+    },
+    "W1": {
+     "b": "mucus_wall",
+     "lv": 2
+    },
+    "W3": {
+     "b": "villi_wall",
+     "lv": 2
+    },
+    "B5": {
+     "b": "macrophage_tower",
+     "lv": 2
+    },
+    "E1": {
+     "b": "ors_station",
+     "lv": 1
+    }
+   },
+   "allowed": [
+    "drug_battery",
+    "macrophage_tower",
+    "iga_cannon",
+    "paneth_tower",
+    "ors_station",
+    "mucus_wall"
+   ],
+   "allowedDrugs": [
+    "ceftriaxone",
+    "azithromycin",
+    "fluoroquinolone",
+    "hpylori_combo",
+    "metronidazole",
+    "albendazole"
+   ],
+   "allowedVaccines": [
+    "typhoid"
+   ],
+   "vaccineCost": 350,
+   "research": {
+    "tcells": true
+   },
+   "resistance": {
+    "fluoroquinolone": 70
+   },
+   "memory": {},
+   "waves": [
+    {
+     "t": 30,
+     "u": "typhoid",
+     "n": 6,
+     "gap": 18
+    },
+    {
+     "t": 330,
+     "u": "hpylori",
+     "n": 5,
+     "gap": 30
+    },
+    {
+     "t": 700,
+     "u": "worm",
+     "n": 4,
+     "gap": 40
+    },
+    {
+     "t": 1000,
+     "u": "typhoid",
+     "n": 8,
+     "gap": 14
+    },
+    {
+     "t": 1300,
+     "u": "hpylori",
+     "n": 4,
+     "gap": 25
+    }
+   ],
+   "objectives": [
+    {
+     "key": "survive"
+    },
+    {
+     "key": "killed_with",
+     "drugs": [
+      "hpylori_combo"
+     ],
+     "n": 3
+    },
+    {
+     "key": "killed_with",
+     "drugs": [
+      "albendazole"
+     ],
+     "n": 2
+    },
+    {
+     "key": "building_standing",
+     "site": "KUPF"
+    }
+   ]
+  }
+ ]
+}

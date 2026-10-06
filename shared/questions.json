@@ -1,0 +1,2394 @@
+[
+ {
+  "id": "q001",
+  "topic": "cholera",
+  "q": "Drug of choice for cholera in adults?",
+  "options": [
+   "Ciprofloxacin for 7 days",
+   "Single-dose doxycycline",
+   "Metronidazole for 5 days",
+   "Ceftriaxone injection"
+  ],
+  "answer": 1,
+  "explanation": "GTFCC recommends one oral dose of doxycycline (300 mg in adults) as first-line, with azithromycin as the alternative; it is given alongside rehydration for moderate or severe cases.",
+  "difficulty": 1,
+  "ref": "GTFCC Cholera Guidance 2018",
+  "tags": [
+   "cholera"
+  ]
+ },
+ {
+  "id": "q002",
+  "topic": "ors_dehydration",
+  "q": "Osmolarity of WHO low-osmolarity ORS?",
+  "options": [
+   "200 mOsm/L",
+   "311 mOsm/L",
+   "245 mOsm/L",
+   "290 mOsm/L"
+  ],
+  "answer": 2,
+  "explanation": "Reduced-osmolarity ORS (245 mOsm/L) replaced the older 311 mOsm/L formula because it lowers stool output, vomiting and the need for IV fluids.",
+  "difficulty": 1,
+  "ref": "WHO Treatment of Diarrhoea 2005",
+  "tags": [
+   "cholera",
+   "rotavirus",
+   "etec"
+  ]
+ },
+ {
+  "id": "q003",
+  "topic": "ors_dehydration",
+  "q": "Sodium concentration of low-osmolarity ORS?",
+  "options": [
+   "120 mmol/L",
+   "45 mmol/L",
+   "90 mmol/L",
+   "75 mmol/L"
+  ],
+  "answer": 3,
+  "explanation": "Low-osmolarity ORS contains sodium 75 and glucose 75 mmol/L; 90 mmol/L sodium was the old WHO formula.",
+  "difficulty": 2,
+  "ref": "WHO Treatment of Diarrhoea 2005",
+  "tags": [
+   "cholera",
+   "rotavirus",
+   "etec"
+  ]
+ },
+ {
+  "id": "q004",
+  "topic": "ors_dehydration",
+  "q": "Why does ORS still work in cholera's secretory diarrhoea?",
+  "options": [
+   "Potassium closes CFTR channels",
+   "Sodium-glucose co-transport (SGLT1) stays intact",
+   "ORS kills Vibrio cholerae",
+   "Glucose inactivates cholera toxin"
+  ],
+  "answer": 1,
+  "explanation": "Toxins drive chloride secretion but leave the SGLT1 transporter working, so glucose pulls sodium and water back into the body.",
+  "difficulty": 1,
+  "ref": "Standard physiology texts",
+  "tags": [
+   "cholera",
+   "rotavirus",
+   "etec"
+  ]
+ },
+ {
+  "id": "q005",
+  "topic": "ors_dehydration",
+  "q": "WHO Plan C: total Ringer's lactate for severe dehydration?",
+  "options": [
+   "20 ml/kg",
+   "200 ml/kg",
+   "50 ml/kg",
+   "100 ml/kg"
+  ],
+  "answer": 3,
+  "explanation": "Give 100 ml/kg: from age 1 year, 30 ml/kg in 30 minutes then 70 ml/kg over 2.5 hours (infants: 1 hour, then 5 hours).",
+  "difficulty": 2,
+  "ref": "WHO Treatment of Diarrhoea 2005",
+  "tags": [
+   "cholera",
+   "rotavirus",
+   "etec"
+  ]
+ },
+ {
+  "id": "q006",
+  "topic": "ors_dehydration",
+  "q": "Best IV fluid for severe dehydration from cholera?",
+  "options": [
+   "Albumin (colloid)",
+   "Ringer's lactate",
+   "0.45% saline",
+   "5% dextrose"
+  ],
+  "answer": 1,
+  "explanation": "Ringer's lactate replaces sodium, potassium and base; plain dextrose replaces no salt. Normal saline is used only if Ringer's lactate is unavailable.",
+  "difficulty": 1,
+  "ref": "WHO Treatment of Diarrhoea 2005",
+  "tags": [
+   "cholera",
+   "rotavirus",
+   "etec"
+  ]
+ },
+ {
+  "id": "q007",
+  "topic": "ors_dehydration",
+  "q": "WHO Plan B (some dehydration): ORS volume in the first 4 hours?",
+  "options": [
+   "About 10 ml/kg",
+   "About 150 ml/kg",
+   "About 75 ml/kg",
+   "About 25 ml/kg"
+  ],
+  "answer": 2,
+  "explanation": "Plan B gives roughly 75 ml/kg of ORS over 4 hours under observation, then reassesses the child.",
+  "difficulty": 2,
+  "ref": "WHO Treatment of Diarrhoea 2005",
+  "tags": [
+   "cholera",
+   "rotavirus",
+   "etec"
+  ]
+ },
+ {
+  "id": "q008",
+  "topic": "ors_dehydration",
+  "q": "Which pair of signs means SEVERE dehydration in a child?",
+  "options": [
+   "Restless, drinks eagerly",
+   "Loose stools for 3 days, playful",
+   "Lethargic, skin pinch goes back very slowly",
+   "Thirsty, skin pinch normal"
+  ],
+  "answer": 2,
+  "explanation": "Severe dehydration needs two of: lethargic or unconscious, sunken eyes, unable to drink or drinking poorly, skin pinch very slow (over 2 seconds).",
+  "difficulty": 1,
+  "ref": "WHO/MoHFW IMNCI",
+  "tags": [
+   "cholera",
+   "rotavirus",
+   "etec"
+  ]
+ },
+ {
+  "id": "q009",
+  "topic": "ors_dehydration",
+  "q": "Zinc dose for a 2-year-old with acute diarrhoea?",
+  "options": [
+   "40 mg daily for 5 days",
+   "5 mg daily for 3 days",
+   "20 mg daily for 10-14 days",
+   "10 mg as a single dose"
+  ],
+  "answer": 2,
+  "explanation": "Children 6 months to 5 years get 20 mg zinc daily for 10-14 days; infants under 6 months get 10 mg.",
+  "difficulty": 1,
+  "ref": "WHO/UNICEF Joint Statement on Diarrhoea 2004",
+  "tags": [
+   "cholera",
+   "rotavirus",
+   "etec"
+  ]
+ },
+ {
+  "id": "q010",
+  "topic": "ors_dehydration",
+  "q": "Main benefit of zinc in childhood diarrhoea?",
+  "options": [
+   "It stops vomiting at once",
+   "It replaces lost fluid",
+   "It kills rotavirus in the gut",
+   "Shorter, milder episodes and fewer new ones for 2-3 months"
+  ],
+  "answer": 3,
+  "explanation": "Zinc reduces the duration and severity of diarrhoea and the number of episodes in the following 2-3 months; it does not replace fluids.",
+  "difficulty": 2,
+  "ref": "WHO/UNICEF Joint Statement on Diarrhoea 2004",
+  "tags": [
+   "cholera",
+   "rotavirus",
+   "etec"
+  ]
+ },
+ {
+  "id": "q011",
+  "topic": "ors_dehydration",
+  "q": "A child on Plan B vomits the ORS once. Best next step?",
+  "options": [
+   "Give fruit juice instead",
+   "Wait 10 minutes, then give ORS slowly",
+   "Start IV fluids at once",
+   "Stop ORS and give an antiemetic"
+  ],
+  "answer": 1,
+  "explanation": "WHO advises a 10-minute pause, then small sips or a spoonful every 1-2 minutes; most vomiting settles as the child rehydrates.",
+  "difficulty": 2,
+  "ref": "WHO Treatment of Diarrhoea 2005",
+  "tags": [
+   "cholera",
+   "rotavirus",
+   "etec"
+  ]
+ },
+ {
+  "id": "q012",
+  "topic": "cholera",
+  "q": "Cholera toxin raises which second messenger in enterocytes?",
+  "options": [
+   "Cyclic AMP",
+   "Nitric oxide",
+   "Cyclic GMP",
+   "Inositol trisphosphate"
+  ],
+  "answer": 0,
+  "explanation": "The A subunit ADP-ribosylates Gs-alpha, locking adenylate cyclase on; high cAMP opens CFTR chloride channels.",
+  "difficulty": 1,
+  "ref": "Standard medical microbiology texts",
+  "tags": [
+   "cholera"
+  ]
+ },
+ {
+  "id": "q013",
+  "topic": "cholera",
+  "q": "Typical stool in cholera?",
+  "options": [
+   "Small bloody mucoid stools",
+   "Rice-water stool",
+   "Red-currant jelly stool",
+   "Pea-soup stool"
+  ],
+  "answer": 1,
+  "explanation": "Profuse, watery stool flecked with mucus looks like water in which rice was washed.",
+  "difficulty": 1,
+  "ref": "Standard medical microbiology texts",
+  "tags": [
+   "cholera"
+  ]
+ },
+ {
+  "id": "q014",
+  "topic": "cholera",
+  "q": "Selective medium for Vibrio cholerae?",
+  "options": [
+   "Sabouraud agar",
+   "TCBS agar",
+   "Wilson-Blair medium",
+   "Lowenstein-Jensen medium"
+  ],
+  "answer": 1,
+  "explanation": "Thiosulphate-citrate-bile salts-sucrose agar grows yellow (sucrose-fermenting) colonies; alkaline peptone water is the enrichment broth.",
+  "difficulty": 2,
+  "ref": "Standard medical microbiology texts",
+  "tags": [
+   "cholera"
+  ]
+ },
+ {
+  "id": "q015",
+  "topic": "cholera",
+  "q": "What do antibiotics achieve in cholera?",
+  "options": [
+   "Shorter diarrhoea and shedding",
+   "They make rehydration unnecessary",
+   "They neutralise toxin already bound",
+   "They are needed by all contacts"
+  ],
+  "answer": 0,
+  "explanation": "Antibiotics cut stool volume and bacterial shedding, but rehydration is what saves lives; mass prophylaxis of contacts is not recommended.",
+  "difficulty": 1,
+  "ref": "GTFCC Cholera Guidance 2018",
+  "tags": [
+   "cholera"
+  ]
+ },
+ {
+  "id": "q016",
+  "topic": "cholera",
+  "q": "Why does cholera need a very large infectious dose?",
+  "options": [
+   "It cannot attach without bile",
+   "It grows only in the colon",
+   "Vibrio cholerae is killed by gastric acid",
+   "Salivary IgA destroys it"
+  ],
+  "answer": 2,
+  "explanation": "Healthy people need around 10^8 bacteria; low acid (PPIs, gastrectomy) lowers the dose sharply.",
+  "difficulty": 2,
+  "ref": "Standard medical microbiology texts",
+  "tags": [
+   "cholera"
+  ]
+ },
+ {
+  "id": "q017",
+  "topic": "cholera",
+  "q": "Serogroups that cause epidemic cholera?",
+  "options": [
+   "O1 and O157",
+   "O157 and O104",
+   "O1 and O139",
+   "K1 and H7"
+  ],
+  "answer": 2,
+  "explanation": "Only toxigenic O1 (classical and El Tor biotypes) and O139 cause epidemic cholera.",
+  "difficulty": 2,
+  "ref": "Standard medical microbiology texts",
+  "tags": [
+   "cholera"
+  ]
+ },
+ {
+  "id": "q018",
+  "topic": "cholera",
+  "q": "Quick clue to cholera on hanging-drop stool microscopy?",
+  "options": [
+   "Sheets of pus cells",
+   "Trophozoites with ingested red cells",
+   "Darting motility of comma-shaped rods",
+   "Gram-positive cocci in clusters"
+  ],
+  "answer": 2,
+  "explanation": "Vibrio cholerae has a single polar flagellum and shows rapid 'shooting star' darting motility.",
+  "difficulty": 2,
+  "ref": "Standard medical microbiology texts",
+  "tags": [
+   "cholera"
+  ]
+ },
+ {
+  "id": "q019",
+  "topic": "cholera",
+  "q": "Alternative to doxycycline for cholera?",
+  "options": [
+   "Single-dose azithromycin",
+   "Metronidazole",
+   "Oral vancomycin",
+   "Nitrofurantoin"
+  ],
+  "answer": 0,
+  "explanation": "Azithromycin as a single dose (1 g in adults, 20 mg/kg in children) is the GTFCC alternative, useful when doxycycline cannot be given or local strains resist tetracycline.",
+  "difficulty": 1,
+  "ref": "GTFCC Cholera Guidance 2018",
+  "tags": [
+   "cholera"
+  ]
+ },
+ {
+  "id": "q020",
+  "topic": "etec",
+  "q": "Commonest bacterial cause of traveller's diarrhoea?",
+  "options": [
+   "Shigella flexneri",
+   "Enterotoxigenic E. coli",
+   "Clostridioides difficile",
+   "Salmonella Typhi"
+  ],
+  "answer": 1,
+  "explanation": "ETEC, spread by contaminated food and water, causes most traveller's diarrhoea in low- and middle-income countries.",
+  "difficulty": 1,
+  "ref": "Riddle et al., J Travel Med 2017",
+  "tags": [
+   "etec"
+  ]
+ },
+ {
+  "id": "q021",
+  "topic": "etec",
+  "q": "ETEC heat-stable toxin (ST) acts by raising?",
+  "options": [
+   "cAMP via adenylate cyclase",
+   "cGMP via guanylate cyclase C",
+   "Calcium via ryanodine channels",
+   "Ceramide via sphingomyelinase"
+  ],
+  "answer": 1,
+  "explanation": "ST activates guanylate cyclase C; the heat-labile toxin (LT) raises cAMP like cholera toxin.",
+  "difficulty": 2,
+  "ref": "Standard medical microbiology texts",
+  "tags": [
+   "etec"
+  ]
+ },
+ {
+  "id": "q022",
+  "topic": "etec",
+  "q": "Mild watery traveller's diarrhoea, no fever or blood. Treatment?",
+  "options": [
+   "Ceftriaxone injection",
+   "Ciprofloxacin for 7 days",
+   "Doxycycline for 7 days",
+   "Fluids or ORS; no antibiotic"
+  ],
+  "answer": 3,
+  "explanation": "Mild traveller's diarrhoea settles by itself; antibiotics are kept for severe disease.",
+  "difficulty": 1,
+  "ref": "Riddle et al., J Travel Med 2017",
+  "tags": [
+   "etec"
+  ]
+ },
+ {
+  "id": "q023",
+  "topic": "etec",
+  "q": "Antibiotic preferred for severe traveller's diarrhoea in South Asia?",
+  "options": [
+   "Azithromycin",
+   "Ciprofloxacin",
+   "Ceftriaxone",
+   "Metronidazole"
+  ],
+  "answer": 0,
+  "explanation": "High fluoroquinolone resistance in South Asia (notably Campylobacter) makes azithromycin the preferred choice.",
+  "difficulty": 2,
+  "ref": "Riddle et al., J Travel Med 2017",
+  "tags": [
+   "etec"
+  ]
+ },
+ {
+  "id": "q024",
+  "topic": "etec",
+  "q": "ETEC heat-labile toxin (LT) closely resembles?",
+  "options": [
+   "Shiga toxin",
+   "Botulinum toxin",
+   "Cholera toxin",
+   "Diphtheria toxin"
+  ],
+  "answer": 2,
+  "explanation": "LT and cholera toxin share structure and action: both ADP-ribosylate Gs and raise cAMP.",
+  "difficulty": 1,
+  "ref": "Standard medical microbiology texts",
+  "tags": [
+   "etec"
+  ]
+ },
+ {
+  "id": "q025",
+  "topic": "etec",
+  "q": "ETEC sticks to small-intestinal cells using?",
+  "options": [
+   "Colonisation factor fimbriae",
+   "Urease",
+   "An actin tail",
+   "The Vi capsule"
+  ],
+  "answer": 0,
+  "explanation": "ETEC attaches by fimbriae and releases toxins without invading, so the stool has no blood or pus cells.",
+  "difficulty": 2,
+  "ref": "Standard medical microbiology texts",
+  "tags": [
+   "etec"
+  ]
+ },
+ {
+  "id": "q026",
+  "topic": "rotavirus",
+  "q": "Antibiotic for rotavirus diarrhoea?",
+  "options": [
+   "Ceftriaxone",
+   "None: ORS and zinc only",
+   "Metronidazole",
+   "Azithromycin"
+  ],
+  "answer": 1,
+  "explanation": "Rotavirus is a virus; antibiotics cannot affect it and only harm the gut flora.",
+  "difficulty": 1,
+  "ref": "WHO Treatment of Diarrhoea 2005",
+  "tags": [
+   "rotavirus"
+  ]
+ },
+ {
+  "id": "q027",
+  "topic": "rotavirus",
+  "q": "Rotavirus genome?",
+  "options": [
+   "Segmented double-stranded RNA",
+   "Single-stranded DNA",
+   "Non-segmented single-stranded RNA",
+   "Double-stranded circular DNA"
+  ],
+  "answer": 0,
+  "explanation": "Rotavirus has 11 segments of dsRNA inside a wheel-like triple-layered capsid.",
+  "difficulty": 2,
+  "ref": "Standard medical microbiology texts",
+  "tags": [
+   "rotavirus"
+  ]
+ },
+ {
+  "id": "q028",
+  "topic": "rotavirus",
+  "q": "Rotavirus protein that acts as a viral enterotoxin?",
+  "options": [
+   "NSP4",
+   "Haemagglutinin",
+   "VP7",
+   "Neuraminidase"
+  ],
+  "answer": 0,
+  "explanation": "NSP4 raises intracellular calcium and drives chloride secretion, adding to fluid loss from villus-tip damage.",
+  "difficulty": 3,
+  "ref": "Standard medical microbiology texts",
+  "tags": [
+   "rotavirus"
+  ]
+ },
+ {
+  "id": "q029",
+  "topic": "rotavirus",
+  "q": "Age group with the most severe rotavirus disease?",
+  "options": [
+   "Adults over 60",
+   "Adolescents",
+   "6-24 months",
+   "5-10 years"
+  ],
+  "answer": 2,
+  "explanation": "Severe dehydrating rotavirus diarrhoea peaks between 6 and 24 months of age.",
+  "difficulty": 1,
+  "ref": "Standard medical microbiology texts",
+  "tags": [
+   "rotavirus"
+  ]
+ },
+ {
+  "id": "q030",
+  "topic": "rotavirus",
+  "q": "Rotavirus vaccine schedule in India's UIP?",
+  "options": [
+   "One injection at birth",
+   "One oral dose at 5 years",
+   "Oral doses at 9 and 16 months",
+   "Oral doses at 6, 10 and 14 weeks"
+  ],
+  "answer": 3,
+  "explanation": "Rotavac or Rotasiil is given as three oral doses alongside the other primary vaccines.",
+  "difficulty": 1,
+  "ref": "MoHFW Universal Immunisation Programme",
+  "tags": [
+   "rotavirus"
+  ]
+ },
+ {
+  "id": "q031",
+  "topic": "rotavirus",
+  "q": "Rotavac efficacy against severe rotavirus diarrhoea in the first year (Indian trial)?",
+  "options": [
+   "About 56%",
+   "About 95%",
+   "About 20%",
+   "100%"
+  ],
+  "answer": 0,
+  "explanation": "The phase 3 trial found 56.4% efficacy in the first year, lower in the second year: useful but partial.",
+  "difficulty": 2,
+  "ref": "Bhandari et al., Lancet 2014",
+  "tags": [
+   "rotavirus"
+  ]
+ },
+ {
+  "id": "q032",
+  "topic": "rotavirus",
+  "q": "Rare adverse event watched for after rotavirus vaccine?",
+  "options": [
+   "Optic neuritis",
+   "Lobar pneumonia",
+   "Intussusception",
+   "Hepatitis"
+  ],
+  "answer": 2,
+  "explanation": "A small rise in intussusception risk is monitored; the benefit of preventing severe diarrhoea far outweighs it.",
+  "difficulty": 2,
+  "ref": "MoHFW Universal Immunisation Programme",
+  "tags": [
+   "rotavirus"
+  ]
+ },
+ {
+  "id": "q033",
+  "topic": "shigella",
+  "q": "Infectious dose of Shigella?",
+  "options": [
+   "About 10^8 bacteria",
+   "About 10^11 bacteria",
+   "About 10^5 bacteria",
+   "10-100 bacteria"
+  ],
+  "answer": 3,
+  "explanation": "Shigella survives gastric acid well, so a tiny dose infects and it spreads easily from person to person.",
+  "difficulty": 1,
+  "ref": "Standard medical microbiology texts",
+  "tags": [
+   "shigella"
+  ]
+ },
+ {
+  "id": "q034",
+  "topic": "shigella",
+  "q": "Shigella kills macrophages by?",
+  "options": [
+   "Complement fixation",
+   "Pyroptosis",
+   "Opsonisation",
+   "Antibody-dependent cytotoxicity"
+  ],
+  "answer": 1,
+  "explanation": "Inflammasome activation (caspase-1) kills the macrophage and releases IL-1 beta, which calls in neutrophils.",
+  "difficulty": 2,
+  "ref": "Standard medical microbiology texts",
+  "tags": [
+   "shigella"
+  ]
+ },
+ {
+  "id": "q035",
+  "topic": "shigella",
+  "q": "Main site of Shigella infection?",
+  "options": [
+   "Liver",
+   "Jejunal villi",
+   "Stomach",
+   "Colon"
+  ],
+  "answer": 3,
+  "explanation": "Shigella invades colonic epithelium; bacillary dysentery is a colitis.",
+  "difficulty": 1,
+  "ref": "Standard medical microbiology texts",
+  "tags": [
+   "shigella"
+  ]
+ },
+ {
+  "id": "q036",
+  "topic": "shigella",
+  "q": "Why is ciprofloxacin a poor empirical choice for dysentery in India?",
+  "options": [
+   "Fluoroquinolone resistance in Shigella is common",
+   "Shigella is not a bacterium",
+   "It cannot enter colonic cells",
+   "It always causes HUS"
+  ],
+  "answer": 0,
+  "explanation": "Indian surveillance shows high fluoroquinolone resistance in Shigella, so azithromycin or ceftriaxone is preferred.",
+  "difficulty": 1,
+  "ref": "ICMR Antimicrobial Treatment Guidelines",
+  "tags": [
+   "shigella"
+  ]
+ },
+ {
+  "id": "q037",
+  "topic": "shigella",
+  "q": "Drugs commonly used for Shigella dysentery in India?",
+  "options": [
+   "Albendazole or mebendazole",
+   "Azithromycin or ceftriaxone",
+   "Doxycycline or tetracycline",
+   "Metronidazole or tinidazole"
+  ],
+  "answer": 1,
+  "explanation": "Choice follows local susceptibility; metronidazole has no activity against Shigella.",
+  "difficulty": 1,
+  "ref": "ICMR Antimicrobial Treatment Guidelines",
+  "tags": [
+   "shigella"
+  ]
+ },
+ {
+  "id": "q038",
+  "topic": "shigella",
+  "q": "Toxin of Shigella dysenteriae type 1 linked to HUS?",
+  "options": [
+   "Toxin A",
+   "Cholera toxin",
+   "Shiga toxin",
+   "Heat-labile toxin"
+  ],
+  "answer": 2,
+  "explanation": "Shiga toxin blocks protein synthesis in endothelial cells and can cause haemolytic uraemic syndrome.",
+  "difficulty": 1,
+  "ref": "Standard medical microbiology texts",
+  "tags": [
+   "shigella"
+  ]
+ },
+ {
+  "id": "q039",
+  "topic": "shigella",
+  "q": "Stool microscopy typical of bacillary dysentery?",
+  "options": [
+   "Rice-water stool with no cells",
+   "Many pus cells and red cells",
+   "Quadrinucleate cysts",
+   "Ova with a mammillated coat"
+  ],
+  "answer": 1,
+  "explanation": "Colonic invasion brings neutrophils and blood into the stool.",
+  "difficulty": 2,
+  "ref": "Standard medical microbiology texts",
+  "tags": [
+   "shigella"
+  ]
+ },
+ {
+  "id": "q040",
+  "topic": "shigella",
+  "q": "How does Shigella spread from cell to cell?",
+  "options": [
+   "By polymerising host actin (IcsA)",
+   "By pilus retraction",
+   "By capsule swelling",
+   "By flagellar swimming"
+  ],
+  "answer": 0,
+  "explanation": "Shigella is non-motile in broth; inside cells it builds an actin tail that pushes it into neighbouring cells.",
+  "difficulty": 3,
+  "ref": "Standard medical microbiology texts",
+  "tags": [
+   "shigella"
+  ]
+ },
+ {
+  "id": "q041",
+  "topic": "typhoid",
+  "q": "Empirical oral drug for uncomplicated typhoid in India?",
+  "options": [
+   "Metronidazole",
+   "Azithromycin",
+   "Doxycycline",
+   "Ciprofloxacin"
+  ],
+  "answer": 1,
+  "explanation": "Most Indian S. Typhi are fluoroquinolone non-susceptible; azithromycin (or cefixime) is used for uncomplicated cases.",
+  "difficulty": 1,
+  "ref": "ICMR Antimicrobial Treatment Guidelines",
+  "tags": [
+   "typhoid"
+  ]
+ },
+ {
+  "id": "q042",
+  "topic": "typhoid",
+  "q": "IV drug of choice for severe enteric fever in India?",
+  "options": [
+   "Ciprofloxacin",
+   "Vancomycin",
+   "Metronidazole",
+   "Ceftriaxone"
+  ],
+  "answer": 3,
+  "explanation": "Ceftriaxone remains first-line for complicated enteric fever; adjust once blood culture sensitivities are back.",
+  "difficulty": 1,
+  "ref": "ICMR Antimicrobial Treatment Guidelines",
+  "tags": [
+   "typhoid"
+  ]
+ },
+ {
+  "id": "q043",
+  "topic": "typhoid",
+  "q": "Best test in the first week of enteric fever?",
+  "options": [
+   "Blood culture",
+   "Urine culture",
+   "Stool culture",
+   "Widal test"
+  ],
+  "answer": 0,
+  "explanation": "Bacteraemia is highest early; the Widal test is unreliable in endemic areas.",
+  "difficulty": 1,
+  "ref": "Standard medical microbiology texts",
+  "tags": [
+   "typhoid"
+  ]
+ },
+ {
+  "id": "q044",
+  "topic": "typhoid",
+  "q": "Most sensitive culture in typhoid, even after antibiotics?",
+  "options": [
+   "Urine culture",
+   "Rose spot scraping",
+   "Stool culture",
+   "Bone marrow culture"
+  ],
+  "answer": 3,
+  "explanation": "Marrow macrophages hold many bacteria, so marrow culture stays positive longer than blood culture.",
+  "difficulty": 2,
+  "ref": "Standard medical microbiology texts",
+  "tags": [
+   "typhoid"
+  ]
+ },
+ {
+  "id": "q045",
+  "topic": "typhoid",
+  "q": "Where does S. Typhi cross the gut wall?",
+  "options": [
+   "Gastric parietal cells",
+   "M cells over ileal Peyer's patches",
+   "Colonic goblet cells",
+   "Duodenal Brunner glands"
+  ],
+  "answer": 1,
+  "explanation": "It enters through M cells, is taken up by macrophages and spreads to liver, spleen and marrow.",
+  "difficulty": 2,
+  "ref": "Standard medical microbiology texts",
+  "tags": [
+   "typhoid"
+  ]
+ },
+ {
+  "id": "q046",
+  "topic": "typhoid",
+  "q": "Typhoid perforation usually occurs in?",
+  "options": [
+   "Terminal ileum, third week",
+   "Sigmoid colon, first week",
+   "Duodenum, second day",
+   "Stomach, first week"
+  ],
+  "answer": 0,
+  "explanation": "Necrosis of inflamed Peyer's patches leads to bleeding or perforation, classically in the third week.",
+  "difficulty": 2,
+  "ref": "Standard medical microbiology texts",
+  "tags": [
+   "typhoid"
+  ]
+ },
+ {
+  "id": "q047",
+  "topic": "typhoid",
+  "q": "Chronic typhoid carriers harbour bacteria mainly in the?",
+  "options": [
+   "Tonsils",
+   "Urinary bladder",
+   "Appendix",
+   "Gallbladder"
+  ],
+  "answer": 3,
+  "explanation": "Gallstones help S. Typhi persist in the gallbladder, from where it is shed in stool for years.",
+  "difficulty": 1,
+  "ref": "Standard medical microbiology texts",
+  "tags": [
+   "typhoid"
+  ]
+ },
+ {
+  "id": "q048",
+  "topic": "typhoid",
+  "q": "XDR S. Typhi (Pakistan, 2016) is resistant to?",
+  "options": [
+   "No antibiotics",
+   "Azithromycin only",
+   "Fluoroquinolones and ceftriaxone",
+   "Carbapenems only"
+  ],
+  "answer": 2,
+  "explanation": "XDR strains also resist chloramphenicol, ampicillin and co-trimoxazole; azithromycin or a carbapenem is used.",
+  "difficulty": 3,
+  "ref": "WHO XDR Typhoid Alerts",
+  "tags": [
+   "typhoid"
+  ]
+ },
+ {
+  "id": "q049",
+  "topic": "typhoid",
+  "q": "Classic pulse finding in typhoid fever?",
+  "options": [
+   "Pulsus alternans",
+   "Relative bradycardia",
+   "Pulsus paradoxus",
+   "Water-hammer pulse"
+  ],
+  "answer": 1,
+  "explanation": "The pulse is slower than expected for the height of the fever, though this sign is often absent.",
+  "difficulty": 1,
+  "ref": "Standard medical microbiology texts",
+  "tags": [
+   "typhoid"
+  ]
+ },
+ {
+  "id": "q050",
+  "topic": "amoeba",
+  "q": "Infective form of Entamoeba histolytica?",
+  "options": [
+   "Embryonated egg",
+   "Rhabditiform larva",
+   "Trophozoite",
+   "Quadrinucleate cyst"
+  ],
+  "answer": 3,
+  "explanation": "Acid-resistant mature cysts are swallowed in contaminated food or water and excyst in the gut.",
+  "difficulty": 1,
+  "ref": "Standard medical microbiology texts",
+  "tags": [
+   "amoeba"
+  ]
+ },
+ {
+  "id": "q051",
+  "topic": "amoeba",
+  "q": "After metronidazole for amoebic liver abscess, give?",
+  "options": [
+   "Albendazole",
+   "Oral vancomycin",
+   "A luminal agent such as paromomycin",
+   "Nothing further"
+  ],
+  "answer": 2,
+  "explanation": "Metronidazole does not reliably clear gut cysts; a luminal agent (paromomycin or diloxanide furoate) prevents relapse.",
+  "difficulty": 1,
+  "ref": "Standard medical microbiology texts",
+  "tags": [
+   "amoeba"
+  ]
+ },
+ {
+  "id": "q052",
+  "topic": "amoeba",
+  "q": "Stool finding that proves invasive E. histolytica?",
+  "options": [
+   "Thick-shelled eggs",
+   "Pus cells without red cells",
+   "Trophozoites containing red cells",
+   "Curved Gram-negative rods"
+  ],
+  "answer": 2,
+  "explanation": "Erythrophagocytosis distinguishes E. histolytica from the harmless look-alike E. dispar.",
+  "difficulty": 2,
+  "ref": "Standard medical microbiology texts",
+  "tags": [
+   "amoeba"
+  ]
+ },
+ {
+  "id": "q053",
+  "topic": "amoeba",
+  "q": "Typical colonic ulcer of amoebiasis?",
+  "options": [
+   "Cobblestone ulceration",
+   "Longitudinal ulcer",
+   "Transverse girdle ulcer",
+   "Flask-shaped ulcer"
+  ],
+  "answer": 3,
+  "explanation": "A narrow neck opens into a broad base undermining the submucosa; longitudinal ulcers suggest typhoid, girdle ulcers TB.",
+  "difficulty": 1,
+  "ref": "Standard medical microbiology texts",
+  "tags": [
+   "amoeba"
+  ]
+ },
+ {
+  "id": "q054",
+  "topic": "amoeba",
+  "q": "Pus from an amoebic liver abscess is described as?",
+  "options": [
+   "Red-currant jelly",
+   "Rice water",
+   "Pea soup",
+   "Anchovy sauce"
+  ],
+  "answer": 3,
+  "explanation": "It is thick, reddish-brown liquefied liver tissue, usually without many amoebae or bacteria.",
+  "difficulty": 1,
+  "ref": "Standard medical microbiology texts",
+  "tags": [
+   "amoeba"
+  ]
+ },
+ {
+  "id": "q055",
+  "topic": "amoeba",
+  "q": "Commonest site of amoebic liver abscess?",
+  "options": [
+   "Caudate lobe",
+   "Left lobe of the liver",
+   "Right lobe of the liver",
+   "Spleen"
+  ],
+  "answer": 2,
+  "explanation": "Portal blood from the caecum and ascending colon flows mainly to the right lobe.",
+  "difficulty": 2,
+  "ref": "Standard medical microbiology texts",
+  "tags": [
+   "amoeba"
+  ]
+ },
+ {
+  "id": "q056",
+  "topic": "amoeba",
+  "q": "Asymptomatic E. histolytica cyst passer: treatment?",
+  "options": [
+   "Albendazole",
+   "Surgical drainage",
+   "Luminal agent alone",
+   "Metronidazole alone"
+  ],
+  "answer": 2,
+  "explanation": "A luminal agent clears cysts, preventing invasive disease and spread to others.",
+  "difficulty": 2,
+  "ref": "Standard medical microbiology texts",
+  "tags": [
+   "amoeba"
+  ]
+ },
+ {
+  "id": "q057",
+  "topic": "hpylori",
+  "q": "Enzyme that lets H. pylori survive gastric acid?",
+  "options": [
+   "Coagulase",
+   "Urease",
+   "Lipase",
+   "Catalase"
+  ],
+  "answer": 1,
+  "explanation": "Urease splits urea into ammonia, buffering acid around the bacterium.",
+  "difficulty": 1,
+  "ref": "Standard medical microbiology texts",
+  "tags": [
+   "hpylori"
+  ]
+ },
+ {
+  "id": "q058",
+  "topic": "hpylori",
+  "q": "First-line H. pylori therapy where clarithromycin resistance is high?",
+  "options": [
+   "Clarithromycin alone, 7 days",
+   "Bismuth quadruple therapy, 14 days",
+   "PPI alone, 8 weeks",
+   "Amoxicillin alone, 5 days"
+  ],
+  "answer": 1,
+  "explanation": "Maastricht VI and ACG 2024 favour 14-day bismuth quadruple therapy when clarithromycin resistance exceeds 15% or is unknown.",
+  "difficulty": 2,
+  "ref": "Maastricht VI/Florence 2022",
+  "tags": [
+   "hpylori"
+  ]
+ },
+ {
+  "id": "q059",
+  "topic": "hpylori",
+  "q": "Components of bismuth quadruple therapy?",
+  "options": [
+   "PPI + bismuth + azithromycin + ceftriaxone",
+   "PPI + bismuth + tetracycline + metronidazole",
+   "H2 blocker + bismuth + vancomycin + metronidazole",
+   "PPI + amoxicillin + ciprofloxacin + albendazole"
+  ],
+  "answer": 1,
+  "explanation": "Tetracycline, not doxycycline, is the recommended tetracycline in this regimen.",
+  "difficulty": 2,
+  "ref": "ACG H. pylori Guideline 2024",
+  "tags": [
+   "hpylori"
+  ]
+ },
+ {
+  "id": "q060",
+  "topic": "hpylori",
+  "q": "Why is a PPI part of every H. pylori regimen?",
+  "options": [
+   "It raises gastric pH so antibiotics work better",
+   "It replaces the antibiotics",
+   "It blocks antibiotic absorption",
+   "It inhibits urease directly"
+  ],
+  "answer": 0,
+  "explanation": "Higher pH stabilises acid-labile antibiotics and drives H. pylori into a growing, antibiotic-sensitive state.",
+  "difficulty": 2,
+  "ref": "Maastricht VI/Florence 2022",
+  "tags": [
+   "hpylori"
+  ]
+ },
+ {
+  "id": "q061",
+  "topic": "hpylori",
+  "q": "Best non-invasive test to confirm H. pylori cure?",
+  "options": [
+   "Widal test",
+   "Stool culture on TCBS",
+   "IgG serology",
+   "Urea breath test"
+  ],
+  "answer": 3,
+  "explanation": "Test at least 4 weeks after therapy and 2 weeks off PPI; serology stays positive after cure.",
+  "difficulty": 2,
+  "ref": "Maastricht VI/Florence 2022",
+  "tags": [
+   "hpylori"
+  ]
+ },
+ {
+  "id": "q062",
+  "topic": "hpylori",
+  "q": "Which macrolide is used in H. pylori triple therapy?",
+  "options": [
+   "Erythromycin",
+   "Azithromycin",
+   "Fidaxomicin",
+   "Clarithromycin"
+  ],
+  "answer": 3,
+  "explanation": "Clarithromycin is the regimen macrolide; azithromycin is not part of any standard regimen.",
+  "difficulty": 1,
+  "ref": "Maastricht VI/Florence 2022",
+  "tags": [
+   "hpylori"
+  ]
+ },
+ {
+  "id": "q063",
+  "topic": "hpylori",
+  "q": "H. pylori is a risk factor for?",
+  "options": [
+   "Hepatocellular carcinoma",
+   "Gastric cancer and MALT lymphoma",
+   "Colorectal carcinoma",
+   "Oesophageal squamous carcinoma"
+  ],
+  "answer": 1,
+  "explanation": "WHO classes H. pylori as a group 1 carcinogen for gastric adenocarcinoma; it also drives gastric MALT lymphoma.",
+  "difficulty": 1,
+  "ref": "Standard medical microbiology texts",
+  "tags": [
+   "hpylori"
+  ]
+ },
+ {
+  "id": "q064",
+  "topic": "hpylori",
+  "q": "Which H. pylori resistance is especially high in India?",
+  "options": [
+   "Metronidazole",
+   "Amoxicillin",
+   "Bismuth",
+   "Tetracycline"
+  ],
+  "answer": 0,
+  "explanation": "Indian series report very high metronidazole and substantial clarithromycin resistance; amoxicillin and tetracycline resistance remain low.",
+  "difficulty": 3,
+  "ref": "Maastricht VI/Florence 2022",
+  "tags": [
+   "hpylori"
+  ]
+ },
+ {
+  "id": "q065",
+  "topic": "hpylori",
+  "q": "Why does a single antibiotic fail against H. pylori?",
+  "options": [
+   "H. pylori lives only in the colon",
+   "H. pylori is a virus",
+   "Low cure rate and rapid resistance",
+   "No drug reaches the stomach"
+  ],
+  "answer": 2,
+  "explanation": "Monotherapy cures few patients and selects resistant strains, so combination regimens are always used.",
+  "difficulty": 1,
+  "ref": "Maastricht VI/Florence 2022",
+  "tags": [
+   "hpylori"
+  ]
+ },
+ {
+  "id": "q066",
+  "topic": "cdiff",
+  "q": "Preferred drug for a first episode of C. difficile infection?",
+  "options": [
+   "Oral fidaxomicin",
+   "IV ceftriaxone",
+   "Oral metronidazole",
+   "IV vancomycin"
+  ],
+  "answer": 0,
+  "explanation": "Fidaxomicin is preferred, oral vancomycin is acceptable, and metronidazole is used only if neither is available.",
+  "difficulty": 1,
+  "ref": "IDSA/SHEA CDI Update 2021",
+  "tags": [
+   "cdiff"
+  ]
+ },
+ {
+  "id": "q067",
+  "topic": "cdiff",
+  "q": "Why must vancomycin be given orally for C. difficile?",
+  "options": [
+   "Oral is simply cheaper",
+   "IV vancomycin does not reach the colon lumen",
+   "Oral vancomycin is well absorbed",
+   "IV vancomycin causes C. difficile"
+  ],
+  "answer": 1,
+  "explanation": "Oral vancomycin is not absorbed, so it reaches high levels exactly where C. difficile lives.",
+  "difficulty": 1,
+  "ref": "IDSA/SHEA CDI Update 2021",
+  "tags": [
+   "cdiff"
+  ]
+ },
+ {
+  "id": "q068",
+  "topic": "cdiff",
+  "q": "Antibiotic classically linked to C. difficile colitis?",
+  "options": [
+   "Doxycycline",
+   "Albendazole",
+   "Clindamycin",
+   "Nitrofurantoin"
+  ],
+  "answer": 2,
+  "explanation": "Clindamycin, fluoroquinolones, cephalosporins and carbapenems carry the highest risk.",
+  "difficulty": 1,
+  "ref": "IDSA/SHEA CDI Update 2021",
+  "tags": [
+   "cdiff"
+  ]
+ },
+ {
+  "id": "q069",
+  "topic": "cdiff",
+  "q": "C. difficile toxins A and B act by?",
+  "options": [
+   "Cleaving ribosomal RNA",
+   "Cleaving SNARE proteins",
+   "Glucosylating Rho GTPases",
+   "Raising cAMP"
+  ],
+  "answer": 2,
+  "explanation": "Inactivating Rho proteins collapses the actin cytoskeleton, opens tight junctions and kills colonocytes.",
+  "difficulty": 3,
+  "ref": "Standard medical microbiology texts",
+  "tags": [
+   "cdiff"
+  ]
+ },
+ {
+  "id": "q070",
+  "topic": "cdiff",
+  "q": "Hand hygiene during a C. difficile outbreak?",
+  "options": [
+   "Soap and water; alcohol does not kill spores",
+   "Alcohol rub alone",
+   "Chlorhexidine mouthwash",
+   "No special measures"
+  ],
+  "answer": 0,
+  "explanation": "Spores survive alcohol; washing removes them mechanically, alongside gloves and gowns.",
+  "difficulty": 2,
+  "ref": "IDSA/SHEA CDI Update 2021",
+  "tags": [
+   "cdiff"
+  ]
+ },
+ {
+  "id": "q071",
+  "topic": "cdiff",
+  "q": "Endoscopic hallmark of C. difficile colitis?",
+  "options": [
+   "Cobblestoning",
+   "Pseudomembranes",
+   "Melanosis coli",
+   "Flask-shaped ulcers"
+  ],
+  "answer": 1,
+  "explanation": "Yellow-white plaques of fibrin, mucus and dead cells stud the inflamed colonic mucosa.",
+  "difficulty": 1,
+  "ref": "Standard medical microbiology texts",
+  "tags": [
+   "cdiff"
+  ]
+ },
+ {
+  "id": "q072",
+  "topic": "cdiff",
+  "q": "Recommended for multiple recurrences of C. difficile?",
+  "options": [
+   "Loperamide",
+   "Faecal microbiota transplantation",
+   "Oral fluconazole",
+   "Long-term ciprofloxacin"
+  ],
+  "answer": 1,
+  "explanation": "Restoring a healthy microbiota prevents further recurrences after appropriate antibiotic treatment.",
+  "difficulty": 2,
+  "ref": "IDSA/SHEA CDI Update 2021",
+  "tags": [
+   "cdiff"
+  ]
+ },
+ {
+  "id": "q073",
+  "topic": "cdiff",
+  "q": "Why does fidaxomicin cause fewer recurrences than vancomycin?",
+  "options": [
+   "Its narrow spectrum spares normal flora",
+   "It kills spores in the soil",
+   "It is a live probiotic",
+   "It is given intravenously"
+  ],
+  "answer": 0,
+  "explanation": "Sparing Bacteroides and other anaerobes preserves colonisation resistance.",
+  "difficulty": 3,
+  "ref": "IDSA/SHEA CDI Update 2021",
+  "tags": [
+   "cdiff"
+  ]
+ },
+ {
+  "id": "q074",
+  "topic": "candida_flora",
+  "q": "Candida grown from stool after antibiotics in a well adult usually means?",
+  "options": [
+   "Invasive candidiasis needing an echinocandin",
+   "Fungal dysentery",
+   "Fluconazole for 14 days",
+   "Colonisation; no antifungal needed"
+  ],
+  "answer": 3,
+  "explanation": "Gut Candida after antibiotics is colonisation; antifungals treat thrush, oesophagitis or invasive disease.",
+  "difficulty": 2,
+  "ref": "IDSA Candidiasis Guideline 2016",
+  "tags": [
+   "candida",
+   "cdiff"
+  ]
+ },
+ {
+  "id": "q075",
+  "topic": "candida_flora",
+  "q": "Colonisation resistance means?",
+  "options": [
+   "Normal flora stop pathogens settling",
+   "Pathogens resist antibiotics",
+   "Flora resist bile salts",
+   "IgA resists acid"
+  ],
+  "answer": 0,
+  "explanation": "Resident microbes compete for space and nutrients and make inhibitory substances.",
+  "difficulty": 1,
+  "ref": "Standard medical microbiology texts",
+  "tags": [
+   "candida",
+   "cdiff"
+  ]
+ },
+ {
+  "id": "q076",
+  "topic": "candida_flora",
+  "q": "Short-chain fatty acid that feeds colonocytes?",
+  "options": [
+   "Lactate",
+   "Urea",
+   "Oxalate",
+   "Butyrate"
+  ],
+  "answer": 3,
+  "explanation": "Flora ferment fibre into butyrate, the main fuel of colonic epithelial cells.",
+  "difficulty": 2,
+  "ref": "Standard physiology texts",
+  "tags": [
+   "candida",
+   "cdiff"
+  ]
+ },
+ {
+  "id": "q077",
+  "topic": "candida_flora",
+  "q": "First-line drug for candidaemia (IDSA 2016)?",
+  "options": [
+   "Oral nystatin",
+   "Metronidazole",
+   "Albendazole",
+   "An echinocandin"
+  ],
+  "answer": 3,
+  "explanation": "Echinocandins (e.g. caspofungin, micafungin) are first-line; fluconazole is a step-down option.",
+  "difficulty": 2,
+  "ref": "IDSA Candidiasis Guideline 2016",
+  "tags": [
+   "candida",
+   "cdiff"
+  ]
+ },
+ {
+  "id": "q078",
+  "topic": "candida_flora",
+  "q": "A genuine indication for fluconazole in the GI tract?",
+  "options": [
+   "Candida in stool after antibiotics",
+   "Rotavirus diarrhoea",
+   "Oesophageal candidiasis",
+   "Amoebic colitis"
+  ],
+  "answer": 2,
+  "explanation": "Oesophageal candidiasis, usually in immunosuppressed patients, needs systemic fluconazole.",
+  "difficulty": 2,
+  "ref": "IDSA Candidiasis Guideline 2016",
+  "tags": [
+   "candida",
+   "cdiff"
+  ]
+ },
+ {
+  "id": "q079",
+  "topic": "candida_flora",
+  "q": "Mild oral thrush in an infant: usual treatment?",
+  "options": [
+   "Topical nystatin suspension",
+   "Albendazole",
+   "Oral metronidazole",
+   "IV amphotericin B"
+  ],
+  "answer": 0,
+  "explanation": "Mild oral candidiasis responds to a topical antifungal; systemic drugs are kept for severe, oesophageal or invasive disease.",
+  "difficulty": 1,
+  "ref": "IDSA Candidiasis Guideline 2016",
+  "tags": [
+   "candida",
+   "cdiff"
+  ]
+ },
+ {
+  "id": "q080",
+  "topic": "worms",
+  "q": "Albendazole dose for a 1-2-year-old on National Deworming Day?",
+  "options": [
+   "100 mg once",
+   "200 mg once",
+   "400 mg once",
+   "800 mg once"
+  ],
+  "answer": 1,
+  "explanation": "Children aged 1-2 years get half a tablet (200 mg); ages 2-19 get 400 mg.",
+  "difficulty": 1,
+  "ref": "National Deworming Day Guidelines (MoHFW)",
+  "tags": [
+   "worm"
+  ]
+ },
+ {
+  "id": "q081",
+  "topic": "worms",
+  "q": "National Deworming Day rounds are held on?",
+  "options": [
+   "29 July and 2 October",
+   "1 January and 1 July",
+   "7 April only",
+   "10 February and 10 August"
+  ],
+  "answer": 3,
+  "explanation": "Two rounds a year through schools and anganwadis, each with a mop-up day.",
+  "difficulty": 1,
+  "ref": "National Deworming Day Guidelines (MoHFW)",
+  "tags": [
+   "worm"
+  ]
+ },
+ {
+  "id": "q082",
+  "topic": "worms",
+  "q": "Albendazole kills worms by?",
+  "options": [
+   "Opening GABA-gated chloride channels",
+   "Inhibiting cell wall synthesis",
+   "Depolarising neuromuscular block",
+   "Binding beta-tubulin, blocking microtubules"
+  ],
+  "answer": 3,
+  "explanation": "Without microtubules the worm cannot take up glucose and dies slowly.",
+  "difficulty": 2,
+  "ref": "Standard pharmacology texts",
+  "tags": [
+   "worm"
+  ]
+ },
+ {
+  "id": "q083",
+  "topic": "worms",
+  "q": "Ascaris larvae migrating through the lungs cause?",
+  "options": [
+   "Cavitary tuberculosis",
+   "Loeffler syndrome",
+   "Lobar pneumonia",
+   "Pleural mesothelioma"
+  ],
+  "answer": 1,
+  "explanation": "Transient cough, wheeze and lung infiltrates with blood eosinophilia.",
+  "difficulty": 2,
+  "ref": "Standard medical microbiology texts",
+  "tags": [
+   "worm"
+  ]
+ },
+ {
+  "id": "q084",
+  "topic": "worms",
+  "q": "Target age group of National Deworming Day?",
+  "options": [
+   "1-19 years",
+   "All adults",
+   "6-14 only",
+   "Under 5 only"
+  ],
+  "answer": 0,
+  "explanation": "All children and adolescents aged 1-19 are dewormed without stool testing.",
+  "difficulty": 1,
+  "ref": "National Deworming Day Guidelines (MoHFW)",
+  "tags": [
+   "worm"
+  ]
+ },
+ {
+  "id": "q085",
+  "topic": "worms",
+  "q": "Albendazole is avoided in?",
+  "options": [
+   "Children with anaemia",
+   "Adolescent girls",
+   "First trimester of pregnancy",
+   "School-age children"
+  ],
+  "answer": 2,
+  "explanation": "It is teratogenic in animals; deworming in pregnancy is done after the first trimester.",
+  "difficulty": 2,
+  "ref": "Standard pharmacology texts",
+  "tags": [
+   "worm"
+  ]
+ },
+ {
+  "id": "q086",
+  "topic": "vaccines",
+  "q": "Efficacy of typhoid conjugate vaccine in the Nepal trial?",
+  "options": [
+   "100% for life",
+   "About 80%",
+   "About 20%",
+   "About 50% for 6 months"
+  ],
+  "answer": 1,
+  "explanation": "Typbar-TCV gave 81.6% protection in Nepali children; protection lasts years but is not complete.",
+  "difficulty": 2,
+  "ref": "Shakya et al., NEJM 2019",
+  "tags": []
+ },
+ {
+  "id": "q087",
+  "topic": "vaccines",
+  "q": "Minimum age for typhoid conjugate vaccine?",
+  "options": [
+   "5 years",
+   "2 years",
+   "At birth",
+   "6 months"
+  ],
+  "answer": 3,
+  "explanation": "TCV works from 6 months as a single dose; the Vi polysaccharide vaccine is used only from 2 years.",
+  "difficulty": 1,
+  "ref": "WHO Typhoid Vaccine Position 2018",
+  "tags": []
+ },
+ {
+  "id": "q088",
+  "topic": "vaccines",
+  "q": "Schedule of killed oral cholera vaccine?",
+  "options": [
+   "Two oral doses 14 days apart",
+   "Three doses at 6, 10, 14 weeks",
+   "Yearly injection",
+   "One injection"
+  ],
+  "answer": 0,
+  "explanation": "It is used in outbreaks and high-risk areas from 1 year of age.",
+  "difficulty": 1,
+  "ref": "GTFCC Cholera Guidance 2018",
+  "tags": []
+ },
+ {
+  "id": "q089",
+  "topic": "vaccines",
+  "q": "Protection from killed oral cholera vaccine over 5 years in Kolkata?",
+  "options": [
+   "About 65%",
+   "About 10%",
+   "About 95%",
+   "About 100%"
+  ],
+  "answer": 0,
+  "explanation": "Partial protection, in addition to herd effects at high coverage.",
+  "difficulty": 2,
+  "ref": "Bhattacharya et al., Lancet ID 2013",
+  "tags": []
+ },
+ {
+  "id": "q090",
+  "topic": "vaccines",
+  "q": "Herd protection means?",
+  "options": [
+   "Antibodies pass through water",
+   "Animals protect humans",
+   "Unvaccinated people are shielded at high coverage",
+   "Vaccinated people never get infected"
+  ],
+  "answer": 2,
+  "explanation": "Fewer infected people means less transmission, which protects those who are not vaccinated.",
+  "difficulty": 1,
+  "ref": "Standard immunology texts",
+  "tags": []
+ },
+ {
+  "id": "q091",
+  "topic": "vaccines",
+  "q": "Why can a vaccinated child still get rotavirus diarrhoea?",
+  "options": [
+   "Rotavirus is a bacterium",
+   "ORS cancels the vaccine",
+   "Protection is partial and wanes",
+   "The vaccine causes the disease"
+  ],
+  "answer": 2,
+  "explanation": "Rotavirus vaccines prevent about half of severe disease in India; breakthrough illness is usually milder.",
+  "difficulty": 1,
+  "ref": "Bhandari et al., Lancet 2014",
+  "tags": []
+ },
+ {
+  "id": "q092",
+  "topic": "vaccines",
+  "q": "Unlike typhoid conjugate vaccine, the Vi polysaccharide vaccine is?",
+  "options": [
+   "Lifelong after one dose",
+   "Given at birth",
+   "A live oral vaccine",
+   "Poorly immunogenic under 2 years"
+  ],
+  "answer": 3,
+  "explanation": "Plain polysaccharides trigger T-independent responses that infants make poorly; conjugation recruits T-cell help.",
+  "difficulty": 2,
+  "ref": "Standard immunology texts",
+  "tags": []
+ },
+ {
+  "id": "q093",
+  "topic": "resistance_stewardship",
+  "q": "WHO AWaRe group of ceftriaxone, azithromycin and ciprofloxacin?",
+  "options": [
+   "Access",
+   "Reserve",
+   "Unclassified",
+   "Watch"
+  ],
+  "answer": 3,
+  "explanation": "Watch antibiotics carry higher resistance potential and should be used for specific indications.",
+  "difficulty": 2,
+  "ref": "WHO AWaRe Classification 2023",
+  "tags": []
+ },
+ {
+  "id": "q094",
+  "topic": "resistance_stewardship",
+  "q": "WHO AWaRe group of doxycycline and metronidazole?",
+  "options": [
+   "Reserve",
+   "Banned",
+   "Watch",
+   "Access"
+  ],
+  "answer": 3,
+  "explanation": "Access antibiotics are first- or second-choice drugs with lower resistance potential.",
+  "difficulty": 2,
+  "ref": "WHO AWaRe Classification 2023",
+  "tags": []
+ },
+ {
+  "id": "q095",
+  "topic": "resistance_stewardship",
+  "q": "The red vertical line on some Indian medicine packs means?",
+  "options": [
+   "Sold over the counter",
+   "Safe for children",
+   "Prescription-only; never take without a doctor",
+   "The pack has expired"
+  ],
+  "answer": 2,
+  "explanation": "The Red Line campaign marks prescription-only antibiotics and other Schedule H/H1 drugs.",
+  "difficulty": 1,
+  "ref": "MoHFW Red Line Campaign 2016",
+  "tags": []
+ },
+ {
+  "id": "q096",
+  "topic": "resistance_stewardship",
+  "q": "India's first National Action Plan on AMR was launched in?",
+  "options": [
+   "2023",
+   "2001",
+   "2010",
+   "2017"
+  ],
+  "answer": 3,
+  "explanation": "NAP-AMR (2017) follows a One Health approach across human, animal and environmental sectors.",
+  "difficulty": 3,
+  "ref": "NAP-AMR, Government of India 2017",
+  "tags": []
+ },
+ {
+  "id": "q097",
+  "topic": "resistance_stewardship",
+  "q": "ESBL-producing E. coli are resistant to?",
+  "options": [
+   "Only metronidazole",
+   "Only vancomycin",
+   "Third-generation cephalosporins",
+   "Only antifungals"
+  ],
+  "answer": 2,
+  "explanation": "Extended-spectrum beta-lactamases hydrolyse ceftriaxone and similar drugs; carbapenems usually still work.",
+  "difficulty": 2,
+  "ref": "Standard medical microbiology texts",
+  "tags": []
+ },
+ {
+  "id": "q098",
+  "topic": "resistance_stewardship",
+  "q": "Acute watery diarrhoea in a child, no blood, no cholera suspected. Antibiotic?",
+  "options": [
+   "None needed",
+   "Metronidazole",
+   "Co-trimoxazole",
+   "Ciprofloxacin"
+  ],
+  "answer": 0,
+  "explanation": "Antibiotics are reserved for bloody diarrhoea and suspected cholera with severe dehydration.",
+  "difficulty": 1,
+  "ref": "WHO Treatment of Diarrhoea 2005",
+  "tags": []
+ },
+ {
+  "id": "q099",
+  "topic": "resistance_stewardship",
+  "q": "Why does an antibiotic given for viral diarrhoea promote resistance?",
+  "options": [
+   "It inactivates ORS",
+   "It kills susceptible gut bacteria, leaving resistant ones",
+   "It mutates the patient's DNA",
+   "It makes the virus resistant"
+  ],
+  "answer": 1,
+  "explanation": "Selection pressure lets resistant strains multiply and share resistance genes.",
+  "difficulty": 1,
+  "ref": "Standard medical microbiology texts",
+  "tags": []
+ },
+ {
+  "id": "q100",
+  "topic": "resistance_stewardship",
+  "q": "NDM-1, first described in 2008, is a?",
+  "options": [
+   "Carbapenemase",
+   "Penicillin-binding protein",
+   "Bacterial toxin",
+   "Vaccine antigen"
+  ],
+  "answer": 0,
+  "explanation": "New Delhi metallo-beta-lactamase destroys carbapenems and spreads on plasmids.",
+  "difficulty": 2,
+  "ref": "Standard medical microbiology texts",
+  "tags": []
+ },
+ {
+  "id": "q101",
+  "topic": "resistance_stewardship",
+  "q": "Best basis for choosing an antibiotic for enteric fever?",
+  "options": [
+   "The broadest spectrum available",
+   "Blood culture and local susceptibility data",
+   "Whatever worked last year",
+   "The patient's preference"
+  ],
+  "answer": 1,
+  "explanation": "Culture-guided, locally informed choices are the core of stewardship.",
+  "difficulty": 1,
+  "ref": "ICMR Antimicrobial Treatment Guidelines",
+  "tags": []
+ },
+ {
+  "id": "q102",
+  "topic": "immunology",
+  "q": "Main antibody class in gut secretions?",
+  "options": [
+   "IgD",
+   "IgM",
+   "IgE",
+   "Secretory IgA"
+  ],
+  "answer": 3,
+  "explanation": "Dimeric IgA is the most abundant antibody at mucosal surfaces.",
+  "difficulty": 1,
+  "ref": "Standard immunology texts",
+  "tags": []
+ },
+ {
+  "id": "q103",
+  "topic": "immunology",
+  "q": "Secretory component of IgA comes from?",
+  "options": [
+   "Complement C3",
+   "J chain from plasma cells",
+   "Epithelial polymeric Ig receptor",
+   "Mast cell granules"
+  ],
+  "answer": 2,
+  "explanation": "pIgR carries dimeric IgA across the epithelium; part of it stays attached and protects IgA from proteases.",
+  "difficulty": 3,
+  "ref": "Standard immunology texts",
+  "tags": []
+ },
+ {
+  "id": "q104",
+  "topic": "immunology",
+  "q": "Cells that sample gut antigens over Peyer's patches?",
+  "options": [
+   "Paneth cells",
+   "Chief cells",
+   "M (microfold) cells",
+   "Goblet cells"
+  ],
+  "answer": 2,
+  "explanation": "M cells pass antigens to underlying dendritic cells and lymphocytes; S. Typhi and Shigella exploit them.",
+  "difficulty": 1,
+  "ref": "Standard immunology texts",
+  "tags": []
+ },
+ {
+  "id": "q105",
+  "topic": "immunology",
+  "q": "Macrophages kill intracellular S. Typhi after activation by?",
+  "options": [
+   "Interferon-gamma from Th1 cells",
+   "IgE antibodies",
+   "IL-4 from Th2 cells",
+   "Histamine from mast cells"
+  ],
+  "answer": 0,
+  "explanation": "IFN-gamma switches on macrophage killing mechanisms such as nitric oxide and phagolysosome fusion.",
+  "difficulty": 2,
+  "ref": "Standard immunology texts",
+  "tags": []
+ },
+ {
+  "id": "q106",
+  "topic": "immunology",
+  "q": "Kupffer cells are?",
+  "options": [
+   "Resident macrophages of the liver",
+   "Hepatic stellate cells",
+   "Splenic neutrophils",
+   "Peyer's patch lymphocytes"
+  ],
+  "answer": 0,
+  "explanation": "They line the sinusoids and filter bacteria arriving in portal blood from the gut.",
+  "difficulty": 1,
+  "ref": "Standard immunology texts",
+  "tags": []
+ },
+ {
+  "id": "q107",
+  "topic": "immunology",
+  "q": "Compared with the primary response, a secondary (memory) response is?",
+  "options": [
+   "Weaker and shorter",
+   "Exactly the same",
+   "Slower and mainly IgM",
+   "Faster, larger and higher-affinity"
+  ],
+  "answer": 3,
+  "explanation": "Memory B and T cells respond quickly with class-switched, affinity-matured antibody.",
+  "difficulty": 1,
+  "ref": "Standard immunology texts",
+  "tags": []
+ },
+ {
+  "id": "q108",
+  "topic": "immunology",
+  "q": "Hallmark white cell in bacillary dysentery stool?",
+  "options": [
+   "Neutrophils",
+   "Plasma cells",
+   "Basophils",
+   "Eosinophils"
+  ],
+  "answer": 0,
+  "explanation": "IL-1 beta and IL-8 from infected tissue recruit masses of neutrophils into the colon.",
+  "difficulty": 1,
+  "ref": "Standard immunology texts",
+  "tags": []
+ },
+ {
+  "id": "q109",
+  "topic": "immunology",
+  "q": "Cytokine that drives B-cell switching to IgA in the gut?",
+  "options": [
+   "IL-2",
+   "TGF-beta",
+   "IFN-gamma",
+   "IL-4"
+  ],
+  "answer": 1,
+  "explanation": "TGF-beta (with retinoic acid and APRIL/BAFF) favours IgA class switching in gut-associated lymphoid tissue.",
+  "difficulty": 3,
+  "ref": "Standard immunology texts",
+  "tags": []
+ },
+ {
+  "id": "q110",
+  "topic": "immunology",
+  "q": "Blood eosinophilia is most typical of?",
+  "options": [
+   "Typhoid",
+   "Cholera",
+   "Rotavirus",
+   "Helminth infection"
+  ],
+  "answer": 3,
+  "explanation": "Th2 responses to worms (IL-5) raise eosinophils, especially during larval migration.",
+  "difficulty": 1,
+  "ref": "Standard immunology texts",
+  "tags": []
+ },
+ {
+  "id": "q111",
+  "topic": "gut_defences",
+  "q": "Normal fasting gastric pH?",
+  "options": [
+   "About 7",
+   "About 9",
+   "About 5",
+   "About 1-2"
+  ],
+  "answer": 3,
+  "explanation": "This acidity kills most swallowed microbes; acid-sensitive germs such as Vibrio cholerae suffer most.",
+  "difficulty": 1,
+  "ref": "Standard physiology texts",
+  "tags": []
+ },
+ {
+  "id": "q112",
+  "topic": "gut_defences",
+  "q": "Long-term PPI use raises the risk of?",
+  "options": [
+   "Peptic ulcer",
+   "Dental caries",
+   "C. difficile and other enteric infections",
+   "Rotavirus vaccine failure"
+  ],
+  "answer": 2,
+  "explanation": "Less acid lets more swallowed pathogens survive; PPIs are a recognised risk factor for C. difficile.",
+  "difficulty": 2,
+  "ref": "IDSA/SHEA CDI Update 2021",
+  "tags": []
+ },
+ {
+  "id": "q113",
+  "topic": "gut_defences",
+  "q": "Normal peristalsis moves gut contents?",
+  "options": [
+   "Only during sleep",
+   "Into the portal vein",
+   "Towards the mouth",
+   "Towards the anus (aborally)"
+  ],
+  "answer": 3,
+  "explanation": "Propulsion flushes microbes downstream and out of the body.",
+  "difficulty": 1,
+  "ref": "Standard physiology texts",
+  "tags": []
+ },
+ {
+  "id": "q114",
+  "topic": "gut_defences",
+  "q": "Role of the migrating motor complex?",
+  "options": [
+   "Secretes gastric acid",
+   "Sweeps the fasting small intestine clean",
+   "Makes secretory IgA",
+   "Absorbs vitamin B12"
+  ],
+  "answer": 1,
+  "explanation": "This 'housekeeper' wave limits small-intestinal bacterial overgrowth between meals.",
+  "difficulty": 2,
+  "ref": "Standard physiology texts",
+  "tags": []
+ },
+ {
+  "id": "q115",
+  "topic": "gut_defences",
+  "q": "Proteins that seal epithelial tight junctions?",
+  "options": [
+   "Albumin and globulin",
+   "Keratin and collagen",
+   "Actin and myosin only",
+   "Claudins and occludin"
+  ],
+  "answer": 3,
+  "explanation": "Tight junctions block leakage between cells; several enteric toxins pry them open.",
+  "difficulty": 2,
+  "ref": "Standard physiology texts",
+  "tags": []
+ },
+ {
+  "id": "q116",
+  "topic": "gut_defences",
+  "q": "The intestinal mucus layer is made mainly by?",
+  "options": [
+   "Parietal cells",
+   "Goblet cells",
+   "Enterochromaffin cells",
+   "Kupffer cells"
+  ],
+  "answer": 1,
+  "explanation": "Goblet cells secrete MUC2 mucin, which keeps bacteria away from the epithelium.",
+  "difficulty": 1,
+  "ref": "Standard physiology texts",
+  "tags": []
+ },
+ {
+  "id": "q117",
+  "topic": "gut_defences",
+  "q": "Paneth cells secrete?",
+  "options": [
+   "Alpha-defensins and lysozyme",
+   "Intrinsic factor",
+   "Gastrin",
+   "Pepsinogen"
+  ],
+  "answer": 0,
+  "explanation": "Paneth cells sit at the base of small-intestinal crypts and release antimicrobial peptides.",
+  "difficulty": 1,
+  "ref": "Standard immunology texts",
+  "tags": []
+ },
+ {
+  "id": "q118",
+  "topic": "gut_defences",
+  "q": "Why do spores, cysts and worm eggs get past the stomach?",
+  "options": [
+   "They dissolve in bile",
+   "They resist gastric acid",
+   "They are absorbed in the mouth",
+   "They are too small to meet acid"
+  ],
+  "answer": 1,
+  "explanation": "Tough outer walls let C. difficile spores, amoebic cysts and Ascaris eggs survive acid.",
+  "difficulty": 1,
+  "ref": "Standard medical microbiology texts",
+  "tags": []
+ },
+ {
+  "id": "q119",
+  "topic": "loperamide",
+  "q": "Mechanism of loperamide?",
+  "options": [
+   "Dopamine D2 antagonist",
+   "Enkephalinase inhibitor",
+   "Peripheral mu-opioid agonist slowing transit",
+   "5-HT3 receptor antagonist"
+  ],
+  "answer": 2,
+  "explanation": "It slows gut movement and increases absorption time; racecadotril is the enkephalinase inhibitor.",
+  "difficulty": 1,
+  "ref": "Standard pharmacology texts",
+  "tags": [
+   "shigella",
+   "amoeba",
+   "cdiff"
+  ]
+ },
+ {
+  "id": "q120",
+  "topic": "loperamide",
+  "q": "Loperamide should be avoided in?",
+  "options": [
+   "Mild traveller's diarrhoea in an adult",
+   "Diarrhoea-predominant IBS",
+   "Bloody diarrhoea with fever",
+   "Chronic functional diarrhoea"
+  ],
+  "answer": 2,
+  "explanation": "Slowing the gut in dysentery keeps invasive germs and toxins in contact with the colon.",
+  "difficulty": 1,
+  "ref": "IDSA Infectious Diarrhoea Guideline 2017",
+  "tags": [
+   "shigella",
+   "amoeba",
+   "cdiff"
+  ]
+ },
+ {
+  "id": "q121",
+  "topic": "loperamide",
+  "q": "Why are antimotility drugs not given to young children with diarrhoea?",
+  "options": [
+   "Risk of ileus and sedation, no benefit",
+   "They stain the teeth",
+   "They inactivate vaccines",
+   "They spoil the taste of ORS"
+  ],
+  "answer": 0,
+  "explanation": "WHO advises against antidiarrhoeal drugs in children; deaths from ileus and CNS depression have occurred.",
+  "difficulty": 1,
+  "ref": "WHO Treatment of Diarrhoea 2005",
+  "tags": [
+   "shigella",
+   "amoeba",
+   "cdiff"
+  ]
+ },
+ {
+  "id": "q122",
+  "topic": "loperamide",
+  "q": "Loperamide in Shiga toxin-producing E. coli infection may increase?",
+  "options": [
+   "Peptic ulceration",
+   "Hypoglycaemia",
+   "Haemolytic uraemic syndrome",
+   "Stevens-Johnson syndrome"
+  ],
+  "answer": 2,
+  "explanation": "Longer toxin exposure is linked to HUS; antimotility drugs and antibiotics are avoided in STEC.",
+  "difficulty": 2,
+  "ref": "IDSA Infectious Diarrhoea Guideline 2017",
+  "tags": [
+   "shigella",
+   "amoeba",
+   "cdiff"
+  ]
+ },
+ {
+  "id": "q123",
+  "topic": "loperamide",
+  "q": "Why does loperamide cause few CNS effects at normal doses?",
+  "options": [
+   "P-glycoprotein pumps it out of the brain",
+   "It is fully destroyed in the stomach",
+   "It is given only intravenously",
+   "It is not an opioid"
+  ],
+  "answer": 0,
+  "explanation": "Efflux at the blood-brain barrier keeps it peripheral; massive overdoses cause QT prolongation and arrhythmias.",
+  "difficulty": 3,
+  "ref": "Standard pharmacology texts",
+  "tags": [
+   "shigella",
+   "amoeba",
+   "cdiff"
+  ]
+ },
+ {
+  "id": "q124",
+  "topic": "pharmacology_general",
+  "q": "Ceftriaxone acts by?",
+  "options": [
+   "Forming DNA-damaging radicals",
+   "Inhibiting cell-wall cross-linking (PBPs)",
+   "Inhibiting DNA gyrase",
+   "Blocking the 50S ribosome"
+  ],
+  "answer": 1,
+  "explanation": "Beta-lactams bind penicillin-binding proteins and block peptidoglycan transpeptidation.",
+  "difficulty": 1,
+  "ref": "Standard pharmacology texts",
+  "tags": []
+ },
+ {
+  "id": "q125",
+  "topic": "pharmacology_general",
+  "q": "Azithromycin binds?",
+  "options": [
+   "The 30S ribosomal subunit",
+   "Penicillin-binding proteins",
+   "The 50S ribosomal subunit",
+   "DNA gyrase"
+  ],
+  "answer": 2,
+  "explanation": "Macrolides block the exit tunnel and translocation, stopping protein synthesis.",
+  "difficulty": 1,
+  "ref": "Standard pharmacology texts",
+  "tags": []
+ },
+ {
+  "id": "q126",
+  "topic": "pharmacology_general",
+  "q": "Target of ciprofloxacin?",
+  "options": [
+   "DNA gyrase and topoisomerase IV",
+   "Fungal cell membrane ergosterol",
+   "The 50S ribosome",
+   "Dihydrofolate reductase"
+  ],
+  "answer": 0,
+  "explanation": "Fluoroquinolones trap these enzymes on DNA, causing lethal double-strand breaks.",
+  "difficulty": 1,
+  "ref": "Standard pharmacology texts",
+  "tags": []
+ },
+ {
+  "id": "q127",
+  "topic": "pharmacology_general",
+  "q": "Which drug causes a disulfiram-like reaction with alcohol?",
+  "options": [
+   "Metronidazole",
+   "Doxycycline",
+   "Albendazole",
+   "Azithromycin"
+  ],
+  "answer": 0,
+  "explanation": "Flushing, vomiting and palpitations can follow alcohol; patients are told to avoid it during treatment.",
+  "difficulty": 1,
+  "ref": "Standard pharmacology texts",
+  "tags": []
+ },
+ {
+  "id": "q128",
+  "topic": "pharmacology_general",
+  "q": "Doxycycline is swallowed upright with a full glass of water to prevent?",
+  "options": [
+   "Ototoxicity",
+   "Pill oesophagitis",
+   "Red man syndrome",
+   "Disulfiram reaction"
+  ],
+  "answer": 1,
+  "explanation": "Tablets lodged in the oesophagus cause painful ulcers.",
+  "difficulty": 2,
+  "ref": "Standard pharmacology texts",
+  "tags": []
+ },
+ {
+  "id": "q129",
+  "topic": "pharmacology_general",
+  "q": "Ceftriaxone can cause biliary sludge because it?",
+  "options": [
+   "Is excreted in bile and precipitates with calcium",
+   "Blocks bile acid synthesis",
+   "Is a strong opioid",
+   "Is a prodrug of bilirubin"
+  ],
+  "answer": 0,
+  "explanation": "The 'pseudolithiasis' usually resolves after stopping the drug.",
+  "difficulty": 3,
+  "ref": "Standard pharmacology texts",
+  "tags": []
+ },
+ {
+  "id": "q130",
+  "topic": "pharmacology_general",
+  "q": "Class warning for fluoroquinolones?",
+  "options": [
+   "Red man syndrome",
+   "Disulfiram reaction",
+   "Grey baby syndrome",
+   "Tendinitis and tendon rupture"
+  ],
+  "answer": 3,
+  "explanation": "Risk rises with age and corticosteroids; QT prolongation and dysglycaemia are other concerns.",
+  "difficulty": 1,
+  "ref": "Standard pharmacology texts",
+  "tags": []
+ },
+ {
+  "id": "q131",
+  "topic": "pharmacology_general",
+  "q": "How is metronidazole activated inside anaerobes and protozoa?",
+  "options": [
+   "Hydrolysis by gut esterases",
+   "Reduction of its nitro group to radicals",
+   "Acetylation in the liver",
+   "Binding to penicillin-binding proteins"
+  ],
+  "answer": 1,
+  "explanation": "Low-redox organisms reduce it to toxic radicals that break their DNA; aerobic bacteria do not.",
+  "difficulty": 2,
+  "ref": "Standard pharmacology texts",
+  "tags": []
+ },
+ {
+  "id": "q132",
+  "topic": "pharmacology_general",
+  "q": "Azithromycin's long tissue half-life allows?",
+  "options": [
+   "Short courses or single doses",
+   "No dose adjustment ever",
+   "Use only by injection",
+   "Hourly dosing only"
+  ],
+  "answer": 0,
+  "explanation": "High intracellular levels persist for days, so 1-5 day courses are common.",
+  "difficulty": 1,
+  "ref": "Standard pharmacology texts",
+  "tags": []
+ },
+ {
+  "id": "q133",
+  "topic": "pharmacology_general",
+  "q": "Paromomycin is?",
+  "options": [
+   "An azole antifungal",
+   "A macrolide",
+   "A nitroimidazole",
+   "A poorly absorbed aminoglycoside"
+  ],
+  "answer": 3,
+  "explanation": "It stays in the gut lumen and kills amoebic cysts and trophozoites there.",
+  "difficulty": 2,
+  "ref": "Standard pharmacology texts",
+  "tags": []
+ },
+ {
+  "id": "q134",
+  "topic": "pharmacology_general",
+  "q": "Fidaxomicin inhibits?",
+  "options": [
+   "Cell wall synthesis",
+   "DNA gyrase",
+   "Bacterial RNA polymerase",
+   "Folate synthesis"
+  ],
+  "answer": 2,
+  "explanation": "This narrow-spectrum macrocycle is barely absorbed and acts in the colon.",
+  "difficulty": 3,
+  "ref": "Standard pharmacology texts",
+  "tags": []
+ },
+ {
+  "id": "q135",
+  "topic": "pharmacology_general",
+  "q": "Racecadotril reduces stool output by?",
+  "options": [
+   "Killing enterotoxigenic bacteria",
+   "Binding water like a bulking agent",
+   "Blocking mu-opioid receptors in the brain",
+   "Inhibiting enkephalinase (antisecretory)"
+  ],
+  "answer": 3,
+  "explanation": "Protected enkephalins cut intestinal secretion without slowing transit; it is only an adjunct and never replaces ORS.",
+  "difficulty": 2,
+  "ref": "Standard pharmacology texts",
+  "tags": []
+ },
+ {
+  "id": "q136",
+  "topic": "pharmacology_general",
+  "q": "Fluconazole inhibits?",
+  "options": [
+   "Chitin synthase",
+   "Beta-1,3-glucan synthase",
+   "Fungal lanosterol 14-alpha-demethylase",
+   "Microtubule assembly"
+  ],
+  "answer": 2,
+  "explanation": "Blocking ergosterol synthesis damages the fungal membrane; echinocandins target glucan synthase instead.",
+  "difficulty": 2,
+  "ref": "Standard pharmacology texts",
+  "tags": []
+ }
+]

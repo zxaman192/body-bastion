@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: body-bastion
+    runtime: python
+    region: singapore
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT --proxy-headers --forwarded-allow-ips='*'
+    healthCheckPath: /healthz
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ADMIN_USERNAME
+        value: admin
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: AUTO_APPROVE
+        value: "true"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: body-bastion-db
+          property: connectionString
+
+databases:
+  - name: body-bastion-db
+    region: singapore
+    plan: basic-256mb
+    databaseName: bodybastion
+    user: bodybastion

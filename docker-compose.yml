@@ -1,0 +1,26 @@
+# Local-LAN fallback for the live final: `docker compose up -d`, then open http://<laptop-ip>:8000
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: bodybastion
+      POSTGRES_USER: bodybastion
+      POSTGRES_PASSWORD: bodybastion
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    restart: unless-stopped
+  app:
+    build: .
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://bodybastion:bodybastion@db:5432/bodybastion
+      SECRET_KEY: change-me-to-a-long-random-string
+      ADMIN_USERNAME: admin
+      ADMIN_PASSWORD: change-me-now
+      AUTO_APPROVE: "true"
+    restart: unless-stopped
+volumes:
+  dbdata:

@@ -1,0 +1,8 @@
+.git
+.venv
+venv
+__pycache__
+*.db*
+.pytest_cache
+tools/parity_fixtures.json
+node_modules

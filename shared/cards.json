@@ -1,0 +1,167 @@
+{
+ "dehydration_collapse": {
+  "title": "The base collapsed from dehydration",
+  "text": "Hydration reached zero, so the base fell even though towers were still standing. In acute diarrhoea people die of water and salt loss, not of the germ itself. Rehydration (ORS, and IV Ringer's lactate when dehydration is severe) is the first and most important treatment.",
+  "ref": "WHO, The Treatment of Diarrhoea (2005)"
+ },
+ "iv_fluids": {
+  "title": "IV fluids rescued the patient",
+  "text": "Hydration fell below 25%, so the IV Ringer's Lactate Stand switched on. Severe dehydration (lethargy, very slow skin pinch, unable to drink) needs WHO Plan C: 100 ml/kg of Ringer's lactate intravenously, fast at first, then ORS as soon as the patient can drink. Normal saline is used only if Ringer's lactate is not available.",
+  "ref": "WHO, The Treatment of Diarrhoea (2005)"
+ },
+ "severe_ors": {
+  "title": "ORS could not keep up",
+  "text": "Hydration dropped below 25% with no IV stand working, and the ORS station ran at only a fifth of its speed. A drowsy, severely dehydrated patient cannot drink enough ORS to catch up. WHO Plan C says start IV Ringer's lactate at once and return to ORS when the patient can drink.",
+  "ref": "WHO, The Treatment of Diarrhoea (2005)"
+ },
+ "cdiff_after_antibiotics": {
+  "title": "Antibiotics invited C. difficile",
+  "text": "Antibiotic fire killed the Gut Flora Garden and C. diff Phantoms appeared. Clindamycin, cephalosporins, fluoroquinolones and carbapenems strip away the normal flora that stops C. difficile spores from germinating. Treatment: stop the culprit antibiotic where possible and give oral fidaxomicin or oral vancomycin.",
+  "ref": "IDSA/SHEA CDI Focused Update (2021)"
+ },
+ "stopflow_trap": {
+  "title": "Stop-Flow trapped the germs inside",
+  "text": "Loperamide (Stop-Flow) was used while Shigella, Amoeba or C. difficile were in the gut, and they grew stronger. Slowing the gut keeps invasive germs and their toxins in contact with the colon and can lead to toxic megacolon. Antimotility drugs are avoided in bloody or febrile diarrhoea, in C. difficile infection and in all young children.",
+  "ref": "IDSA Infectious Diarrhoea Guideline (2017); WHO, The Treatment of Diarrhoea (2005)"
+ },
+ "no_antibiotic_virus": {
+  "title": "Antibiotics cannot touch a virus",
+  "text": "Drug batteries fired at Rotavirus, wasting ATP and adding resistance pressure. Rotavirus diarrhoea is treated with ORS, zinc for children under 5 and continued feeding. Antibiotics do nothing to viruses but still damage the gut flora.",
+  "ref": "WHO, The Treatment of Diarrhoea (2005)"
+ },
+ "antibiotic_unneeded_etec": {
+  "title": "ETEC rarely needs an antibiotic",
+  "text": "Batteries fired at the ETEC Swarm. Ceftriaxone does kill E. coli, but watery traveller's diarrhoea settles by itself and ORS is the treatment; an antibiotic (azithromycin in South Asia) is kept for severe cases. Every unnecessary shot breeds resistance and harms the flora.",
+  "ref": "Riddle et al., J Travel Med (2017); WHO, The Treatment of Diarrhoea (2005)"
+ },
+ "hpylori_combo_needed": {
+  "title": "One drug alone fails against H. pylori",
+  "text": "A single antibiotic hit H. pylori and pushed regimen resistance up. H. pylori is cured only by a full regimen taken together for 14 days: bismuth quadruple therapy (PPI + bismuth + tetracycline + metronidazole), preferred where clarithromycin resistance is high as in much of India, or PPI + amoxicillin + clarithromycin where clarithromycin resistance is low. A lone antibiotic cures few patients and selects resistant strains.",
+  "ref": "Maastricht VI/Florence (2022); ACG H. pylori Guideline (2024)"
+ },
+ "amoeba_cysts": {
+  "title": "Cysts survived: the infection will relapse",
+  "text": "Amoeba Blobs died but left cysts that tissue drugs barely touch. Metronidazole kills invasive trophozoites in the gut wall and liver, but cysts in the lumen survive it. A luminal agent (paromomycin or diloxanide furoate) must follow to clear them and prevent relapse and spread.",
+  "ref": "Standard medical microbiology texts"
+ },
+ "fq_resistant_typhoid": {
+  "title": "Ciprofloxacin failed against typhoid",
+  "text": "The fluoroquinolone battery barely scratched the Typhoid Stalkers. Most Salmonella Typhi in India are now non-susceptible to fluoroquinolones, so ciprofloxacin must not be used empirically for enteric fever. Use ceftriaxone for severe disease or azithromycin for uncomplicated disease, and adjust to the blood culture result.",
+  "ref": "ICMR Treatment Guidelines for Antimicrobial Use in Common Syndromes"
+ },
+ "wrong_drug": {
+  "title": "Wrong drug, wasted shot",
+  "text": "Some batteries fired drugs that have no activity against their target. Every antimicrobial has a spectrum: outside it, the drug does nothing for the patient but still causes side effects and selects resistant bacteria in the gut. Match the drug to the bug, using culture results and local susceptibility data.",
+  "ref": "ICMR Treatment Guidelines for Antimicrobial Use in Common Syndromes"
+ },
+ "resistance_rising": {
+  "title": "Resistance is rising",
+  "text": "Heavy use of one drug pushed its resistance meter up, so future germs will shrug it off. Each course of antibiotics kills susceptible bacteria and leaves resistant survivors that can share resistance genes; this is how fluoroquinolone-resistant typhoid and ESBL-producing E. coli became common in India. Use antibiotics only when indicated, at the right dose, for the right duration.",
+  "ref": "National Action Plan on AMR, India (2017); ICMR Treatment Guidelines for Antimicrobial Use in Common Syndromes"
+ },
+ "candida_overgrowth": {
+  "title": "Candida moved in after the flora fell",
+  "text": "With the gut flora weakened or gone, Candida grew unchecked. Candida found in stool after antibiotics is usually colonisation, not infection: the remedy is to stop unnecessary antibiotics and let the normal flora recover. Antifungals are for thrush, oesophageal candidiasis or invasive candidiasis.",
+  "ref": "IDSA Candidiasis Guideline (2016)"
+ },
+ "typhoid_macrophage": {
+  "title": "Typhoid hid inside macrophages",
+  "text": "Macrophage Towers did little to Typhoid Stalkers because T cells had not been researched. S. Typhi survives inside resting macrophages and rides them to the liver, spleen and bone marrow. Only when Th1 cells release interferon-gamma do macrophages become activated and kill it, which is why typhoid is a systemic illness.",
+  "ref": "Standard immunology texts"
+ },
+ "kupffer_liver": {
+  "title": "The germs reached the liver gate",
+  "text": "Typhoid or Amoeba reached the liver gate. Venous blood from the intestine drains through the portal vein to the liver, where Kupffer cells (resident macrophages) filter out bacteria. S. Typhi spreads on through the liver, spleen and marrow, and Entamoeba histolytica can cause an amoebic liver abscess.",
+  "ref": "Standard immunology texts"
+ },
+ "amoeba_abscess": {
+  "title": "Amoebic liver abscess",
+  "text": "The Amoeba Blob did double damage at the liver. E. histolytica trophozoites travel from colonic ulcers through the portal vein, usually to the right lobe, and liquefy liver tissue into thick 'anchovy sauce' pus. Treatment is metronidazole followed by a luminal agent; most abscesses heal without drainage.",
+  "ref": "Standard medical microbiology texts"
+ },
+ "shigella_acid": {
+  "title": "Shigella shrugged off the acid",
+  "text": "The Acid Moat barely hurt Shigella. Shigella tolerates gastric acid so well that 10-100 bacteria can cause dysentery, which is why it spreads so easily from person to person. Hand-washing with soap matters as much as safe water.",
+  "ref": "Standard medical microbiology texts"
+ },
+ "acid_kills_cholera": {
+  "title": "Stomach acid killed cholera",
+  "text": "The Acid Moat hit the Cholera Floods hard. Vibrio cholerae is very acid-sensitive, so a healthy person must swallow a huge dose (around 10^8 bacteria) to fall ill. People with low stomach acid, for example on proton pump inhibitors or after gastric surgery, are infected far more easily.",
+  "ref": "Standard medical microbiology texts"
+ },
+ "hpylori_urease": {
+  "title": "H. pylori ignores stomach acid",
+  "text": "The H. pylori Driller crossed the Acid Moat untouched. Its urease splits urea into ammonia, which neutralises the acid around it, and it lives under the protective mucus layer. Chronic infection causes gastritis and peptic ulcers and raises the risk of gastric cancer and MALT lymphoma.",
+  "ref": "Standard medical microbiology texts"
+ },
+ "iga_neutralise": {
+  "title": "IgA neutralised the toxins",
+  "text": "Germs hit by the IgA Antibody Cannon drained less fluid for a while. Secretory IgA, the main antibody of the gut, coats microbes and toxins in the lumen so they cannot attach to the epithelium, without setting off inflammation. Vaccines, especially oral ones, boost these mucosal antibodies.",
+  "ref": "Standard immunology texts"
+ },
+ "vaccine_protects": {
+  "title": "Vaccination reduced the damage",
+  "text": "Vaccinated germs arrived weaker and drained less, but they still came. Real enteric vaccines are partial: rotavirus vaccines prevent roughly half of severe rotavirus diarrhoea in Indian infants, typhoid conjugate vaccine about 80% of typhoid, and killed oral cholera vaccine about 65% of cholera over 3-5 years. Vaccines cut risk and severity; ORS, safe water and hygiene are still needed.",
+  "ref": "Bhandari et al., Lancet (2014); Shakya et al., NEJM (2019); Bhattacharya et al., Lancet Infect Dis (2013)"
+ },
+ "memory_response": {
+  "title": "Immune memory struck harder",
+  "text": "Towers hit harder against a germ this base has beaten before. After a first infection, memory B and T cells primed in Peyer's patches respond faster and stronger the next time, with high-affinity, class-switched antibody such as IgA. This secondary response is also how vaccines work.",
+  "ref": "Standard immunology texts"
+ },
+ "worm_nutrients": {
+  "title": "The worms stole nutrients",
+  "text": "Worm Titans drained nutrients while they lived in the intestine. Heavy roundworm infection in children contributes to poor growth and undernutrition, and hookworm causes anaemia. India's National Deworming Day gives albendazole to everyone aged 1-19 on 10 February and 10 August (400 mg; 200 mg for ages 1-2).",
+  "ref": "National Deworming Day Guidelines, MoHFW"
+ },
+ "biofilm_tolerance": {
+  "title": "Biofilm shielded the germs",
+  "text": "Germs inside the Biofilm Dome took far less drug damage. Bacteria in a biofilm live in a slimy matrix, grow slowly and include dormant 'persister' cells, so they survive antibiotic levels that kill free-floating bacteria. This is why infections on catheters and implants often need the device removed.",
+  "ref": "Standard medical microbiology texts"
+ },
+ "peristalsis_flush": {
+  "title": "Peristalsis flushed germs out",
+  "text": "The Peristalsis Conveyor washed free-floating germs along and damaged them. Normal gut movement, and the migrating motor complex between meals, sweeps microbes towards the colon and out of the body; diarrhoea itself is partly a defence. Germs attached to or invading the wall resist flushing, which is why invasive germs are harder to clear.",
+  "ref": "Standard physiology texts"
+ },
+ "villi_leak": {
+  "title": "Toxins made the villi leak",
+  "text": "Toxin germs next to the Villi Wall made it leak extra fluid. Enterotoxins from cholera, ETEC and rotavirus drive chloride and water secretion from small-intestinal cells, while the sodium-glucose co-transporter keeps working. That is why glucose-based ORS still works in secretory diarrhoea.",
+  "ref": "Standard physiology texts"
+ },
+ "zinc_children": {
+  "title": "Zinc cut the fluid loss",
+  "text": "The level 3 ORS + Zinc Station reduced fluid loss in a child case. In children under 5, zinc (20 mg daily for 10-14 days; 10 mg under 6 months) shortens diarrhoea, reduces stool output and prevents new episodes for 2-3 months. There is no proven benefit in adults, so zinc has no effect in adult cases.",
+  "ref": "WHO/UNICEF Joint Statement on Clinical Management of Acute Diarrhoea (2004)"
+ },
+ "immune_evasion": {
+  "title": "Germs hid from immune cells",
+  "text": "Immune Evasion made germs invisible to immune towers for a few seconds, though drug batteries could still hit them. Real enteric pathogens dodge immunity in many ways: S. Typhi hides inside macrophages behind its Vi capsule, Shigella kills macrophages, and E. histolytica destroys neutrophils on contact.",
+  "ref": "Standard medical microbiology texts"
+ },
+ "quorum_sensing": {
+  "title": "Quorum sensing: strength in numbers",
+  "text": "Quorum Sensing made nearby germs faster and stronger. Bacteria release small signalling molecules called autoinducers; once enough bacteria are present, they switch on group behaviours such as biofilm formation and virulence genes together. Blocking quorum sensing is being studied as a way to disarm germs without killing them.",
+  "ref": "Standard medical microbiology texts"
+ },
+ "contaminated_water": {
+  "title": "Contaminated water brought more germs",
+  "text": "Contaminated Water added an extra germ to every deployment. Cholera, typhoid, shigellosis, rotavirus, amoebiasis and worms all spread by the faecal-oral route. Safe drinking water, sanitation and hand-washing with soap prevent more diarrhoea than any drug.",
+  "ref": "WHO Water, Sanitation and Hygiene (WASH) guidance"
+ },
+ "ors_saved": {
+  "title": "ORS kept the patient alive",
+  "text": "The ORS station refilled hydration throughout the battle. Low-osmolarity ORS (245 mOsm/L, with sodium 75 and glucose 75 mmol/L) uses sodium-glucose co-transport to pull water back into the body and has saved millions of lives. Start ORS early and keep feeding the patient.",
+  "ref": "WHO, The Treatment of Diarrhoea (2005)"
+ },
+ "stewardship_win": {
+  "title": "Every antibiotic shot was justified",
+  "text": "Every drug shot in this battle was needed and on target. That is antimicrobial stewardship: the right drug, for the right germ, at the right dose and duration, and no antibiotic when none is needed. It protects the patient's flora and keeps today's drugs working tomorrow.",
+  "ref": "WHO AWaRe Antibiotic Book (2022); ICMR Treatment Guidelines for Antimicrobial Use in Common Syndromes"
+ },
+ "general_hydration": {
+  "title": "Hydration comes first",
+  "text": "In every diarrhoeal illness the first question is how dehydrated the patient is. Assess the signs, rehydrate with ORS (IV Ringer's lactate if severe), keep feeding, and add zinc for children under 5. Antibiotics are kept for bloody diarrhoea, suspected cholera with severe dehydration, enteric fever and other specific infections.",
+  "ref": "WHO, The Treatment of Diarrhoea (2005)"
+ }
+}

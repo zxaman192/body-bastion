@@ -1,0 +1,8 @@
+{
+  "name": "body-bastion",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "parity": "node tools/parity_check.mjs"
+  }
+}
