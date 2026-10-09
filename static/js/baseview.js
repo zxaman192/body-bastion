@@ -13,7 +13,8 @@ export function mountBaseView(container, opts = {}) {
 
   container.classList.add('bb-baseview');
   const scene = new Scene(container, gd, {
-    insets: { top: 10, right: 10, bottom: 10, left: 10 },
+    insets: opts.insets || { top: 10, right: 10, bottom: 10, left: 10 },
+    fillTall: !!opts.fillTall,
     onTap: (x, y) => {
       if (!onSiteTap) return;
       const id = scene.siteAt(x, y);
@@ -107,6 +108,7 @@ export function mountBaseView(container, opts = {}) {
       rebuild();
     },
     focusSite(id) { scene.focusSite(id); },
+    setInsets(ins) { scene.setInsets(ins); },
     fit() { scene.fit(); },
     get coreLevel() { return coreLevel; },
     destroy() {

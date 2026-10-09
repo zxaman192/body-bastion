@@ -9,3 +9,8 @@ venv/
 .pytest_cache/
 node_modules/
 tools/parity_fixtures.json
+android/build/
+dist/
+*.jks
+*.keystore
+keystore.properties

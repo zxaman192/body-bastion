@@ -5,7 +5,11 @@ and antibiotics for medical and allied-health students (Department of Pharmacolo
 Medical College, New Delhi, with the MAMC Gaming Society).
 
 **Play it:** https://body-bastion.onrender.com (Render free plan, Singapore: the first visit after
-15 minutes of inactivity takes about a minute to wake the server).
+15 minutes of inactivity takes about a minute to wake the server). An Android app is built from
+[android/](android/README.md).
+
+New players see an opening animation and are offered a one-minute guided tour of the base (replay
+it any time with the **?** button); Case 1 has its own coaching tips.
 
 You build and upgrade a gut base (stomach, small intestine, colon, liver gate, Bone Marrow Core) with
 real defences (acid, mucus and villi walls, gut flora, Paneth cells, IgA, macrophages, neutrophils,
@@ -126,7 +130,8 @@ Then players on the same Wi-Fi open `http://<laptop-ip>:8000`. Change the passwo
 
 ```
 app/            FastAPI server (routes, economy, scoring, security) and app/sim.py (authoritative simulation)
-static/         Browser game: index.html, css/, js/ (sim.js mirror, render/, screens/), PWA files
+static/         Browser game: index.html, css/, js/ (sim.js mirror, render/, screens/, intro.js, tutorial.js), PWA files
+android/        Android app (WebView shell, splash, icons) and build_apk.sh
 shared/         gamedata.json (rules), questions.json, cards.json, guide.json
 tests/          pytest suites for the simulation and the API
 tools/          dev_server.py, balance.py, parity_gen.py, parity_check.mjs, load_test.py

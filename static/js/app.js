@@ -5,7 +5,7 @@ import {
 } from './ui.js';
 import { getToken, onUnauthorized, get } from './api.js';
 import {
-  store, setUser, loadGameData, loadCards, subscribe, clearSession, pref, applyTheme, rememberLoginTarget,
+  store, setUser, loadGameData, loadCards, subscribe, clearSession, pref, setPref, applyTheme, rememberLoginTarget,
 } from './store.js';
 import { loadAudio } from './screens/engine.js';
 
@@ -90,7 +90,7 @@ async function render() {
       navigate('#/login', { replace: true });
       return;
     }
-    if (route && route.guestOnly && store.user) {
+    if (route && route.guestOnly && store.user && !store.user.is_guest) {
       navigate('#/home', { replace: true });
       return;
     }
@@ -194,7 +194,25 @@ async function bootUser() {
   }
 }
 
+function startIntro() {
+  if (/[?&]nointro(?:[=&]|$)/.test(location.search)) return;
+  const parsed = parseHash(location.hash || '#/home');
+  if (parsed.route && parsed.route.bare) return;
+  const seen = !!pref('intro.seen', false);
+  import('./intro.js')
+    .then((m) => m.playIntro({ short: seen }))
+    .then(async () => {
+      setPref('intro.seen', true);
+      const audio = await loadAudio();
+      if (audio && !pref('muted', false)) {
+        try { audio.unlock(); audio.play('victory'); } catch { /* sound is optional */ }
+      }
+    })
+    .catch((e) => console.warn('Intro skipped', e));
+}
+
 async function boot() {
+  startIntro();
   const slot = document.getElementById('brand-slot');
   if (slot) mount(slot, brandMark(40));
   applyTheme(pref('theme', 'auto'));

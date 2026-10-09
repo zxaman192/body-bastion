@@ -1,5 +1,7 @@
 import { toIso, fromIso, GROUND_H, buildGeom, Camera, clamp } from './geom.js';
-import { GroundCache, drawAcidSheen, drawPeristalsisBands, drawRangeIntervals, drawMouth } from './map.js';
+import {
+  GroundCache, drawAcidSheen, drawPeristalsisBands, drawRangeIntervals, drawMouth, drawBackdrop, drawLumenFlow,
+} from './map.js';
 import { drawBuilding, drawBuildSlotMarker, siteAnchorIso, buildingHeight } from './buildings.js';
 import { textLabel } from './shapes.js';
 import { rgba } from './color.js';
@@ -8,7 +10,7 @@ const TAP_MOVE = 9;
 const TAP_MS = 450;
 
 export class Scene {
-  constructor(container, gd, { insets, onTap, background } = {}) {
+  constructor(container, gd, { insets, onTap, background, fillTall = false } = {}) {
     this.gd = gd;
     this.geom = buildGeom(gd);
     this.camera = new Camera();
@@ -16,6 +18,7 @@ export class Scene {
     this.insets = insets || { top: 8, right: 8, bottom: 8, left: 8 };
     this.onTap = onTap || null;
     this.background = background || null;
+    this.fillTall = !!fillTall;
     this.canvas = document.createElement('canvas');
     this.canvas.className = 'bb-canvas';
     this.canvas.setAttribute('aria-hidden', 'true');
@@ -62,7 +65,21 @@ export class Scene {
   }
 
   fit() {
-    this.camera.fit(this.geom.contentBounds, this.vw, this.vh, this.insets);
+    const ins = this.insets;
+    const aw = this.vw - (ins.left || 0) - (ins.right || 0), ah = this.vh - (ins.top || 0) - (ins.bottom || 0);
+    const fill = this.fillTall && ah > aw * 1.15 ? Math.min(2.3, (ah / aw) * 1.05) : 1;
+    this.camera.fit(this.geom.contentBounds, this.vw, this.vh, this.insets, fill);
+    if (fill > 1) {
+      // centre the zoomed view on the Bone Marrow Core, keeping the map edge-to-edge
+      const core = [...this.geom.sites.values()].find((v) => v.kind === 'core');
+      const b = this.geom.contentBounds, c = this.camera, l = ins.left || 0;
+      if (core) {
+        const q = toIso(core.x, core.y);
+        const want = l + aw / 2 - q.x * c.scale;
+        const lo = l + aw - b.x1 * c.scale, hi = l - b.x0 * c.scale;
+        c.ox = lo <= hi ? clamp(want, lo, hi) : want;
+      }
+    }
     this.fitted = true;
     this.userMoved = false;
   }
@@ -198,16 +215,13 @@ export class Scene {
       ctx.fillStyle = this.background;
       ctx.fillRect(0, 0, this.vw, this.vh);
     } else {
-      const g = ctx.createLinearGradient(0, 0, 0, this.vh);
-      g.addColorStop(0, '#3b1b2e');
-      g.addColorStop(1, '#22101c');
-      ctx.fillStyle = g;
-      ctx.fillRect(0, 0, this.vw, this.vh);
+      drawBackdrop(ctx, this.vw, this.vh, this.t);
     }
     const c = this.camera;
     this.ground.ensure(c.scale, this.dpr);
     ctx.setTransform(this.dpr * c.scale, 0, 0, this.dpr * c.scale, this.dpr * c.ox, this.dpr * c.oy);
     this.ground.draw(ctx);
+    if (this.flow !== false) drawLumenFlow(ctx, this.geom, this.t, this.flowSpeed || 1);
     return ctx;
   }
 

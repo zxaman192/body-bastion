@@ -1010,6 +1010,15 @@ export function mountBattle(container, props = {}) {
   window.addEventListener('keydown', onKey);
   window.addEventListener('pointerup', stopHold);
   raf = requestAnimationFrame(frame);
+  if (mode === 'campaign' && setup.campaign && Number(setup.campaign.id) === 1 && !props.scored) {
+    let seen = false;
+    try { seen = JSON.parse(localStorage.getItem('bb.pref.tour.case1.done') || 'false'); } catch { seen = false; }
+    if (!seen) {
+      setTimeout(() => {
+        if (alive && phase === 'prep') import('./tutorial.js').then((m) => { if (alive) m.startCaseOneTips(root); }).catch(() => {});
+      }, 700);
+    }
+  }
   if (window.__BB_DEBUG) {
     window.__bbBattle = {
       advance(n) {

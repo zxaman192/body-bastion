@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Body Bastion</title>
+<style>html,body{margin:0;height:100%;background:#1a0510;overflow:hidden;}</style>
+</head>
+<body>
+<script>
+/*INTRO_JS*/
+(function () {
+  var params = new URLSearchParams(location.search);
+  var seen = params.get('seen') === '1';
+  var target = decodeURIComponent(location.hash.slice(1)) || 'https://body-bastion.onrender.com/?nointro&app=android#/home';
+  var started = Date.now();
+  var resolveReady;
+  var ready = new Promise(function (r) { resolveReady = r; });
+  // Called by the app when the server answers its health check.
+  window.bbReady = function () { resolveReady(); };
+  playIntro({
+    short: seen,
+    autoClose: seen ? 1.6 : 0,
+    waitFor: ready,
+    statusText: function () {
+      var s = (Date.now() - started) / 1000;
+      if (s < 6) return 'Connecting to the game server...';
+      if (s < 70) return 'Waking the server (up to a minute on free hosting)...';
+      return 'Still waking... check your internet connection';
+    }
+  }).then(function () { location.replace(target); });
+})();
+</script>
+</body>
+</html>

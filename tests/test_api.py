@@ -55,6 +55,26 @@ def test_registration_rules(client):
     assert client.get("/api/me", headers=H).status_code == 401
 
 
+def test_guest_upgrades_to_account_and_keeps_progress(client):
+    H = guest(client)
+    r = client.post("/api/base/build", headers=H, json={"site": "A3", "b": "paneth_tower"})
+    assert r.status_code == 200
+    body = {"username": "ravi", "password": "password123", "display_name": "Ravi", "college": "MAMC",
+            "course": "MBBS", "is_adult": True, "consent": True}
+    r = client.post("/api/auth/register", headers=H, json=body)
+    assert r.status_code == 200 and r.json()["status"] == "approved" and r.json()["upgraded"] is True
+    me = client.get("/api/me", headers=H).json()
+    assert me["username"] == "ravi" and me["is_guest"] is False
+    H2 = login(client, "ravi", "password123")
+    assert client.get("/api/state", headers=H2).json()["base"]["layout"]["A3"]["b"] == "paneth_tower"
+    # under-18 upgrades wait for approval and the guest session ends
+    G = guest(client)
+    minor = dict(body, username="kid1", is_adult=False, guardian_name="Parent", guardian_email="p@example.com")
+    r = client.post("/api/auth/register", headers=G, json=minor)
+    assert r.json()["status"] == "pending" and r.json()["upgraded"] is True
+    assert client.get("/api/me", headers=G).status_code == 401
+
+
 def test_base_editing_and_validation(client):
     H = guest(client)
     s = client.get("/api/state", headers=H).json()

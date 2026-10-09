@@ -66,31 +66,39 @@ def register(request: Request, payload: dict = Body(default=None)):
     security.limiter.hit(f"register:{ip}")
     ph, salt = security.hash_password(password)
     now = clock.now()
+    # A guest who registers keeps their base, resources and progress: the guest row is upgraded in place.
+    current = security.optional_user(request)
+    guest_id = current["id"] if current and current["is_guest"] else None
+    values = dict(
+        username=username,
+        display_name=display,
+        college=college,
+        course=course or "",
+        email=email,
+        password_hash=ph,
+        salt=salt,
+        is_guest=False,
+        is_adult=is_adult,
+        guardian_name=guardian_name,
+        guardian_email=guardian_email,
+        consent_version=version,
+        consent_at=now,
+    )
     with db.engine().begin() as conn:
         settings = db.get_settings(conn)
         status = "approved" if (settings.get("auto_approve") and is_adult) else "pending"
         try:
             with conn.begin_nested():
-                conn.execute(
-                    db.users.insert().values(
-                        username=username,
-                        display_name=display,
-                        college=college,
-                        course=course or "",
-                        email=email,
-                        password_hash=ph,
-                        salt=salt,
-                        role="player",
-                        status=status,
-                        is_guest=False,
-                        is_adult=is_adult,
-                        guardian_name=guardian_name,
-                        guardian_email=guardian_email,
-                        consent_version=version,
-                        consent_at=now,
-                        created_at=now,
+                if guest_id is not None:
+                    conn.execute(
+                        db.users.update().where(db.users.c.id == guest_id).values(status=status, **values)
                     )
-                )
+                    if status != "approved":
+                        conn.execute(delete(db.sessions).where(db.sessions.c.user_id == guest_id))
+                else:
+                    conn.execute(
+                        db.users.insert().values(role="player", status=status, created_at=now, **values)
+                    )
         except IntegrityError:
             raise HTTPException(409, "That username is taken. Please choose another.")
     if status == "approved":
@@ -100,7 +108,9 @@ def register(request: Request, payload: dict = Body(default=None)):
                "before approving your account.")
     else:
         msg = "Thank you. An organiser will approve your account soon."
-    return {"status": status, "message": msg}
+    if guest_id is not None:
+        msg += " Your guest base and progress have been moved to this account."
+    return {"status": status, "message": msg, "upgraded": guest_id is not None}
 
 
 @router.post("/auth/login")

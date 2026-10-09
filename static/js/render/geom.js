@@ -1,4 +1,4 @@
-export const GROUND_H = 10;
+export const GROUND_H = 18;
 
 export function toIso(x, y) {
   return { x: (x - y) * 0.5, y: (x + y) * 0.25 };
@@ -173,10 +173,10 @@ export function buildGeom(gd) {
   const contentPts = P.slice();
   for (const v of sites.values()) contentPts.push({ x: v.x, y: v.y });
   contentPts.push({ x: P[0].x - T, y: P[0].y });
-  const contentBounds = isoBounds(contentPts, 70, 150, 50);
+  const contentBounds = isoBounds(contentPts, 70, 160, 70);
   const groundBounds = isoBounds(
     [{ x: -T / 2, y: -T / 2 }, { x: W * T - T / 2, y: -T / 2 }, { x: W * T - T / 2, y: H * T - T / 2 }, { x: -T / 2, y: H * T - T / 2 }],
-    0, 20, 60,
+    40, 50, 120,
   );
 
   function labelAnchors() {
@@ -186,7 +186,7 @@ export function buildGeom(gd) {
       if (z.key === 'core') {
         const core = siteList.find((x) => x.kind === 'core');
         if (core) {
-          out.push({ key: z.key, text: z.name, x: core.x * T, y: core.y * T, lift: 150, color: z.color });
+          out.push({ key: z.key, text: z.name, x: core.x * T, y: core.y * T, lift: 290, color: z.color });
           continue;
         }
         s = Math.min(len, (z.s0 + Math.min(z.s1, len)) / 2);
@@ -231,14 +231,16 @@ export class Camera {
     return { x: (sx - this.ox) / this.scale, y: (sy - this.oy) / this.scale };
   }
 
-  fit(b, vw, vh, ins = {}) {
+  fit(b, vw, vh, ins = {}, fill = 1) {
     const l = ins.left || 0, r = ins.right || 0, t = ins.top || 0, bo = ins.bottom || 0;
     const aw = Math.max(40, vw - l - r), ah = Math.max(40, vh - t - bo);
     const bw = b.x1 - b.x0, bh = b.y1 - b.y0;
-    const s = Math.min(aw / bw, ah / bh);
-    this.fitScale = s;
-    this.minScale = s * 0.75;
-    this.maxScale = Math.max(s * 6, 2.2);
+    const s0 = Math.min(aw / bw, ah / bh);
+    // fill > 1 zooms in past "contain" (tall phone screens), never past "cover"
+    const s = fill > 1 ? Math.min(s0 * fill, Math.max(aw / bw, ah / bh)) : s0;
+    this.fitScale = s0;
+    this.minScale = s0 * 0.75;
+    this.maxScale = Math.max(s0 * 6, 2.2);
     this.scale = s;
     this.ox = l + aw / 2 - ((b.x0 + b.x1) / 2) * s;
     this.oy = t + ah / 2 - ((b.y0 + b.y1) / 2) * s;

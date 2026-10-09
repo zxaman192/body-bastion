@@ -1,6 +1,6 @@
 import { h, icon, setTitle, busy, toast, mount, spinnerBlock } from '../ui.js';
 import { post } from '../api.js';
-import { loadPrivacy } from '../store.js';
+import { loadPrivacy, clearSession, store } from '../store.js';
 import { authHero, completeLogin } from './login.js';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -16,7 +16,11 @@ function field(id, label, input, hint) {
 export async function render(root) {
   setTitle('Create account');
   const card = h('div', { class: 'card' }, spinnerBlock('Loading the privacy notice...'));
-  root.append(h('div', { class: 'auth-wrap', style: 'max-width:640px' }, authHero('Create your player account'), card));
+  const upgrading = !!(store.user && store.user.is_guest);
+  root.append(h('div', { class: 'auth-wrap', style: 'max-width:640px' }, authHero('Create your player account'),
+    upgrading ? h('div', { class: 'callout callout-ok mb-2' }, icon('check'),
+      h('p', null, 'You are playing as a guest. When you create your account, your guest base, resources and campaign progress move to it.')) : null,
+    card));
 
   let privacy = null;
   try { privacy = await loadPrivacy(); } catch { privacy = null; }
@@ -123,6 +127,7 @@ export async function render(root) {
       } catch {
         return;
       }
+      if (resp && resp.upgraded && resp.status !== 'approved') clearSession();
       if (resp && resp.status === 'approved') {
         toast(resp.message || 'Account created. Welcome!', 'ok');
         try {
