@@ -110,7 +110,7 @@ ignored.
 | c | fields | who | rule |
 |---|---|---|---|
 | deploy | u | attacker (mode attack) | needs `armyLeft[u] > 0` and unit deployable. Spawns `spawnCount (+1 if t < contaminatedUntil)` units at s=0 this tick. |
-| spell | k, s | attacker | needs `spellsLeft[k] > 0`, `0 <= s <= pathLen` |
+| tactic | k, s | attacker | needs `spellsLeft[k] > 0`, `0 <= s <= pathLen` |
 | end | – | attacker | surrender → battle ends after this tick |
 | build | site, b, drug?, rx? | defender (campaign) | see 4.8 |
 | sell | site | defender (campaign) | see 4.8 |
@@ -328,7 +328,7 @@ liverDamage wormStolen macrophageTyphoidHits built sold buildingsDestroyed`;
 maps `deployed kills shots{D:{L:n}} shotsOn{T:{L:n}} drugKills{D:{T:n}} towerKills{B:{T:n}}
 acidDamage vaccinatedSpawns reachedLiver spellsUsed`; list `vaccinated`.
 
-### 4.11 Spells (attack)
+### 4.11 Tactics (attack)
 contaminated_water: `contaminatedUntil = t + duration`. quorum_sensing / immune_evasion: every
 alive unit with `|u.s - s| <= radius` gets quorumUntil / invisibleUntil = t + duration.
 biofilm_dome: `dome = {s0: s - radius, s1: s + radius, until: t + duration}` (replaces).
@@ -368,7 +368,7 @@ stats.spellsUsed[k]++.
 * **Research**: lab building of that key exists with lv ≥ labLevel; requiresLevel campaign level
   has ≥1 star (0 = none); pay cost. Drugs unlocked = starter.drugs ∪ researched drugs. Units
   unlocked = starter.units ∪ units whose `unlock` level has ≥1 campaign star.
-* **Vaccines** (multiplayer/clan): researched vaccines give efficacy; herd: for each vaccine, clan
+* **Vaccines** (multiplayer/clan): researched vaccines give efficacy; herd: for each vaccine, cohort
   coverage c100 = div(vaccinated members*100, members); frac = min(100, div(c100*100,
   coverageFullPct)); indirect = div(eff*frac*indirectSharePct, 10000); vaccinated member:
   100 − div((100−eff)*(100−indirect), 100); unvaccinated: indirect; cap herd.cap.
@@ -377,10 +377,10 @@ stats.spellsUsed[k]++.
 * **Memory**: after a multiplayer/clan defence, if the base has a peyers_patch, every type with
   kills ≥ memoryKillsNeeded gains a stack (max memoryMaxStacks).
 * **Army**: attacker picks counts of unlocked deployable units with Σ space ≤ armySpace[core-1];
-  costs trainingNutrientsPerSpace × space nutrients at battle start. Spells: one of each.
+  costs trainingNutrientsPerSpace × space nutrients at battle start. Tactics: one of each.
 * **Matchmaking** `POST /api/battle/find`: random approved non-guest-or-guest player with a base,
-  not self, not same clan, not shielded, not under attack, trophies within ±400; else one of the 3
-  bots nearest in trophies. Returns a signed find-token (HMAC, 5-min expiry).
+  not self, not same cohort, not shielded, not under attack, merit points within ±400; else one of the 3
+  bots nearest in merit points. Returns a signed find-token (HMAC, 5-min expiry).
 * **Battle start** stores the immutable setup (defender snapshot), seed (secrets.randbelow),
   marks defender `under_attack_until = now + 4 min`.
 * **Finish**: re-simulate with app/sim.py, compare hash. Server result is authoritative.
@@ -388,7 +388,7 @@ stats.spellsUsed[k]++.
   100*tps) - realtimeSlackSeconds` else flag `too_fast` (league: score 0). start_ref = answered_at
   or created_at. Expired (> battleTimeoutMinutes) → 410.
 * **Multiplayer rewards**: loot each resource = min(loot.cap, div(defender_res*(pctBase +
-  pctPerStar*stars), 100)) (+ wormStolen nutrients); bots: div(botLoot*stars,3) + 50. Trophies:
+  pctPerStar*stars), 100)) (+ wormStolen nutrients); bots: div(botLoot*stars,3) + 50. Merit points:
   stars ≥ 1 → attacker +winPerStar*stars, defender −same (floor 0); stars 0 → attacker −lossOnZero,
   defender +lossOnZero. Defender: −loot, −atpSpent, resistance, memory, shield (if stars ≥ 1),
   defences_total++, defences_won += (stars ≤ 1), stars_conceded += stars.
@@ -399,13 +399,13 @@ stats.spellsUsed[k]++.
   start). Practice is unscored. Tournament setups use the fixed base + fixed army; knowledge
   question for base/trial i is the same for everyone (`index = (Σ char codes of id * 7) % len`).
   League total = Σ best attack score per base + Σ trial scores.
-* **Awards**: Champion = highest league total. Best Clan = highest clan-war stars total (tie:
+* **Awards**: Champion = highest league total. Best Cohort = highest cohort-challenge stars total (tie:
   league total of top 5 members). Best Steward = highest Σ trial score among players who survived
   all trials (tie: fewer totalShots). Best Defender = lowest stars_conceded / defences_total with
   ≥ 3 defences (tie: more defences).
-* **Clan wars**: admin pairs two clans; members' bases are snapshotted at creation (herd immunity
+* **Cohort wars**: admin pairs two cohorts; members' bases are snapshotted at creation (herd immunity
   included). Each member gets attacks_per_member attacks (default 2) on enemy snapshots with their
-  own army. War stars = Σ over enemy bases of best stars; tie → Σ best pct.
+  own army. Challenge stars = Σ over enemy bases of best stars; tie → Σ best pct.
 * **Classroom**: teacher creates a session (campaign level / tournament base / trial) → 6-char
   code, QR (segno SVG) to `<base_url>/#/join/<code>`. Groups join without accounts (group token).
   Results ranked by best score per group (attack score or trial score or campaign stars*1000 +
@@ -456,18 +456,18 @@ Roles: player, teacher, observer, admin (+ guest flag).
 | POST /api/base/policy | {stopflow_at} → State |
 | POST /api/research | {key} → State |
 | POST /api/deworm | {} → State |
-| POST /api/battle/find | {} → {token, opponent:{name, trophies, kind, core_level, college}, layout, core_level, loot:[atp,n]} |
+| POST /api/battle/find | {} → {token, opponent:{name, merit points, kind, core_level, college}, layout, core_level, loot:[atp,n]} |
 | POST /api/battle/start | {mode, target, army?, boost} → {battle_id, setup, question\|null, opponent, practice:bool} |
 | POST /api/battle/{id}/answer | {choice} → {correct, answer, explanation, setup} |
-| POST /api/battle/{id}/finish | {commands, claimed:{hash, stars, pct, ticks}} → {verified, mismatch, flags, result, score, rewards:{atp, nutrients, trophies}, objectives\|null, stars_campaign\|null, cards:[keys], unlocked:{units:[], research:[]}} |
+| POST /api/battle/{id}/finish | {commands, claimed:{hash, stars, pct, ticks}} → {verified, mismatch, flags, result, score, rewards:{atp, nutrients, merit points}, objectives\|null, stars_campaign\|null, cards:[keys], unlocked:{units:[], research:[]}} |
 | GET /api/battle/{id} | → {id, mode, setup, commands, result, score, attacker, defender, created_at, verified, flags, note} |
 | GET /api/battles?kind=attacks\|defences | → {rows:[{id, mode, opponent, stars, pct, score, created_at, verified}]} |
 | GET /api/league | → {phase, bases:[{id, name, difficulty, best_score, best_stars, attempts}], trials:[{id, name, best_score, attempts}], total, rank} |
-| GET /api/leaderboard/{kind} | kind trophies\|league\|clans\|steward\|defender → {rows:[{rank, name, college, value, extra}]} |
+| GET /api/leaderboard/{kind} | kind merit points\|league\|cohorts\|steward\|defender → {rows:[{rank, name, college, value, extra}]} |
 | GET /api/clans | → {rows:[{id, name, college, members}]} |
-| POST /api/clans | {name, college} → clan |
+| POST /api/clans | {name, college} → cohort |
 | POST /api/clans/{id}/join, POST /api/clans/leave | → State |
-| GET /api/clans/{id} | → {clan, members:[{id, name, trophies, vaccines:[germs]}], coverage:{germ:pct}, herd:{germ:pct}, wars:[...]} |
+| GET /api/clans/{id} | → {cohort, members:[{id, name, merit points, vaccines:[germs]}], coverage:{germ:pct}, herd:{germ:pct}, wars:[...]} |
 | GET /api/clanwar | → {war\|null, enemies:[{user_id, name, best_stars, core_level}], attacks_left, stars:{mine, theirs}} |
 | POST /api/classroom | {mode: campaign\|tournament\|trial, ref, title} → {code, join_url, qr_svg, projector_url} |
 | GET /api/classroom/mine | → {rows:[session]} |

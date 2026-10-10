@@ -4,13 +4,13 @@ import { phaseText } from './logic.js';
 
 export function render(root, params) {
   setTitle('Admin');
-  root.append(screenHeader('Organiser console', { subtitle: 'Approve players, run the league and Clan Wars, export results, and delete data after the event.', back: '#/home' }));
+  root.append(screenHeader('Organiser console', { subtitle: 'Approve players, run the league and Cohort Challenges, export results, and delete data after the event.', back: '#/home' }));
   const host = h('div');
   root.append(host);
   tabs(host, [
     { id: 'users', label: 'Players', icon: 'user', render: users },
     { id: 'settings', label: 'League', icon: 'sliders', render: settings },
-    { id: 'wars', label: 'Clan Wars', icon: 'flag', render: wars },
+    { id: 'wars', label: 'Cohort Challenges', icon: 'flag', render: wars },
     { id: 'awards', label: 'Awards', icon: 'trophy', render: awards },
     { id: 'data', label: 'Data', icon: 'download', render: data },
   ], { active: params.tab, onChange: (id) => history.replaceState(null, '', `#/admin/${id}`), label: 'Admin sections' });
@@ -77,7 +77,7 @@ async function settings(panel, alive) {
     h('label', { class: 'field' }, h('span', { class: 'field-label' }, 'League phase'), phase, help),
     h('label', { class: 'switch' }, auto, h('span', { class: 'track', 'aria-hidden': 'true' }), h('span', null, 'Approve adult registrations automatically (under-18s always need manual approval)')),
     h('label', { class: 'switch' }, worm, h('span', { class: 'track', 'aria-hidden': 'true' }), h('span', null, 'Deworming Day is running (players can give albendazole for a nutrient bonus)')),
-    h('label', { class: 'field' }, h('span', { class: 'field-label' }, 'Maximum clan size'), size),
+    h('label', { class: 'field' }, h('span', { class: 'field-label' }, 'Maximum cohort size'), size),
     save));
 }
 
@@ -85,12 +85,12 @@ async function wars(panel, alive) {
   const [clans, list] = await Promise.all([get('/api/clans'), get('/api/admin/clanwars')]);
   if (!alive()) return;
   const opts = () => clans.rows.map((c) => h('option', { value: String(c.id) }, `${c.name} (${c.members})`));
-  const a = h('select', { class: 'input', 'aria-label': 'First clan' }, opts());
-  const b = h('select', { class: 'input', 'aria-label': 'Second clan' }, opts());
+  const a = h('select', { class: 'input', 'aria-label': 'First cohort' }, opts());
+  const b = h('select', { class: 'input', 'aria-label': 'Second cohort' }, opts());
   if (b.options.length > 1) b.selectedIndex = 1;
   const hours = h('input', { class: 'input', type: 'number', min: '1', max: '336', value: '48', 'aria-label': 'Hours' });
   const apm = h('input', { class: 'input', type: 'number', min: '1', max: '10', value: '2', 'aria-label': 'Attacks per member' });
-  const create = h('button', { class: 'btn btn-primary', type: 'button', disabled: clans.rows.length < 2 }, icon('flag', { size: 18 }), 'Start war');
+  const create = h('button', { class: 'btn btn-primary', type: 'button', disabled: clans.rows.length < 2 }, icon('flag', { size: 18 }), 'Start challenge');
   create.addEventListener('click', () => busy(create, async () => {
     try {
       const w = await post('/api/admin/clanwar', { clan_a: Number(a.value), clan_b: Number(b.value), hours: Number(hours.value), attacks_per_member: Number(apm.value) });
@@ -99,7 +99,7 @@ async function wars(panel, alive) {
       wars(panel, alive);
     } catch { /* toast */ }
   }));
-  panel.append(h('div', { class: 'card form' }, h('h3', { class: 'mt-0' }, 'Pair two clans'),
+  panel.append(h('div', { class: 'card form' }, h('h3', { class: 'mt-0' }, 'Pair two cohorts'),
     h('p', { class: 'muted small' }, "Each member's base and vaccination (herd immunity) are snapshotted now; members attack the enemy snapshots with their own armies."),
     a, b, h('label', { class: 'field' }, h('span', { class: 'field-label' }, 'Duration (hours)'), hours),
     h('label', { class: 'field' }, h('span', { class: 'field-label' }, 'Attacks per member'), apm), create));
@@ -112,7 +112,7 @@ async function wars(panel, alive) {
     ul.append(h('li', { class: 'list-item' }, h('div', { class: 'grow' }, h('strong', null, `${w.clan_a} ${w.stars_a} ★ vs ${w.stars_b} ★ ${w.clan_b}`),
       h('small', { class: 'muted' }, `${w.status} • ends ${fmtDate(w.ends_at)}${w.winner ? ` • winner: ${w.winner === 'a' ? w.clan_a : w.clan_b}` : ''}`)), end));
   }
-  panel.append(list.rows.length ? ul : emptyBlock('No wars yet.'));
+  panel.append(list.rows.length ? ul : emptyBlock('No challenges yet.'));
 }
 
 async function awards(panel, alive) {
@@ -122,7 +122,7 @@ async function awards(panel, alive) {
     w ? h('div', null, h('p', { class: 'mb-0' }, h('strong', null, w.name)), h('p', { class: 'muted small' }, `${w.college || ''} • ${unit}: ${w.value}`)) : h('p', { class: 'muted' }, 'Not decided yet'));
   panel.append(h('div', { class: 'grid-cards' },
     card('Champion', a.champion, 'league total'),
-    card('Best Clan', a.best_clan, 'war stars'),
+    card('Best Cohort', a.best_clan, 'challenge stars'),
     card('Best Steward', a.best_steward, 'trial total'),
     card('Best Defender', a.best_defender, 'stars conceded per defence')));
 }
@@ -136,7 +136,7 @@ function data(panel) {
   const purge = h('button', { class: 'btn btn-danger', type: 'button' }, icon('trash', { size: 18 }), 'Delete all player data');
   purge.addEventListener('click', () => busy(purge, async () => {
     const phrase = 'DELETE ALL PLAYER DATA';
-    const ok = await confirmDialog(`This permanently deletes every player account, base, battle, clan and classroom session (admins are kept). Export the results first. Type "${phrase}" to confirm.`,
+    const ok = await confirmDialog(`This permanently deletes every player account, base, battle, cohort and classroom session (admins are kept). Export the results first. Type "${phrase}" to confirm.`,
       { title: 'Delete all player data', okLabel: 'Delete everything', danger: true, typed: phrase });
     if (!ok) return;
     try {
@@ -145,7 +145,7 @@ function data(panel) {
     } catch { /* toast */ }
   }));
   panel.append(h('div', { class: 'card' }, h('h3', { class: 'mt-0' }, 'Exports (CSV)'),
-    h('div', { class: 'btn-group' }, btn('league', 'League results'), btn('trials', 'Defence Trials'), btn('clanwars', 'Clan Wars'), btn('battles', 'All battles'), btn('users', 'Registrations'))),
+    h('div', { class: 'btn-group' }, btn('league', 'League results'), btn('trials', 'Defence Trials'), btn('clanwars', 'Cohort Challenges'), btn('battles', 'All battles'), btn('users', 'Registrations'))),
   h('div', { class: 'card mt-2' }, h('h3', { class: 'mt-0' }, 'After the event (DPDP Act)'),
     h('p', { class: 'muted small' }, 'Personal data is kept only until the competition and its results are finished. Then delete it.'), purge));
 }

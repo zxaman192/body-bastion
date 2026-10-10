@@ -47,7 +47,7 @@ def snapshot_clan(gd: dict, conn, clan_id: int, now: float) -> dict:
 
 def _member_user(user: dict) -> dict:
     if user["is_guest"]:
-        raise HTTPException(403, "Register an account to join a clan.")
+        raise HTTPException(403, "Register an account to join a cohort.")
     return user
 
 
@@ -89,21 +89,21 @@ def list_clans():
 def create_clan(payload: dict = Body(default=None), user: dict = Depends(security.current_user)):
     _member_user(user)
     p = as_dict(payload)
-    name = get_str(p, "name", min_len=3, max_len=40, label="clan name")
+    name = get_str(p, "name", min_len=3, max_len=40, label="cohort name")
     college = get_str(p, "college", required=False, max_len=120) or user.get("college") or ""
     gd = get_gd()
     now = clock.now()
     with db.engine().begin() as conn:
         me = conn.execute(select(db.users.c.clan_id).where(db.users.c.id == user["id"])).first()
         if me and me.clan_id:
-            raise HTTPException(409, "Leave your current clan first.")
+            raise HTTPException(409, "Leave your current cohort first.")
         try:
             with conn.begin_nested():
                 res = conn.execute(db.clans.insert().values(
                     name=name, name_key=" ".join(name.lower().split()), college=college,
                     created_by=user["id"], created_at=now))
         except IntegrityError:
-            raise HTTPException(409, "A clan with that name already exists.")
+            raise HTTPException(409, "A cohort with that name already exists.")
         cid = res.inserted_primary_key[0]
         conn.execute(db.users.update().where(db.users.c.id == user["id"]).values(clan_id=cid))
         state = _state(conn, gd, user["id"], now)
@@ -118,14 +118,14 @@ def join_clan(cid: int, user: dict = Depends(security.current_user)):
     with db.engine().begin() as conn:
         clan = conn.execute(select(db.clans).where(db.clans.c.id == cid)).first()
         if clan is None:
-            raise HTTPException(404, "Clan not found.")
+            raise HTTPException(404, "Cohort not found.")
         me = conn.execute(select(db.users.c.clan_id).where(db.users.c.id == user["id"])).first()
         if me and me.clan_id:
-            raise HTTPException(409, "Leave your current clan first.")
+            raise HTTPException(409, "Leave your current cohort first.")
         limit = db.get_settings(conn).get("clan_max_members", 10)
         n = conn.execute(select(func.count()).select_from(db.users).where(db.users.c.clan_id == cid)).scalar()
         if n >= limit:
-            raise HTTPException(409, f"That clan is full ({limit} members).")
+            raise HTTPException(409, f"That cohort is full ({limit} members).")
         conn.execute(db.users.update().where(db.users.c.id == user["id"]).values(clan_id=cid))
         return _state(conn, gd, user["id"], now)
 
@@ -137,9 +137,9 @@ def leave_clan(user: dict = Depends(security.current_user)):
     with db.engine().begin() as conn:
         me = conn.execute(select(db.users.c.clan_id).where(db.users.c.id == user["id"])).first()
         if not me or not me.clan_id:
-            raise HTTPException(409, "You are not in a clan.")
+            raise HTTPException(409, "You are not in a cohort.")
         if _clan_in_active_war(conn, me.clan_id):
-            raise HTTPException(409, "You cannot leave while your clan is at war.")
+            raise HTTPException(409, "You cannot leave while your cohort is in a challenge.")
         conn.execute(db.users.update().where(db.users.c.id == user["id"]).values(clan_id=None))
         services._delete_clan_if_empty(conn, me.clan_id)
         return _state(conn, gd, user["id"], now)
@@ -154,7 +154,7 @@ def clan_detail(cid: int):
         close_expired_wars(conn, now)
         clan = conn.execute(select(db.clans).where(db.clans.c.id == cid)).first()
         if clan is None:
-            raise HTTPException(404, "Clan not found.")
+            raise HTTPException(404, "Cohort not found.")
         rows = conn.execute(
             select(db.users.c.id, db.users.c.display_name, db.bases.c.trophies, db.bases.c.research,
                    db.bases.c.core_level)
@@ -178,7 +178,7 @@ def clan_detail(cid: int):
             mine, theirs = ("a", "b") if w.clan_a == cid else ("b", "a")
             other_id = w.clan_b if mine == "a" else w.clan_a
             other = conn.execute(select(db.clans.c.name).where(db.clans.c.id == other_id)).first()
-            wars.append({"id": w.id, "opponent": other.name if other else "Disbanded clan", "status": w.status,
+            wars.append({"id": w.id, "opponent": other.name if other else "Disbanded cohort", "status": w.status,
                          "ends_at": clock.iso(w.ends_at), "stars": {"mine": sc[mine]["stars"], "theirs": sc[theirs]["stars"]},
                          "winner": (None if sc.get("winner") is None else ("mine" if sc["winner"] == mine else "theirs"))})
     return {

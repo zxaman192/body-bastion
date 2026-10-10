@@ -51,7 +51,7 @@ export async function render(root, params) {
       h('div', { class: 'btn-group mt-1' }, playBtn, prac)));
   }
   root.append(h('section', { class: 'section' }, h('h2', null, icon('castle'), ' Tournament bases'),
-    h('p', { class: 'muted small' }, `Everyone attacks with the same army: ${armyText}, plus one of each spell.`), bases));
+    h('p', { class: 'muted small' }, `Everyone attacks with the same army: ${armyText}, plus one of each tactic.`), bases));
 
   const trials = h('div', { class: 'grid-cards' });
   for (const tr of lg.trials) {

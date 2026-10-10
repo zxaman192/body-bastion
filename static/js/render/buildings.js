@@ -41,7 +41,7 @@ export function buildingTop(geom, info, key) {
 
 function lumenEnds(geom, info, frac = 0.46) {
   const d = geom.dirAt(info.s);
-  const half = geom.T * frac;
+  const half = (geom.lumenHalf ? geom.lumenHalf(info.s) + 4 : geom.T * 0.46) * (frac / 0.46);
   let e1, e2;
   if (d.dx !== 0) {
     e1 = toIso(info.x, info.y - half);

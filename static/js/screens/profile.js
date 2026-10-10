@@ -14,7 +14,7 @@ export async function render(root) {
       h('dt', null, 'Username'), h('dd', null, u.is_guest ? 'Guest account' : u.username),
       h('dt', null, 'College'), h('dd', null, u.college || '-'),
       h('dt', null, 'Role'), h('dd', null, u.role)),
-    u.is_guest ? h('p', { class: 'muted small mt-1' }, 'Guest progress is kept on this device for about 30 days. ', h('a', { href: '#/register', onclick: () => { clearToken(); clearSession(); } }, 'Register an account'), ' to join the league and clans.') : null));
+    u.is_guest ? h('p', { class: 'muted small mt-1' }, 'Guest progress is kept on this device for about 30 days. ', h('a', { href: '#/register' }, 'Register an account'), ' to keep it for good, join the league and cohorts: your base and progress move to the new account.') : null));
 
   const sound = h('input', { type: 'checkbox', role: 'switch' });
   sound.checked = !pref('muted', false);
@@ -23,10 +23,20 @@ export async function render(root) {
     const a = await loadAudio();
     if (a) { a.setMuted(!sound.checked); a.unlock(); a.play('click'); }
   });
+  const vol = h('input', { type: 'range', class: 'range', min: '0', max: '100', step: '5', id: 'pref-volume',
+    value: String(Math.round(Number(pref('volume', 1)) * 100)) });
+  const volText = h('span', { class: 'field-hint' }, `${vol.value}%`);
+  vol.addEventListener('input', async () => {
+    const v = Number(vol.value) / 100;
+    volText.textContent = `${vol.value}%`;
+    const a = await loadAudio();
+    if (a) { a.setVolume(v); a.unlock(); a.play('click'); }
+  });
   const theme = h('select', { class: 'input', 'aria-label': 'Theme' }, ['auto', 'light', 'dark'].map((t) => h('option', { value: t, selected: pref('theme', 'auto') === t ? true : null }, t === 'auto' ? 'Match my device' : t)));
   theme.addEventListener('change', () => { setPref('theme', theme.value); applyTheme(theme.value); });
   root.append(h('div', { class: 'card mt-2 form' }, h('h2', { class: 'mt-0' }, 'Settings'),
     h('label', { class: 'switch' }, sound, h('span', { class: 'track', 'aria-hidden': 'true' }), h('span', null, 'Sound and music')),
+    h('label', { class: 'field', for: 'pref-volume' }, h('span', { class: 'field-label' }, 'Volume'), vol, volText),
     h('label', { class: 'field' }, h('span', { class: 'field-label' }, 'Theme'), theme)));
 
   const logout = h('button', { class: 'btn', type: 'button' }, icon('logout', { size: 18 }), 'Log out');

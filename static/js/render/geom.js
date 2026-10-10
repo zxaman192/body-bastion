@@ -1,4 +1,11 @@
-export const GROUND_H = 18;
+// Height of the mesentery (where buildings stand) above the gut lumen floor (where germs walk).
+export const GROUND_H = 3;
+// Rim of the opened gut tube above the lumen floor, and the thickness of its wall.
+export const RIM_H = 12;
+export const WALL_W = 12;
+
+// Half-width of the lumen in world units for each part of the gut (stomach widest, vessels narrowest).
+const LUMEN_HALF = { stomach: 58, si: 40, colon: 52, liver: 36, core: 32 };
 
 export function toIso(x, y) {
   return { x: (x - y) * 0.5, y: (x + y) * 0.25 };
@@ -77,6 +84,25 @@ export function buildGeom(gd) {
 
   function zoneByKey(k) {
     return zones.find((z) => z.key === k) || null;
+  }
+
+  // Lumen half-width at s, blended over 60 units around each zone boundary.
+  function lumenHalf(s) {
+    const z = zoneOf(s);
+    const here = LUMEN_HALF[z.key] || 40;
+    for (const o of zones) {
+      if (o === z) continue;
+      const other = LUMEN_HALF[o.key] || 40;
+      if (Math.abs(s - o.s1) < 60 && o.s1 <= z.s0 + 1) {
+        const k = 0.5 + (s - o.s1) / 120;
+        return Math.round(other + (here - other) * Math.min(1, Math.max(0, k)));
+      }
+      if (Math.abs(s - o.s0) < 60 && o.s0 >= z.s1 - 1) {
+        const k = 0.5 + (o.s0 - s) / 120;
+        return Math.round(other + (here - other) * Math.min(1, Math.max(0, k)));
+      }
+    }
+    return here;
   }
 
   const sites = new Map();
@@ -199,7 +225,7 @@ export function buildGeom(gd) {
   }
 
   return {
-    T, W, H, P, S, len, zones, posAt, dirAt, nearestS, zoneOf, zoneByKey, sites, siteList,
+    T, W, H, P, S, len, zones, posAt, dirAt, nearestS, zoneOf, zoneByKey, lumenHalf, sites, siteList,
     pathTiles, isPath, nearestPathTile, rangeIntervals, contentBounds, groundBounds, labelAnchors,
     mouth: { x: P[0].x - T * 0.62, y: P[0].y },
   };

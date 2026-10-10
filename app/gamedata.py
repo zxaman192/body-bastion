@@ -206,6 +206,19 @@ def pick_question(kind: str, ident: str, germ: str | None = None) -> dict | None
     return pool[secrets.randbelow(len(pool))]
 
 
+def pick_checkpoint_question(topics: list, ident: str, exclude: set, fixed: bool) -> dict | None:
+    """A question about germs typical of the gut part just reached, not already asked in this battle."""
+    qs = questions()
+    if not qs:
+        return None
+    fresh = [q for q in qs if q["id"] not in exclude]
+    pool = [q for q in fresh if q.get("germ") in topics or any(t in topics for t in q.get("tags", []))]
+    pool = pool or fresh or qs
+    if fixed:
+        return pool[fixed_index(ident, len(pool))]
+    return pool[secrets.randbelow(len(pool))]
+
+
 def public_question(q: dict, seconds: int) -> dict:
     return {
         "id": q["id"],

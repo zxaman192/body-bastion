@@ -20,9 +20,9 @@ SCALAR_STATS = (
 )
 MAP_STATS = (
     'deployed', 'kills', 'shots', 'shotsOn', 'drugKills', 'towerKills', 'acidDamage',
-    'vaccinatedSpawns', 'reachedLiver', 'spellsUsed',
+    'vaccinatedSpawns', 'reachedLiver', 'spellsUsed', 'boosters',
 )
-COMMANDS = ('deploy', 'spell', 'end', 'build', 'sell', 'rx', 'stopflow', 'vaccinate')
+COMMANDS = ('deploy', 'spell', 'end', 'build', 'sell', 'rx', 'stopflow', 'vaccinate', 'boost')
 
 
 def div(a, b):
@@ -394,6 +394,23 @@ class Battle:
         vc = as_int(camp.get('vaccineCost'))
         self.vaccineCost = _clamp(vc, 0, 1000000000) if vc is not None else 0
 
+        # Checkpoints: the first germ to cross into each listed zone earns the player a knowledge
+        # question; a correct answer (checked by the server) allows one 'boost' command there.
+        bst = _obj(gd.get('boosters'))
+        zstart = {}
+        for z in gd['map']['zones']:
+            zstart[z['key']] = z['s0']
+        self.cpBounds = []
+        for cp in bst.get('checkpoints') or []:
+            if isinstance(cp, dict) and cp.get('zone') in zstart:
+                self.cpBounds.append(zstart[cp['zone']])
+        self.cpTick = [-1] * len(self.cpBounds)
+        self.boostUsed = [False] * len(self.cpBounds)
+        self.boostDefs = {}
+        for bd in bst.get('attack' if self.mode == 'attack' else 'defence') or []:
+            if isinstance(bd, dict) and isinstance(bd.get('key'), str):
+                self.boostDefs[bd['key']] = bd
+
         self.hydrationMax = gd['hydrationMax']
         self.tick = 0
         self.hydration = self.hydrationMax
@@ -586,6 +603,13 @@ class Battle:
         elif c == 'end':
             if self.mode != 'attack':
                 return False
+        elif c == 'boost':
+            k = cmd.get('k')
+            z = as_int(cmd.get('z'))
+            if not isinstance(k, str) or k not in self.boostDefs or z is None or z < 0 or z >= len(self.cpTick):
+                return False
+            if self.cpTick[z] < 0 or self.boostUsed[z] or self._queued_count('boost', 'z', cmd.get('z')) > 0:
+                return False
         else:
             if self.mode != 'campaign':
                 return False
@@ -680,6 +704,8 @@ class Battle:
         elif c == 'end':
             if self.mode == 'attack':
                 self.surrendered = True
+        elif c == 'boost':
+            self._boost(cmd, t)
         elif self.mode != 'campaign':
             return
         elif c == 'build':
@@ -719,6 +745,55 @@ class Battle:
             self.vaccines[u] = _clamp(vd['efficacy'], 0, 100)
             self.budget -= self.vaccineCost
             self.stats['vaccinated'].append(u)
+
+    def _boost(self, cmd, t):
+        k = cmd.get('k')
+        z = as_int(cmd.get('z'))
+        if not isinstance(k, str) or k not in self.boostDefs or z is None or z < 0 or z >= len(self.cpTick):
+            return
+        if self.cpTick[z] < 0 or self.boostUsed[z]:
+            return
+        self.boostUsed[z] = True
+        bd = self.boostDefs[k]
+        eff = bd.get('effect')
+        pct = as_int(bd.get('pct'))
+        if pct is None:
+            pct = 0
+        ticks = as_int(bd.get('ticks'))
+        if ticks is None:
+            ticks = 0
+        until = t + ticks
+        if eff == 'heal':
+            for u in self.units:
+                if u.alive:
+                    u.hp = min(u.maxHp, u.hp + mulpct(u.maxHp, pct))
+        elif eff == 'quorum':
+            for u in self.units:
+                if u.alive and u.quorumUntil < until:
+                    u.quorumUntil = until
+        elif eff == 'evasion':
+            for u in self.units:
+                if u.alive and u.invisibleUntil < until:
+                    u.invisibleUntil = until
+        elif eff == 'neutralise':
+            for u in self.units:
+                if u.alive and u.neutralisedUntil < until:
+                    u.neutralisedUntil = until
+        elif eff == 'rehydrate':
+            h = self.hydration + mulpct(self.hydrationMax, pct)
+            self.hydration = h if h < self.hydrationMax else self.hydrationMax
+        elif eff == 'complement':
+            for u in self.units:
+                if u.alive:
+                    dmg = mulpct(u.maxHp, pct)
+                    self._damage_unit(u, dmg if dmg > 0 else 1, t, 'booster', None)
+        _inc(self.stats['boosters'], k)
+
+    def _cross(self, prev, s, t):
+        cb = self.cpBounds
+        for i in range(len(cb)):
+            if self.cpTick[i] < 0 and prev < cb[i] <= s:
+                self.cpTick[i] = t
 
     def _cmd_build(self, cmd, t):
         st = self.st
@@ -927,12 +1002,16 @@ class Battle:
                     blk = b
                     break
         if blk is not None and u.s + move >= blk.s - self.gd['contact']:
+            prev = u.s
             u.s = max(u.s, blk.s - self.gd['contact'])
+            self._cross(prev, u.s, t)
             u.state = 'attack'
             if u.cd == 0:
                 self._hit(u, blk, t)
             return
+        prev = u.s
         u.s = min(u.s + move, L)
+        self._cross(prev, u.s, t)
         u.state = 'move'
         if d.worm and t % um['wormStealEvery'] == 0:
             z = st.zone_of(u.s)
@@ -1388,6 +1467,7 @@ class Battle:
             'atpLeft': self.atp,
             'budgetLeft': self.budget,
             'stats': self.stats,
+            'checkpointTicks': list(self.cpTick),
             'hash': self.hash,
         }
 

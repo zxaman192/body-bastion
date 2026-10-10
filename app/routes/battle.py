@@ -7,7 +7,7 @@ from sqlalchemy import and_, func, or_, select
 from sqlalchemy.exc import IntegrityError
 
 from app import cards, clock, db, economy, scoring, security, setups, sim
-from app.gamedata import get_gd, index_of, pick_question, public_question
+from app.gamedata import get_gd, index_of, pick_checkpoint_question, pick_question, public_question
 from app.util import as_dict, get_int
 
 router = APIRouter(prefix="/api", tags=["battle"])
@@ -179,7 +179,7 @@ def start(request: Request, payload: dict = Body(default=None)):
                     raise HTTPException(410, "That opponent is no longer available. Search again.")
                 defender, dbase = _defender_snapshot(gd, conn, did, now)
                 if (dbase.get("shield_until") or 0) > now or (dbase.get("under_attack_until") or 0) > now:
-                    raise HTTPException(409, "That base is shielded or already under attack. Search again.")
+                    raise HTTPException(409, "That base is recovering or already under attack. Search again.")
                 drow = _player_row(conn, did)
                 economy.pay(base, 0, cost)
                 dbase["under_attack_until"] = now + ATTACK_LOCK_SECONDS
@@ -244,15 +244,15 @@ def start(request: Request, payload: dict = Body(default=None)):
             did = target.get("user_id")
             war = conn.execute(select(db.clan_wars).where(db.clan_wars.c.id == war_id)).first() if isinstance(war_id, int) else None
             if war is None or war.status != "active" or war.ends_at < now:
-                raise HTTPException(409, "That clan war is not active.")
+                raise HTTPException(409, "That cohort challenge is not active.")
             snaps = war.snapshots or {}
             mine = "a" if str(user["id"]) in (snaps.get("a") or {}) else ("b" if str(user["id"]) in (snaps.get("b") or {}) else None)
             if mine is None:
-                raise HTTPException(403, "You are not part of this clan war.")
+                raise HTTPException(403, "You are not part of this cohort challenge.")
             enemy = snaps.get("b" if mine == "a" else "a") or {}
             snap = enemy.get(str(did)) if isinstance(did, int) else None
             if snap is None:
-                raise HTTPException(404, "That base is not in the enemy clan.")
+                raise HTTPException(404, "That base is not in the enemy cohort.")
             used = conn.execute(
                 select(func.count()).select_from(db.battles).where(
                     and_(db.battles.c.war_id == war.id, db.battles.c.attacker_id == user["id"],
@@ -260,7 +260,7 @@ def start(request: Request, payload: dict = Body(default=None)):
                 )
             ).scalar()
             if used >= war.attacks_per_member:
-                raise HTTPException(409, "You have used all your attacks in this war.")
+                raise HTTPException(409, "You have used all your attacks in this challenge.")
             base = economy.ensure_base(conn, gd, user["id"], now)
             army, _ = economy.validate_army(gd, p.get("army"), economy.units_unlocked(gd, base), base["core_level"])
             setup = setups.attack_setup(gd, seed, snap["defender"], army, setups.all_spells(gd))
@@ -342,6 +342,107 @@ def answer(bid: int, request: Request, payload: dict = Body(default=None)):
     }
 
 
+def _boost_cfg(gd: dict) -> tuple[list, int]:
+    b = gd.get("boosters") or {}
+    return list(b.get("checkpoints") or []), int(b.get("seconds") or gd["questionSeconds"])
+
+
+@router.post("/battle/{bid}/checkpoint")
+def checkpoint(bid: int, request: Request, payload: dict = Body(default=None)):
+    """The first germ crossed into a new part of the gut: issue (or re-issue) that checkpoint's question."""
+    user, group = _actor(request)
+    p = as_dict(payload)
+    gd = get_gd()
+    cps_def, seconds = _boost_cfg(gd)
+    if not cps_def:
+        raise HTTPException(404, "Checkpoint questions are switched off.")
+    z = get_int(p, "z", lo=0, hi=len(cps_def) - 1, label="checkpoint")
+    now = clock.now()
+    with db.engine().begin() as conn:
+        b = _load_battle(conn, bid, user, group, for_update=True)
+        if b["status"] != "started":
+            raise HTTPException(409, "This battle is already over.")
+        cps = dict(b["checkpoints"] or {})
+        entry = cps.get(str(z))
+        if entry is not None:
+            if entry.get("answered_at") is not None:
+                raise HTTPException(409, "You have already answered this checkpoint.")
+            q = entry["q"]
+        else:
+            exclude = {e["q"]["id"] for e in cps.values() if isinstance(e, dict) and e.get("q")}
+            if b["question"]:
+                exclude.add(b["question"]["id"])
+            fixed = b["mode"] in ("tournament", "trial", "classroom")
+            ident = f"{b['mode']}:{b['ref']}:cp{z}"
+            q = pick_checkpoint_question(cps_def[z].get("topics") or [], ident, exclude, fixed)
+            if q is None:
+                raise HTTPException(404, "No questions are available.")
+            cps[str(z)] = {"q": q, "at": now, "answered_at": None, "correct": False}
+            conn.execute(db.battles.update().where(db.battles.c.id == bid).values(checkpoints=cps))
+    return {"z": z, "name": cps_def[z].get("name", ""), "question": public_question(q, seconds)}
+
+
+@router.post("/battle/{bid}/checkpoint/answer")
+def checkpoint_answer(bid: int, request: Request, payload: dict = Body(default=None)):
+    user, group = _actor(request)
+    p = as_dict(payload)
+    gd = get_gd()
+    cps_def, seconds = _boost_cfg(gd)
+    if not cps_def:
+        raise HTTPException(404, "Checkpoint questions are switched off.")
+    z = get_int(p, "z", lo=0, hi=len(cps_def) - 1, label="checkpoint")
+    choice = get_int(p, "choice", lo=-1, hi=20)
+    now = clock.now()
+    with db.engine().begin() as conn:
+        b = _load_battle(conn, bid, user, group, for_update=True)
+        if b["status"] != "started":
+            raise HTTPException(409, "This battle is already over.")
+        cps = dict(b["checkpoints"] or {})
+        entry = cps.get(str(z))
+        if entry is None:
+            raise HTTPException(409, "No question was asked at this checkpoint.")
+        if entry.get("answered_at") is not None:
+            raise HTTPException(409, "You have already answered this checkpoint.")
+        q = entry["q"]
+        in_time = now - entry["at"] <= seconds + 5
+        correct = bool(in_time and choice == q["answer"])
+        cps[str(z)] = dict(entry, answered_at=now, correct=correct, choice=choice)
+        conn.execute(db.battles.update().where(db.battles.c.id == bid).values(checkpoints=cps))
+    return {"z": z, "correct": correct, "answer": q["answer"], "explanation": q.get("explanation", ""),
+            "in_time": in_time}
+
+
+def _filter_boosts(commands: list, cps: dict | None) -> tuple[list, int]:
+    """Keep only boost commands earned by a correct checkpoint answer (one per checkpoint)."""
+    earned = set()
+    for k, e in (cps or {}).items():
+        if isinstance(e, dict) and e.get("correct") and str(k).isdigit():
+            earned.add(int(k))
+    used = set()
+    out = []
+    rejected = 0
+    for c in commands:
+        if c.get("c") == "boost":
+            z = sim.as_int(c.get("z"))
+            if z is None or z not in earned or z in used:
+                rejected += 1
+                continue
+            used.add(z)
+        out.append(c)
+    return out, rejected
+
+
+def _checkpoint_summary(gd: dict, cps: dict | None) -> list:
+    cps_def, _ = _boost_cfg(gd)
+    out = []
+    for k, e in sorted((cps or {}).items(), key=lambda kv: int(kv[0]) if str(kv[0]).isdigit() else 99):
+        if not isinstance(e, dict) or not str(k).isdigit() or int(k) >= len(cps_def):
+            continue
+        out.append({"z": int(k), "name": cps_def[int(k)].get("name", ""), "answered": e.get("answered_at") is not None,
+                    "correct": bool(e.get("correct"))})
+    return out
+
+
 def _clean_commands(commands) -> list:
     if commands is None:
         return []
@@ -415,6 +516,7 @@ def finish(bid: int, request: Request, payload: dict = Body(default=None)):
                 )
     if expired:
         raise HTTPException(410, "This battle took too long and has expired.")
+    commands, boosts_rejected = _filter_boosts(commands, b["checkpoints"])
 
     t0 = time.perf_counter()
     result = sim.simulate(gd, b["setup"], commands)
@@ -425,6 +527,8 @@ def finish(bid: int, request: Request, payload: dict = Body(default=None)):
         if b["status"] != "started":
             raise HTTPException(409, "This battle has already been submitted.")
         flags = []
+        if boosts_rejected:
+            flags.append("boost_rejected")
         mismatch = False
         verified = None
         if "hash" in claimed:
@@ -517,6 +621,7 @@ def finish(bid: int, request: Request, payload: dict = Body(default=None)):
         "unlocked": unlocked,
         "practice": bool(b["practice"]),
         "scored": bool(b["scored"]),
+        "checkpoints": _checkpoint_summary(gd, b["checkpoints"]),
     }
 
 

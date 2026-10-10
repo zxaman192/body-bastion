@@ -13,10 +13,24 @@ function writeMuted(v) {
   try { localStorage.setItem(KEY, JSON.stringify(!!v)); } catch { /* storage blocked */ }
 }
 
+const VOL_KEY = 'bb.pref.volume';
+// Effects are synthesised quietly and then lifted by BOOST; a limiter keeps loud moments clean.
+const BOOST = 2.8;
+
+function readVolume() {
+  try {
+    const v = JSON.parse(localStorage.getItem(VOL_KEY));
+    return typeof v === 'number' && v >= 0 && v <= 1 ? v : 1;
+  } catch {
+    return 1;
+  }
+}
+
 let ctx = null;
 let master = null;
 let musicGain = null;
 let muted = readMuted();
+let volume = readVolume();
 let musicOn = false;
 let musicTimer = 0;
 let musicStep = 0;
@@ -29,10 +43,20 @@ function ensure() {
   if (!AC) return null;
   ctx = new AC();
   master = ctx.createGain();
-  master.gain.value = muted ? 0 : 0.55;
-  master.connect(ctx.destination);
+  master.gain.value = muted ? 0 : volume;
+  const limiter = ctx.createDynamicsCompressor();
+  limiter.threshold.value = -12;
+  limiter.knee.value = 10;
+  limiter.ratio.value = 8;
+  limiter.attack.value = 0.003;
+  limiter.release.value = 0.18;
+  const makeup = ctx.createGain();
+  makeup.gain.value = 1.4;
+  master.connect(limiter);
+  limiter.connect(makeup);
+  makeup.connect(ctx.destination);
   musicGain = ctx.createGain();
-  musicGain.gain.value = 0.18;
+  musicGain.gain.value = 0.3;
   musicGain.connect(master);
   const len = ctx.sampleRate * 0.5;
   noiseBuf = ctx.createBuffer(1, len, ctx.sampleRate);
@@ -50,8 +74,9 @@ function tone(freq, dur, { type = 'sine', gain = 0.25, slide = 0, delay = 0, des
   o.type = type;
   o.frequency.setValueAtTime(freq, t0);
   if (slide) o.frequency.exponentialRampToValueAtTime(Math.max(30, freq * slide), t0 + dur);
+  const peak = Math.min(0.95, gain * BOOST);
   g.gain.setValueAtTime(0.0001, t0);
-  g.gain.exponentialRampToValueAtTime(gain, t0 + 0.012);
+  g.gain.exponentialRampToValueAtTime(peak, t0 + 0.012);
   g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
   o.connect(g);
   g.connect(dest || master);
@@ -70,7 +95,7 @@ function noise(dur, { gain = 0.2, freq = 1200, q = 1, delay = 0, type = 'bandpas
   f.frequency.value = freq;
   f.Q.value = q;
   const g = c.createGain();
-  g.gain.setValueAtTime(gain, t0);
+  g.gain.setValueAtTime(Math.min(0.95, gain * BOOST), t0);
   g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
   s.connect(f);
   f.connect(g);
@@ -144,7 +169,13 @@ export const audio = {
   setMuted(v) {
     muted = !!v;
     writeMuted(muted);
-    if (master && ctx) master.gain.setTargetAtTime(muted ? 0 : 0.55, ctx.currentTime, 0.05);
+    if (master && ctx) master.gain.setTargetAtTime(muted ? 0 : volume, ctx.currentTime, 0.05);
   },
+  setVolume(v) {
+    volume = Math.max(0, Math.min(1, Number(v) || 0));
+    try { localStorage.setItem(VOL_KEY, JSON.stringify(volume)); } catch { /* storage blocked */ }
+    if (master && ctx && !muted) master.gain.setTargetAtTime(volume, ctx.currentTime, 0.05);
+  },
+  get volume() { return volume; },
   get muted() { return muted; },
 };

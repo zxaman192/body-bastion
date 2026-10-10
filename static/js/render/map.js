@@ -1,43 +1,31 @@
-import { toIso, hash01, GROUND_H } from './geom.js';
+// The base as an anatomical dissection: the opened gut tube (stomach rugae, small-intestine folds,
+// colon haustra, then the portal vein and a vessel to the marrow) lying on yellow mesenteric fat with
+// its vessel arcades, beside the liver, gallbladder, spleen, coils of bowel and a marrow-filled bone.
+import { toIso, hash01, GROUND_H, RIM_H, WALL_W } from './geom.js';
 import { mix, shade, rgba } from './color.js';
+import { tissuePattern } from './textures.js';
 
 const TAU = Math.PI * 2;
-const TISSUE = '#e9a0ab';
+const G = GROUND_H;
 
-// The sides of the diorama show a real cross-section of the gut wall, top to bottom.
+const FLOOR_TEX = { stomach: 'stomach', si: 'si', colon: 'colon', liver: 'vein', core: 'core' };
+
+const LOOK = {
+  stomach: { floor: '#e3877e', fold: '#a8443d', glint: '#ffd3c9', serosa: '#e7a08f', serosaDark: '#b0614f' },
+  si: { floor: '#eb9a88', fold: '#b45a4b', glint: '#ffdcd0', serosa: '#efae9f', serosaDark: '#bd7465' },
+  colon: { floor: '#dba595', fold: '#9c6352', glint: '#fbe3d8', serosa: '#e8c3ae', serosaDark: '#b28772' },
+  liver: { floor: '#7b2a4c', fold: '#4a1430', glint: '#d7a3c8', serosa: '#7b5aa0', serosaDark: '#46306e' },
+  core: { floor: '#a5212f', fold: '#62101a', glint: '#ffb3bc', serosa: '#c63a4b', serosaDark: '#82202d' },
+};
+
+// Abdominal wall cross-section shown on the diorama's sides, top to bottom.
 const WALL_LAYERS = [
-  { h: 10, a: '#e48496', b: '#c9687d' }, // mucosa
-  { h: 17, a: '#f6dcc8', b: '#dfbfa6' }, // submucosa (vessels)
-  { h: 18, a: '#c24a58', b: '#a13a48' }, // circular muscle
-  { h: 12, a: '#9c3342', b: '#7f2735' }, // longitudinal muscle
-  { h: 5, a: '#f4cdd5', b: '#d9aab6' },  // serosa
+  { h: 5, a: '#f6dcdc', b: '#dcbdbd' },   // parietal peritoneum
+  { h: 20, a: '#b9404a', b: '#97303b' },  // muscle
+  { h: 24, a: '#f3d17a', b: '#d8b15c' },  // subcutaneous fat
+  { h: 9, a: '#e6b393', b: '#c89676' },   // skin
 ];
 const SLAB_DEPTH = WALL_LAYERS.reduce((n, l) => n + l.h, 0);
-
-function tileCorners(T, i, j, lift) {
-  const h = T / 2;
-  const top = toIso(i * T - h, j * T - h);
-  const right = toIso(i * T + h, j * T - h);
-  const bottom = toIso(i * T + h, j * T + h);
-  const left = toIso(i * T - h, j * T + h);
-  return {
-    top: { x: top.x, y: top.y - lift }, right: { x: right.x, y: right.y - lift },
-    bottom: { x: bottom.x, y: bottom.y - lift }, left: { x: left.x, y: left.y - lift },
-  };
-}
-
-function quad(ctx, a, b, c, d) {
-  ctx.beginPath();
-  ctx.moveTo(a.x, a.y);
-  ctx.lineTo(b.x, b.y);
-  ctx.lineTo(c.x, c.y);
-  ctx.lineTo(d.x, d.y);
-  ctx.closePath();
-}
-
-function tileFill(ctx, c) {
-  quad(ctx, c.top, c.right, c.bottom, c.left);
-}
 
 function lerp(a, b, k) {
   return { x: a.x + (b.x - a.x) * k, y: a.y + (b.y - a.y) * k };
@@ -51,686 +39,863 @@ function seeded(seed) {
   };
 }
 
-function groundTint(geom, i, j) {
-  const { tile, dist } = geom.nearestPathTile(i, j);
-  const base = tile ? mix(TISSUE, tile.color, Math.max(0, 0.34 - dist * 0.06)) : TISSUE;
-  return shade(base, (i + j) % 2 ? -0.025 : 0.015);
+function iso(x, y, lift = 0) {
+  const q = toIso(x, y);
+  return { x: q.x, y: q.y - lift };
+}
+
+function poly(ctx, pts) {
+  ctx.beginPath();
+  pts.forEach((p, i) => (i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)));
+  ctx.closePath();
+}
+
+function line(ctx, pts) {
+  ctx.beginPath();
+  pts.forEach((p, i) => (i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)));
+}
+
+function smoothLine(ctx, pts) {
+  ctx.beginPath();
+  ctx.moveTo(pts[0].x, pts[0].y);
+  for (let k = 1; k < pts.length - 1; k++) {
+    const m = lerp(pts[k], pts[k + 1], 0.5);
+    ctx.quadraticCurveTo(pts[k].x, pts[k].y, m.x, m.y);
+  }
+  const l = pts[pts.length - 1];
+  ctx.lineTo(l.x, l.y);
+}
+
+function topCorners(geom) {
+  const { T, W, H } = geom;
+  const h = T / 2;
+  return {
+    top: iso(-h, -h, G), right: iso(W * T - h, -h, G), bottom: iso(W * T - h, H * T - h, G), left: iso(-h, H * T - h, G),
+  };
+}
+
+function clipTop(ctx, geom) {
+  const c = topCorners(geom);
+  poly(ctx, [c.top, c.right, c.bottom, c.left]);
+  ctx.clip();
+}
+
+// Closed smooth shape through world control points (in tiles), as iso points at a lift.
+function blob(geom, ctrl, lift, steps = 10) {
+  const T = geom.T;
+  const n = ctrl.length;
+  const out = [];
+  for (let i = 0; i < n; i++) {
+    const p0 = ctrl[(i - 1 + n) % n], p1 = ctrl[i], p2 = ctrl[(i + 1) % n], p3 = ctrl[(i + 2) % n];
+    for (let k = 0; k < steps; k++) {
+      const t = k / steps, t2 = t * t, t3 = t2 * t;
+      const x = 0.5 * (2 * p1[0] + (-p0[0] + p2[0]) * t + (2 * p0[0] - 5 * p1[0] + 4 * p2[0] - p3[0]) * t2 + (-p0[0] + 3 * p1[0] - 3 * p2[0] + p3[0]) * t3);
+      const y = 0.5 * (2 * p1[1] + (-p0[1] + p2[1]) * t + (2 * p0[1] - 5 * p1[1] + 4 * p2[1] - p3[1]) * t2 + (-p0[1] + 3 * p1[1] - 3 * p2[1] + p3[1]) * t3);
+      out.push(iso(x * T, y * T, lift));
+    }
+  }
+  return out;
+}
+
+function openSpline(geom, ctrl, step = 8) {
+  const T = geom.T;
+  const out = [];
+  for (let i = 0; i < ctrl.length - 1; i++) {
+    const p0 = ctrl[Math.max(0, i - 1)], p1 = ctrl[i], p2 = ctrl[i + 1], p3 = ctrl[Math.min(ctrl.length - 1, i + 2)];
+    for (let k = 0; k < step; k++) {
+      const t = k / step, t2 = t * t, t3 = t2 * t;
+      const x = 0.5 * (2 * p1[0] + (-p0[0] + p2[0]) * t + (2 * p0[0] - 5 * p1[0] + 4 * p2[0] - p3[0]) * t2 + (-p0[0] + 3 * p1[0] - 3 * p2[0] + p3[0]) * t3);
+      const y = 0.5 * (2 * p1[1] + (-p0[1] + p2[1]) * t + (2 * p0[1] - 5 * p1[1] + 4 * p2[1] - p3[1]) * t2 + (-p0[1] + 3 * p1[1] - 3 * p2[1] + p3[1]) * t3);
+      out.push({ x: x * T, y: y * T });
+    }
+  }
+  const l = ctrl[ctrl.length - 1];
+  out.push({ x: l[0] * T, y: l[1] * T });
+  return out;
+}
+
+// ---------------------------------------------------------------- the gut tube (centre line)
+
+const tubeCache = new WeakMap();
+
+function tube(geom) {
+  let t = tubeCache.get(geom);
+  if (t) return t;
+  const step = 6;
+  const raw = [];
+  for (let s = 0; s < geom.len; s += step) raw.push({ s, ...geom.posAt(s) });
+  raw.push({ s: geom.len, ...geom.posAt(geom.len) });
+  const n = raw.length;
+  const k = Math.round(42 / step);
+  const pts = raw.map((r, i) => {
+    const m = Math.min(k, i, n - 1 - i);
+    let x = 0, y = 0;
+    for (let j = i - m; j <= i + m; j++) { x += raw[j].x; y += raw[j].y; }
+    return { s: r.s, x: x / (2 * m + 1), y: y / (2 * m + 1) };
+  });
+  for (let i = 0; i < n; i++) {
+    const a = pts[Math.max(0, i - 1)], b = pts[Math.min(n - 1, i + 1)];
+    let tx = b.x - a.x, ty = b.y - a.y;
+    const l = Math.hypot(tx, ty) || 1;
+    tx /= l; ty /= l;
+    const p = pts[i];
+    p.tx = tx; p.ty = ty; p.nx = -ty; p.ny = tx;
+    p.h = geom.lumenHalf(p.s);
+    p.zone = geom.zoneOf(Math.min(p.s, geom.len - 1)).key;
+  }
+  t = { pts };
+  tubeCache.set(geom, t);
+  return t;
+}
+
+function off(p, d, lift) {
+  return iso(p.x + p.nx * d, p.y + p.ny * d, lift);
+}
+
+function floorPoly(pts) {
+  const left = pts.map((p) => off(p, p.h, 0));
+  const right = pts.map((p) => off(p, -p.h, 0)).reverse();
+  return left.concat(right);
+}
+
+// Split [i0, i1) into runs where `key(i)` is constant.
+function runs(n, key) {
+  const out = [];
+  let start = 0;
+  let cur = key(0);
+  for (let i = 1; i < n; i++) {
+    const k = key(i);
+    if (k !== cur) {
+      out.push({ i0: start, i1: i, key: cur });
+      start = i - 1;
+      cur = k;
+    }
+  }
+  out.push({ i0: start, i1: n - 1, key: cur });
+  return out;
 }
 
 // ---------------------------------------------------------------- slab sides
 
 function drawSlab(ctx, geom) {
-  const { T, W, H } = geom;
-  const h = T / 2;
-  const L = toIso(-h, H * T - h);
-  const B = toIso(W * T - h, H * T - h);
-  const R = toIso(W * T - h, -h);
-  const at = (p, d) => ({ x: p.x, y: p.y - GROUND_H + d });
-
+  const c = topCorners(geom);
+  const L = c.left, B = c.bottom, R = c.right;
+  const at = (p, d) => ({ x: p.x, y: p.y + d });
   const fade = ctx.createLinearGradient(0, B.y, 0, B.y + SLAB_DEPTH + 40);
   fade.addColorStop(0, 'rgba(10,2,8,0.5)');
   fade.addColorStop(1, 'rgba(10,2,8,0)');
   ctx.fillStyle = fade;
-  quad(ctx, at(L, SLAB_DEPTH), at(B, SLAB_DEPTH), at(B, SLAB_DEPTH + 34), at(L, SLAB_DEPTH + 14));
+  poly(ctx, [at(L, SLAB_DEPTH), at(B, SLAB_DEPTH), at(B, SLAB_DEPTH + 34), at(L, SLAB_DEPTH + 14)]);
   ctx.fill();
-  quad(ctx, at(B, SLAB_DEPTH), at(R, SLAB_DEPTH), at(R, SLAB_DEPTH + 14), at(B, SLAB_DEPTH + 34));
+  poly(ctx, [at(B, SLAB_DEPTH), at(R, SLAB_DEPTH), at(R, SLAB_DEPTH + 14), at(B, SLAB_DEPTH + 34)]);
   ctx.fill();
-
   let d0 = 0;
   WALL_LAYERS.forEach((layer, li) => {
     const d1 = d0 + layer.h;
-    for (const [p, q, col, dark] of [[L, B, layer.a, 0], [B, R, layer.b, 1]]) {
+    for (const [p, q, col] of [[L, B, layer.a], [B, R, layer.b]]) {
       const g = ctx.createLinearGradient(0, at(p, d0).y, 0, at(p, d1).y);
       g.addColorStop(0, shade(col, 0.06));
-      g.addColorStop(1, shade(col, -0.08));
+      g.addColorStop(1, shade(col, -0.1));
       ctx.fillStyle = g;
-      quad(ctx, at(p, d0), at(q, d0), at(q, d1), at(p, d1));
+      poly(ctx, [at(p, d0), at(q, d0), at(q, d1), at(p, d1)]);
       ctx.fill();
       const len = Math.hypot(q.x - p.x, q.y - p.y);
       ctx.save();
-      quad(ctx, at(p, d0), at(q, d0), at(q, d1), at(p, d1));
+      poly(ctx, [at(p, d0), at(q, d0), at(q, d1), at(p, d1)]);
       ctx.clip();
-      if (li === 0) {
-        ctx.strokeStyle = rgba(shade(col, -0.35), 0.45);
-        ctx.lineWidth = 1.2;
-        for (let u = 6; u < len; u += 9) {
-          const a = lerp(at(p, d0), at(q, d0), u / len);
-          ctx.beginPath();
-          ctx.moveTo(a.x, a.y + 1);
-          ctx.lineTo(a.x, a.y + layer.h * 0.7);
+      if (li === 1) {
+        // striated muscle fibres
+        ctx.strokeStyle = rgba(shade(col, -0.45), 0.35);
+        ctx.lineWidth = 0.9;
+        for (let k = 1; k < 7; k++) {
+          const dd = d0 + (layer.h * k) / 7;
+          line(ctx, [at(p, dd), at(q, dd)]);
           ctx.stroke();
         }
-      } else if (li === 1) {
-        const rnd = seeded(77 + dark);
-        for (let u = 24; u < len - 10; u += 46 + rnd() * 30) {
-          const c = lerp(at(p, d0 + layer.h * 0.5), at(q, d0 + layer.h * 0.5), u / len);
-          const artery = rnd() < 0.5;
-          if (artery) {
-            ctx.fillStyle = '#b52437';
-            ctx.beginPath();
-            ctx.ellipse(c.x, c.y, 4.6, 4.2, 0, 0, TAU);
-            ctx.fill();
-            ctx.fillStyle = '#ffd6dc';
-            ctx.beginPath();
-            ctx.ellipse(c.x, c.y, 1.8, 1.6, 0, 0, TAU);
-            ctx.fill();
-          } else {
-            ctx.fillStyle = '#5868b8';
-            ctx.beginPath();
-            ctx.ellipse(c.x + 2, c.y + 0.5, 6, 4.4, 0.3, 0, TAU);
-            ctx.fill();
-            ctx.fillStyle = '#c9cff2';
-            ctx.beginPath();
-            ctx.ellipse(c.x + 2, c.y + 0.5, 4.4, 3, 0.3, 0, TAU);
-            ctx.fill();
-          }
-          ctx.fillStyle = 'rgba(255,240,170,0.75)';
-          ctx.beginPath();
-          ctx.ellipse(c.x + 11, c.y - 2, 2.2, 1.8, 0, 0, TAU);
-          ctx.fill();
+        ctx.strokeStyle = 'rgba(255,190,190,0.25)';
+        for (let u = 9; u < len; u += 14) {
+          const a = lerp(at(p, d0), at(q, d0), u / len);
+          line(ctx, [{ x: a.x, y: a.y + 2 }, { x: a.x + 2, y: a.y + layer.h - 2 }]);
+          ctx.stroke();
         }
       } else if (li === 2) {
-        ctx.strokeStyle = rgba(shade(col, -0.4), 0.35);
-        ctx.lineWidth = 1;
-        for (let k = 1; k < 5; k++) {
-          const dd = d0 + (layer.h * k) / 5;
-          ctx.beginPath();
-          ctx.moveTo(at(p, dd).x, at(p, dd).y);
-          ctx.lineTo(at(q, dd).x, at(q, dd).y);
-          ctx.stroke();
-        }
-      } else if (li === 3) {
-        ctx.fillStyle = rgba(shade(col, -0.45), 0.5);
-        for (let u = 4; u < len; u += 7) {
-          for (const f of [0.3, 0.72]) {
-            const c = lerp(at(p, d0 + layer.h * f), at(q, d0 + layer.h * f), (u + (f > 0.5 ? 3.5 : 0)) / len);
+        // fat lobules
+        const rnd = seeded(91 + li);
+        for (let u = 4; u < len; u += 9) {
+          for (let r = 0; r < 2; r++) {
+            const a = lerp(at(p, d0 + 5 + r * 11 + rnd() * 4), at(q, d0 + 5 + r * 11 + rnd() * 4), (u + r * 4) / len);
+            ctx.fillStyle = rgba(shade(col, 0.22), 0.7);
             ctx.beginPath();
-            ctx.ellipse(c.x, c.y, 1.6, 1.3, 0, 0, TAU);
+            ctx.ellipse(a.x, a.y, 4.2, 3.4, 0, 0, TAU);
             ctx.fill();
+            ctx.strokeStyle = rgba(shade(col, -0.3), 0.4);
+            ctx.lineWidth = 0.7;
+            ctx.stroke();
           }
         }
-      } else {
-        ctx.strokeStyle = 'rgba(255,255,255,0.45)';
+      } else if (li === 0) {
+        ctx.strokeStyle = 'rgba(255,255,255,0.6)';
         ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(at(p, d0 + 1.5).x, at(p, d0 + 1.5).y);
-        ctx.lineTo(at(q, d0 + 1.5).x, at(q, d0 + 1.5).y);
+        line(ctx, [at(p, d0 + 1.2), at(q, d0 + 1.2)]);
         ctx.stroke();
       }
       ctx.restore();
     }
     d0 = d1;
   });
-
   ctx.strokeStyle = 'rgba(255,225,232,0.55)';
   ctx.lineWidth = 1.4;
-  ctx.beginPath();
-  ctx.moveTo(at(B, 0).x, at(B, 0).y);
-  ctx.lineTo(at(B, SLAB_DEPTH).x, at(B, SLAB_DEPTH).y);
+  line(ctx, [B, at(B, SLAB_DEPTH)]);
   ctx.stroke();
   ctx.strokeStyle = 'rgba(60,10,30,0.45)';
   ctx.lineWidth = 1.2;
-  ctx.beginPath();
-  ctx.moveTo(at(L, SLAB_DEPTH).x, at(L, SLAB_DEPTH).y);
-  ctx.lineTo(at(B, SLAB_DEPTH).x, at(B, SLAB_DEPTH).y);
-  ctx.lineTo(at(R, SLAB_DEPTH).x, at(R, SLAB_DEPTH).y);
+  line(ctx, [at(L, SLAB_DEPTH), at(B, SLAB_DEPTH), at(R, SLAB_DEPTH)]);
   ctx.stroke();
 }
 
-// ---------------------------------------------------------------- lumen floor
+// ---------------------------------------------------------------- mesenteric fat and vessels
 
-function lumenTexture(ctx, c, t, i, j) {
-  const cx = (c.top.x + c.bottom.x) / 2, cy = (c.top.y + c.bottom.y) / 2;
-  const base = t.color;
-  if (t.zone === 'stomach') {
-    // gastric rugae: thick wavy folds
-    for (let k = -2; k <= 2; k++) {
-      ctx.strokeStyle = rgba(shade(base, -0.28), 0.6);
-      ctx.lineWidth = 4.5;
-      ctx.beginPath();
-      for (let q = -40; q <= 40; q += 4) {
-        const x = cx + q, y = cy + k * 9 + Math.sin((q + i * 31 + k * 17) * 0.11) * 3.2;
-        if (q === -40) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-      }
-      ctx.stroke();
-      ctx.strokeStyle = rgba(shade(base, 0.35), 0.55);
-      ctx.lineWidth = 1.4;
-      ctx.stroke();
-    }
-  } else if (t.zone === 'si') {
-    // villus carpet
-    for (let k = 0; k < 16; k++) {
-      const u = (k % 4) / 4 + 0.12 + (hash01(i, j, k) - 0.5) * 0.08;
-      const v = Math.floor(k / 4) / 4 + 0.12 + (hash01(j, i, k) - 0.5) * 0.08;
-      const x = c.top.x + (c.right.x - c.top.x) * u + (c.left.x - c.top.x) * v;
-      const y = c.top.y + (c.right.y - c.top.y) * u + (c.left.y - c.top.y) * v;
-      ctx.fillStyle = rgba(shade(base, -0.25), 0.7);
-      ctx.beginPath();
-      ctx.ellipse(x + 0.6, y + 1.6, 3.6, 2.2, 0, 0, TAU);
-      ctx.fill();
-      ctx.fillStyle = rgba(shade(base, 0.3), 0.95);
-      ctx.beginPath();
-      ctx.ellipse(x - 0.4, y - 0.3, 2.8, 1.8, 0, 0, TAU);
-      ctx.fill();
-    }
-  } else if (t.zone === 'colon') {
-    // haustral folds and resident flora
-    ctx.strokeStyle = rgba(shade(base, -0.3), 0.6);
-    ctx.lineWidth = 3;
-    for (let k = -1; k <= 1; k += 2) {
-      ctx.beginPath();
-      ctx.ellipse(cx + k * 15, cy, 13, 18, 0.5, -1.2, 1.2);
-      ctx.stroke();
-    }
-    for (let k = 0; k < 9; k++) {
-      const x = cx + (hash01(i, j, 40 + k) - 0.5) * 60;
-      const y = cy + (hash01(i, j, 50 + k) - 0.5) * 26;
-      ctx.fillStyle = ['rgba(70,150,80,0.6)', 'rgba(150,110,200,0.5)', 'rgba(230,170,60,0.55)'][k % 3];
-      ctx.beginPath();
-      ctx.ellipse(x, y, 2.8, 1.4, hash01(i, j, k) * 3, 0, TAU);
-      ctx.fill();
-    }
-  } else if (t.zone === 'liver') {
-    // hexagonal hepatic lobules with central veins
-    for (let k = 0; k < 3; k++) {
-      const x = cx + [-18, 16, 0][k], y = cy + [-4, 5, -12][k];
-      ctx.fillStyle = rgba(shade(base, -0.08), 0.6);
-      ctx.strokeStyle = rgba(shade(base, -0.32), 0.7);
-      ctx.lineWidth = 1.4;
-      ctx.beginPath();
-      for (let a = 0; a <= 6; a++) {
-        const ang = (a / 6) * TAU;
-        const px = x + Math.cos(ang) * 12, py = y + Math.sin(ang) * 6.5;
-        if (a === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-      }
-      ctx.fill();
-      ctx.stroke();
-      ctx.fillStyle = 'rgba(90,40,90,0.6)';
-      ctx.beginPath();
-      ctx.ellipse(x, y, 2.4, 1.5, 0, 0, TAU);
-      ctx.fill();
-    }
-  } else {
-    // marrow route: blood cells drifting toward the core
-    for (let k = 0; k < 9; k++) {
-      const x = cx + (hash01(i, j, 60 + k) - 0.5) * 60;
-      const y = cy + (hash01(i, j, 70 + k) - 0.5) * 28;
-      const red = k % 3 !== 0;
-      ctx.fillStyle = red ? 'rgba(206,52,72,0.7)' : 'rgba(250,245,255,0.8)';
-      ctx.beginPath();
-      ctx.ellipse(x, y, 3.4, 2, 0, 0, TAU);
-      ctx.fill();
-      if (red) {
-        ctx.fillStyle = 'rgba(140,20,40,0.6)';
-        ctx.beginPath();
-        ctx.ellipse(x, y, 1.4, 0.8, 0, 0, TAU);
-        ctx.fill();
-      }
-    }
+function drawFat(ctx, geom) {
+  const { T, W, H } = geom;
+  const c = topCorners(geom);
+  poly(ctx, [c.top, c.right, c.bottom, c.left]);
+  ctx.fillStyle = tissuePattern(ctx, 'fat', 200) || '#ecc173';
+  ctx.fill();
+  // broad tonal variation so the fat does not look like wallpaper
+  const rnd = seeded(5150);
+  for (let k = 0; k < 30; k++) {
+    const q = iso(rnd() * W * T, rnd() * H * T, G);
+    const r = 70 + rnd() * 150;
+    const warm = rnd() < 0.5;
+    const gl = ctx.createRadialGradient(q.x, q.y, 0, q.x, q.y, r);
+    gl.addColorStop(0, warm ? 'rgba(230,140,90,0.16)' : 'rgba(255,250,215,0.18)');
+    gl.addColorStop(1, 'rgba(255,240,200,0)');
+    ctx.fillStyle = gl;
+    ctx.beginPath();
+    ctx.ellipse(q.x, q.y, r, r * 0.55, 0, 0, TAU);
+    ctx.fill();
+  }
+  // glistening peritoneum: wet highlights
+  ctx.lineCap = 'round';
+  for (let k = 0; k < 90; k++) {
+    const q = iso(rnd() * W * T, rnd() * H * T, G);
+    ctx.strokeStyle = `rgba(255,255,255,${(0.18 + rnd() * 0.25).toFixed(2)})`;
+    ctx.lineWidth = 0.8 + rnd() * 1.6;
+    ctx.beginPath();
+    ctx.moveTo(q.x, q.y);
+    ctx.quadraticCurveTo(q.x + 6, q.y - 2, q.x + 10 + rnd() * 12, q.y);
+    ctx.stroke();
   }
 }
 
-function drawLumenTile(ctx, geom, pt) {
-  const { T } = geom;
-  const c = tileCorners(T, pt.i, pt.j, 0);
-  ctx.save();
-  tileFill(ctx, c);
-  ctx.clip();
-  const g = ctx.createLinearGradient(c.top.x, c.top.y, c.bottom.x, c.bottom.y);
-  g.addColorStop(0, shade(pt.color, -0.3));
-  g.addColorStop(0.5, shade(pt.color, -0.13));
-  g.addColorStop(1, shade(pt.color, -0.06));
-  ctx.fillStyle = g;
-  ctx.fillRect(c.left.x - 2, c.top.y - 2, c.right.x - c.left.x + 4, c.bottom.y - c.top.y + 4);
-  lumenTexture(ctx, c, pt, pt.i, pt.j);
-
-  // wet sheen along the lumen's centre line
-  const pts = [];
-  for (let s = pt.s - 60; s <= pt.s + 60; s += 15) {
-    const p = geom.posAt(Math.max(0, Math.min(geom.len, s)));
-    pts.push(toIso(p.x, p.y));
-  }
+function vessel(ctx, pts, w = 1) {
+  // a vein (blue) running beside its artery (red), both glossy
+  const shifted = pts.map((p) => ({ x: p.x + 2.4 * w, y: p.y + 1.2 * w }));
   ctx.lineCap = 'round';
   ctx.lineJoin = 'round';
-  for (const [w, a] of [[22, 0.07], [10, 0.12], [3, 0.22]]) {
-    ctx.strokeStyle = `rgba(255,255,255,${a})`;
-    ctx.lineWidth = w;
-    ctx.beginPath();
-    pts.forEach((q, k) => (k ? ctx.lineTo(q.x, q.y - 2) : ctx.moveTo(q.x, q.y - 2)));
+  for (const [path, col, lw] of [[shifted, '#3f4c9c', 3.4 * w], [pts, '#b8202f', 2.6 * w]]) {
+    smoothLine(ctx, path);
+    ctx.strokeStyle = shade(col, -0.35);
+    ctx.lineWidth = lw + 1.2;
+    ctx.stroke();
+    ctx.strokeStyle = col;
+    ctx.lineWidth = lw;
+    ctx.stroke();
+    ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+    ctx.lineWidth = Math.max(0.6, lw * 0.25);
     ctx.stroke();
   }
+}
 
-  // ambient occlusion where the raised mucosa walls meet the floor
-  const backs = [];
-  if (!geom.isPath(pt.i - 1, pt.j)) backs.push([c.top, c.left]);
-  if (!geom.isPath(pt.i, pt.j - 1)) backs.push([c.top, c.right]);
-  for (const [a, b] of backs) {
-    for (const [w, al] of [[34, 0.1], [18, 0.14], [7, 0.18]]) {
-      ctx.strokeStyle = `rgba(70,10,35,${al})`;
-      ctx.lineWidth = w;
+function drawVessels(ctx, geom) {
+  const { pts } = tube(geom);
+  const rnd = seeded(777);
+  let prevEnd = { 1: null, '-1': null };
+  for (let i = 10; i < pts.length - 10; i += 23) {
+    const p = pts[i];
+    if (p.zone === 'core' || p.zone === 'liver') continue;
+    const side = (Math.floor(i / 23) % 2) ? 1 : -1;
+    const base = p.h + WALL_W + 2;
+    const len = 70 + rnd() * 80;
+    const bend = (rnd() - 0.5) * 0.6;
+    const path = [];
+    for (let k = 0; k <= 6; k++) {
+      const d = base + (len * k) / 6;
+      const along = Math.sin((k / 6) * Math.PI) * bend * 40;
+      path.push(iso(p.x + p.nx * side * d + p.tx * along, p.y + p.ny * side * d + p.ty * along, G));
+    }
+    vessel(ctx, path, 0.85);
+    // arcade joining neighbouring vessels on the same side
+    const end = path[4];
+    const key = String(side);
+    if (prevEnd[key] && Math.hypot(prevEnd[key].x - end.x, prevEnd[key].y - end.y) < 220) {
+      const mid = lerp(prevEnd[key], end, 0.5);
+      vessel(ctx, [prevEnd[key], { x: mid.x, y: mid.y + 6 }, end], 0.6);
+    }
+    prevEnd[key] = end;
+    // lymph node at the branch
+    if (rnd() < 0.35) {
+      const q = path[5];
+      ctx.fillStyle = '#e9d7bd';
+      ctx.strokeStyle = 'rgba(120,90,60,0.6)';
+      ctx.lineWidth = 0.8;
       ctx.beginPath();
-      ctx.moveTo(a.x, a.y);
-      ctx.lineTo(b.x, b.y);
+      ctx.ellipse(q.x + 6, q.y - 2, 6, 3.4, 0.3, 0, TAU);
+      ctx.fill();
       ctx.stroke();
     }
+  }
+  // vasa recta: short straight vessels into the bowel wall
+  ctx.lineCap = 'round';
+  for (let i = 4; i < pts.length - 4; i += 3) {
+    const p = pts[i];
+    if (p.zone !== 'si' && p.zone !== 'colon') continue;
+    for (const side of [1, -1]) {
+      const d0 = p.h + WALL_W, d1 = d0 + 9 + hash01(i, side + 3) * 9;
+      const a = off(p, side * d0, G), b = off(p, side * d1, G);
+      ctx.strokeStyle = i % 2 ? 'rgba(184,32,47,0.8)' : 'rgba(63,76,156,0.75)';
+      ctx.lineWidth = 1.1;
+      line(ctx, [a, b]);
+      ctx.stroke();
+    }
+  }
+}
+
+// ---------------------------------------------------------------- organs
+
+const LIVER = [[17.4, 9.1], [18.5, 8.15], [20.2, 7.95], [22.1, 8.2], [23.35, 9.0], [23.42, 11.2], [23.4, 13.6], [22.5, 14.38],
+  [20.1, 14.42], [17.9, 14.38], [17.15, 13.2], [17.5, 11.7], [18.45, 10.8], [17.55, 10.1]];
+const BONE = [[9.85, 11.0], [10.6, 9.75], [12.2, 9.55], [13.9, 9.75], [14.75, 11.0], [14.7, 12.9], [13.9, 14.2], [12.2, 14.42],
+  [10.5, 14.2], [9.8, 12.9]];
+const SPLEEN = [[21.7, 0.25], [22.6, -0.05], [23.38, 0.35], [23.3, 1.15], [22.5, 1.35], [21.8, 0.95]];
+const GALL = [[22.5, 13.05], [23.15, 12.95], [23.4, 13.6], [23.2, 14.3], [22.75, 14.35], [22.45, 13.8]];
+const LOOPS = [
+  [[0.7, 8.2], [3.0, 7.7], [5.8, 7.8], [8.0, 8.3], [8.6, 9.4], [7.2, 10.1], [4.2, 9.9], [1.7, 10.0], [0.8, 11.1], [1.6, 12.1],
+    [4.4, 11.8], [7.4, 11.6], [8.7, 12.4], [8.2, 13.6], [5.5, 14.0], [2.6, 13.9], [0.7, 13.7]],
+];
+
+function organ(ctx, outline, opt) {
+  const thick = opt.thick || 7;
+  // side thickness, then the glossy top surface
+  ctx.fillStyle = opt.side;
+  poly(ctx, outline.map((p) => ({ x: p.x, y: p.y + thick })));
+  ctx.fill();
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (const p of outline) { x0 = Math.min(x0, p.x); y0 = Math.min(y0, p.y); x1 = Math.max(x1, p.x); y1 = Math.max(y1, p.y); }
+  const g = ctx.createRadialGradient(x0 + (x1 - x0) * 0.35, y0 + (y1 - y0) * 0.3, 4, x0 + (x1 - x0) * 0.5, y0 + (y1 - y0) * 0.55, Math.max(x1 - x0, y1 - y0) * 0.75);
+  g.addColorStop(0, opt.light);
+  g.addColorStop(0.55, opt.base);
+  g.addColorStop(1, opt.dark);
+  ctx.fillStyle = g;
+  poly(ctx, outline);
+  ctx.fill();
+  ctx.strokeStyle = opt.edge;
+  ctx.lineWidth = 1.3;
+  ctx.stroke();
+  return { x0, y0, x1, y1 };
+}
+
+function gloss(ctx, box, n, seed, a = 0.3) {
+  const rnd = seeded(seed);
+  ctx.strokeStyle = `rgba(255,255,255,${a})`;
+  ctx.lineCap = 'round';
+  for (let k = 0; k < n; k++) {
+    const x = box.x0 + (box.x1 - box.x0) * (0.15 + rnd() * 0.5);
+    const y = box.y0 + (box.y1 - box.y0) * (0.12 + rnd() * 0.45);
+    const w = 10 + rnd() * 26;
+    ctx.lineWidth = 1.2 + rnd() * 2.4;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.quadraticCurveTo(x + w * 0.5, y - 4, x + w, y + 1);
+    ctx.stroke();
+  }
+}
+
+function drawLiver(ctx, geom) {
+  const out = blob(geom, LIVER, G + 1);
+  const box = organ(ctx, out, { side: '#4c140f', light: '#b4483a', base: '#8a2f25', dark: '#5e1a14', edge: 'rgba(50,10,8,0.7)', thick: 9 });
+  ctx.save();
+  poly(ctx, out);
+  ctx.clip();
+  ctx.globalAlpha = 0.75;
+  ctx.fillStyle = tissuePattern(ctx, 'liver', 200) || '#8a2f25';
+  ctx.fillRect(box.x0, box.y0, box.x1 - box.x0, box.y1 - box.y0);
+  ctx.globalAlpha = 1;
+  const shadeL = ctx.createRadialGradient(box.x0 + (box.x1 - box.x0) * 0.35, box.y0 + (box.y1 - box.y0) * 0.3, 4,
+    box.x0 + (box.x1 - box.x0) * 0.5, box.y0 + (box.y1 - box.y0) * 0.55, Math.max(box.x1 - box.x0, box.y1 - box.y0) * 0.75);
+  shadeL.addColorStop(0, 'rgba(255,170,150,0.18)');
+  shadeL.addColorStop(0.6, 'rgba(0,0,0,0)');
+  shadeL.addColorStop(1, 'rgba(40,5,5,0.4)');
+  ctx.fillStyle = shadeL;
+  ctx.fillRect(box.x0, box.y0, box.x1 - box.x0, box.y1 - box.y0);
+  // falciform ligament and a lobe fissure
+  const f = openSpline(geom, [[19.2, 8.0], [19.6, 10.0], [19.3, 12.2], [19.8, 14.4]], 10).map((p) => iso(p.x, p.y, G + 1));
+  smoothLine(ctx, f);
+  ctx.strokeStyle = 'rgba(255,220,200,0.35)';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  gloss(ctx, box, 9, 31, 0.28);
+  ctx.restore();
+  // gallbladder peeking from under the edge
+  const gb = blob(geom, GALL, G + 3, 8);
+  const gbox = organ(ctx, gb, { side: '#2f4a16', light: '#a7c86a', base: '#6f9a3b', dark: '#3f5f1d', edge: 'rgba(30,50,10,0.7)', thick: 5 });
+  gloss(ctx, gbox, 2, 77, 0.45);
+}
+
+function drawSpleen(ctx, geom) {
+  const sp = blob(geom, SPLEEN, G + 1, 8);
+  const box = organ(ctx, sp, { side: '#3a0f26', light: '#a3466e', base: '#7a2a4f', dark: '#4e1733', edge: 'rgba(40,6,24,0.7)', thick: 6 });
+  gloss(ctx, box, 3, 12, 0.3);
+}
+
+function drawBone(ctx, geom) {
+  const outer = blob(geom, BONE, G + 2, 10);
+  const box = organ(ctx, outer, { side: '#8f8068', light: '#fffaf0', base: '#efe5cf', dark: '#cdbf9f', edge: 'rgba(90,70,40,0.7)', thick: 10 });
+  // marrow cavity: red marrow in a lattice of trabeculae
+  const cx = (box.x0 + box.x1) / 2, cy = (box.y0 + box.y1) / 2;
+  const inner = outer.map((p) => ({ x: cx + (p.x - cx) * 0.82, y: cy + (p.y - cy) * 0.8 }));
+  ctx.save();
+  poly(ctx, inner);
+  const mg = ctx.createRadialGradient(cx - 20, cy - 12, 6, cx, cy, (box.x1 - box.x0) * 0.5);
+  mg.addColorStop(0, '#d9505c');
+  mg.addColorStop(0.7, '#b3303e');
+  mg.addColorStop(1, '#8a1f2c');
+  ctx.fillStyle = mg;
+  ctx.fill();
+  ctx.clip();
+  const rnd = seeded(4242);
+  ctx.strokeStyle = 'rgba(250,238,214,0.85)';
+  ctx.lineCap = 'round';
+  for (let k = 0; k < 70; k++) {
+    const x = box.x0 + rnd() * (box.x1 - box.x0), y = box.y0 + rnd() * (box.y1 - box.y0);
+    const a = rnd() * TAU, l = 8 + rnd() * 16;
+    ctx.lineWidth = 1 + rnd() * 2;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.quadraticCurveTo(x + Math.cos(a + 0.6) * l * 0.5, y + Math.sin(a + 0.6) * l * 0.3, x + Math.cos(a) * l, y + Math.sin(a) * l * 0.55);
+    ctx.stroke();
+  }
+  for (let k = 0; k < 26; k++) {
+    const x = box.x0 + rnd() * (box.x1 - box.x0), y = box.y0 + rnd() * (box.y1 - box.y0);
+    ctx.fillStyle = rnd() < 0.5 ? 'rgba(255,214,120,0.75)' : 'rgba(120,10,25,0.5)';
+    ctx.beginPath();
+    ctx.ellipse(x, y, 2 + rnd() * 3, 1.3 + rnd() * 1.6, 0, 0, TAU);
+    ctx.fill();
   }
   ctx.restore();
+  ctx.strokeStyle = 'rgba(120,95,60,0.55)';
+  ctx.lineWidth = 1.2;
+  poly(ctx, inner);
+  ctx.stroke();
+  gloss(ctx, box, 4, 9, 0.3);
 }
 
-// ---------------------------------------------------------------- tissue tiles
-
-function drawTissueTile(ctx, geom, i, j) {
-  const { T, W, H } = geom;
-  const base = groundTint(geom, i, j);
-  const c = tileCorners(T, i, j, GROUND_H);
-  const b = tileCorners(T, i, j, 0);
-  if (i + 1 < W && geom.isPath(i + 1, j)) {
-    const g = ctx.createLinearGradient(0, c.right.y, 0, b.bottom.y);
-    g.addColorStop(0, shade(base, -0.16));
-    g.addColorStop(1, shade(base, -0.42));
-    ctx.fillStyle = g;
-    quad(ctx, c.right, c.bottom, b.bottom, b.right);
-    ctx.fill();
-    ctx.strokeStyle = rgba(shade(base, -0.5), 0.35);
-    ctx.lineWidth = 1;
-    for (let k = 1; k < 6; k++) {
-      const a = lerp(c.right, c.bottom, k / 6);
+// closed coils of small bowel lying on the mesentery
+function drawLoops(ctx, geom) {
+  for (const ctrl of LOOPS) {
+    const pts = openSpline(geom, ctrl, 9);
+    const r = 32;
+    const top = pts.map((p) => iso(p.x, p.y, G + r * 0.55));
+    const ground = pts.map((p) => iso(p.x, p.y, G));
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    smoothLine(ctx, ground.map((p) => ({ x: p.x + 4, y: p.y + 4 })));
+    ctx.strokeStyle = 'rgba(70,20,10,0.28)';
+    ctx.lineWidth = r * 1.25;
+    ctx.stroke();
+    smoothLine(ctx, top);
+    ctx.strokeStyle = '#9c4f45';
+    ctx.lineWidth = r * 1.2;
+    ctx.stroke();
+    ctx.strokeStyle = tissuePattern(ctx, 'serosa', 140) || '#d98a7e';
+    ctx.lineWidth = r * 1.05;
+    ctx.stroke();
+    smoothLine(ctx, top.map((p) => ({ x: p.x, y: p.y + r * 0.22 })));
+    ctx.strokeStyle = 'rgba(120,40,30,0.35)';
+    ctx.lineWidth = r * 0.5;
+    ctx.stroke();
+    smoothLine(ctx, top.map((p) => ({ x: p.x, y: p.y - r * 0.12 })));
+    ctx.strokeStyle = 'rgba(255,215,200,0.4)';
+    ctx.lineWidth = r * 0.62;
+    ctx.stroke();
+    // circular folds faintly visible through the thin wall
+    for (let k = 1; k < top.length - 1; k += 2) {
+      const a = top[k - 1], b = top[k + 1], p = top[k];
+      const dx = b.x - a.x, dy = b.y - a.y, l = Math.hypot(dx, dy) || 1;
+      const nx = -dy / l, ny = dx / l;
+      ctx.strokeStyle = 'rgba(150,60,50,0.22)';
+      ctx.lineWidth = 1.2;
       ctx.beginPath();
-      ctx.moveTo(a.x, a.y + 2);
-      ctx.quadraticCurveTo(a.x + 1.5, a.y + GROUND_H * 0.5, a.x, a.y + GROUND_H - 2);
+      ctx.moveTo(p.x + nx * r * 0.5, p.y + ny * r * 0.5);
+      ctx.quadraticCurveTo(p.x + dx / l * 3, p.y + dy / l * 3, p.x - nx * r * 0.5, p.y - ny * r * 0.5);
+      ctx.stroke();
+    }
+    smoothLine(ctx, top.map((p) => ({ x: p.x - 1, y: p.y - r * 0.3 })));
+    ctx.strokeStyle = 'rgba(255,225,215,0.75)';
+    ctx.lineWidth = r * 0.22;
+    ctx.stroke();
+    smoothLine(ctx, top.map((p) => ({ x: p.x - 2, y: p.y - r * 0.38 })));
+    ctx.strokeStyle = 'rgba(255,255,255,0.55)';
+    ctx.lineWidth = 1.6;
+    ctx.stroke();
+    // little vessels running over the serosa
+    for (let k = 3; k < top.length - 3; k += 5) {
+      const p = top[k];
+      ctx.strokeStyle = k % 2 ? 'rgba(170,30,45,0.55)' : 'rgba(70,80,160,0.5)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(p.x - 3, p.y + r * 0.42);
+      ctx.quadraticCurveTo(p.x + 2, p.y, p.x - 2, p.y - r * 0.4);
       ctx.stroke();
     }
   }
-  if (j + 1 < H && geom.isPath(i, j + 1)) {
-    const g = ctx.createLinearGradient(0, c.left.y, 0, b.bottom.y);
-    g.addColorStop(0, shade(base, -0.04));
-    g.addColorStop(1, shade(base, -0.3));
-    ctx.fillStyle = g;
-    quad(ctx, c.bottom, c.left, b.left, b.bottom);
-    ctx.fill();
-    ctx.strokeStyle = rgba(shade(base, -0.45), 0.3);
-    ctx.lineWidth = 1;
-    for (let k = 1; k < 6; k++) {
-      const a = lerp(c.bottom, c.left, k / 6);
-      ctx.beginPath();
-      ctx.moveTo(a.x, a.y + 2);
-      ctx.quadraticCurveTo(a.x - 1.5, a.y + GROUND_H * 0.5, a.x, a.y + GROUND_H - 2);
-      ctx.stroke();
-    }
-  }
-  ctx.fillStyle = base;
-  ctx.beginPath();
-  ctx.moveTo(c.top.x, c.top.y - 0.6);
-  ctx.lineTo(c.right.x + 1.2, c.right.y);
-  ctx.lineTo(c.bottom.x, c.bottom.y + 0.6);
-  ctx.lineTo(c.left.x - 1.2, c.left.y);
-  ctx.closePath();
-  ctx.fill();
+}
 
-  // glossy lips where the mucosa drops into the lumen
+function drawEsophagus(ctx, geom) {
+  const a = geom.mouth, b = geom.posAt(0);
+  const r = 26;
+  const pa = iso(a.x, a.y, G + r * 0.5), pb = iso(b.x + 10, b.y, G + r * 0.5);
   ctx.lineCap = 'round';
-  const lip = (p, q) => {
-    ctx.strokeStyle = 'rgba(255,226,232,0.55)';
-    ctx.lineWidth = 3.2;
-    ctx.beginPath();
-    ctx.moveTo(p.x, p.y);
-    ctx.lineTo(q.x, q.y);
-    ctx.stroke();
-    ctx.strokeStyle = 'rgba(255,255,255,0.45)';
-    ctx.lineWidth = 1.1;
-    ctx.stroke();
-  };
-  if (i + 1 < W && geom.isPath(i + 1, j)) lip(c.right, c.bottom);
-  if (j + 1 < H && geom.isPath(i, j + 1)) lip(c.bottom, c.left);
-  if (geom.isPath(i - 1, j)) lip(c.top, c.left);
-  if (geom.isPath(i, j - 1)) lip(c.top, c.right);
+  line(ctx, [pa, pb]);
+  ctx.strokeStyle = '#9c4f45';
+  ctx.lineWidth = r * 1.2;
+  ctx.stroke();
+  ctx.strokeStyle = '#df9284';
+  ctx.lineWidth = r;
+  ctx.stroke();
+  line(ctx, [{ x: pa.x, y: pa.y - r * 0.3 }, { x: pb.x, y: pb.y - r * 0.3 }]);
+  ctx.strokeStyle = 'rgba(255,230,220,0.7)';
+  ctx.lineWidth = r * 0.25;
+  ctx.stroke();
 }
 
-function tissueClip(ctx, geom) {
-  const { T, W, H } = geom;
-  ctx.beginPath();
-  for (let i = 0; i < W; i++) {
-    for (let j = 0; j < H; j++) {
-      if (geom.isPath(i, j)) continue;
-      const c = tileCorners(T, i, j, GROUND_H);
-      ctx.moveTo(c.top.x, c.top.y - 0.6);
-      ctx.lineTo(c.right.x + 1, c.right.y);
-      ctx.lineTo(c.bottom.x, c.bottom.y + 0.6);
-      ctx.lineTo(c.left.x - 1, c.left.y);
-      ctx.closePath();
+// ---------------------------------------------------------------- the opened gut tube
+
+function drawTube(ctx, geom) {
+  const { pts } = tube(geom);
+  const n = pts.length;
+
+  // shadow on the fat
+  ctx.save();
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  for (const rz of runs(n, (i) => pts[i].zone)) {
+    const seg = pts.slice(rz.i0, rz.i1 + 1);
+    const outline = seg.map((p) => off(p, p.h + WALL_W + 6, G)).concat(seg.map((p) => off(p, -(p.h + WALL_W + 6), G)).reverse());
+    ctx.fillStyle = 'rgba(70,25,10,0.22)';
+    poly(ctx, outline.map((p) => ({ x: p.x + 3, y: p.y + 4 })));
+    ctx.fill();
+  }
+  ctx.restore();
+
+  // lumen floor (mucosa), zone by zone
+  for (const rz of runs(n, (i) => pts[i].zone)) {
+    const seg = pts.slice(rz.i0, rz.i1 + 1);
+    const lk = LOOK[rz.key] || LOOK.si;
+    poly(ctx, floorPoly(seg));
+    ctx.fillStyle = tissuePattern(ctx, FLOOR_TEX[rz.key] || 'si', 120) || lk.floor;
+    ctx.fill();
+    ctx.strokeStyle = rgba(lk.floor, 0.8);
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+  ctx.save();
+  poly(ctx, floorPoly(pts));
+  ctx.clip();
+  drawMucosa(ctx, pts);
+  ctx.restore();
+
+  // inner wall on the far side, outer wall (serosa) on the near side
+  for (const side of [1, -1]) {
+    const back = (i) => side * (pts[i].nx + pts[i].ny + pts[Math.min(n - 1, i + 1)].nx + pts[Math.min(n - 1, i + 1)].ny) < 0;
+    for (const r of runs(n, (i) => `${back(i) ? 'b' : 'f'}|${pts[i].zone}`)) {
+      const seg = pts.slice(r.i0, r.i1 + 1);
+      if (seg.length < 2) continue;
+      const lk = LOOK[r.key.split('|')[1]] || LOOK.si;
+      if (r.key[0] === 'b') {
+        const top = seg.map((p) => off(p, side * p.h, RIM_H));
+        const bot = seg.map((p) => off(p, side * p.h, 0)).reverse();
+        const pts2 = top.concat(bot);
+        let y0 = Infinity, y1 = -Infinity;
+        for (const p of pts2) { y0 = Math.min(y0, p.y); y1 = Math.max(y1, p.y); }
+        poly(ctx, pts2);
+        ctx.fillStyle = tissuePattern(ctx, FLOOR_TEX[r.key.split('|')[1]] || 'si', 120) || lk.floor;
+        ctx.fill();
+        const g = ctx.createLinearGradient(0, y0, 0, y1);
+        g.addColorStop(0, 'rgba(255,235,230,0.18)');
+        g.addColorStop(1, 'rgba(60,8,18,0.45)');
+        ctx.fillStyle = g;
+        ctx.fill();
+        // fold creases on the far wall
+        ctx.strokeStyle = rgba(lk.fold, 0.35);
+        ctx.lineWidth = 1;
+        for (let k = 0; k < seg.length; k += 2) {
+          const a = off(seg[k], side * seg[k].h, RIM_H - 1), b = off(seg[k], side * seg[k].h, 1);
+          line(ctx, [a, b]);
+          ctx.stroke();
+        }
+      }
     }
   }
-  ctx.clip();
+  for (const side of [1, -1]) {
+    const back = (i) => side * (pts[i].nx + pts[i].ny + pts[Math.min(n - 1, i + 1)].nx + pts[Math.min(n - 1, i + 1)].ny) < 0;
+    for (const r of runs(n, (i) => `${back(i) ? 'b' : 'f'}|${pts[i].zone}`)) {
+      if (r.key[0] !== 'f') continue;
+      const seg = pts.slice(r.i0, r.i1 + 1);
+      if (seg.length < 2) continue;
+      const zone = r.key.split('|')[1];
+      const lk = LOOK[zone] || LOOK.si;
+      const top = seg.map((p) => off(p, side * p.h, RIM_H));
+      const bot = seg.map((p) => off(p, side * (p.h + WALL_W), G));
+      const pts2 = top.concat(bot.slice().reverse());
+      let y0 = Infinity, y1 = -Infinity;
+      for (const p of pts2) { y0 = Math.min(y0, p.y); y1 = Math.max(y1, p.y); }
+      poly(ctx, pts2);
+      ctx.fillStyle = zone === 'liver' || zone === 'core' ? lk.serosa : (tissuePattern(ctx, 'serosa', 140) || lk.serosa);
+      ctx.fill();
+      const g = ctx.createLinearGradient(0, y0, 0, y1);
+      g.addColorStop(0, 'rgba(255,240,235,0.35)');
+      g.addColorStop(0.35, 'rgba(255,240,235,0.05)');
+      g.addColorStop(1, rgba(lk.serosaDark, 0.75));
+      ctx.fillStyle = g;
+      ctx.fill();
+      ctx.strokeStyle = rgba(shade(lk.serosaDark, -0.3), 0.6);
+      ctx.lineWidth = 1;
+      line(ctx, bot);
+      ctx.stroke();
+      decorateWall(ctx, seg, side, zone, top, bot);
+    }
+  }
+
+  // cut edge of the wall: muscle, submucosa and mucosa layers
+  for (const side of [1, -1]) {
+    for (const rz of runs(n, (i) => pts[i].zone)) {
+      const seg = pts.slice(rz.i0, rz.i1 + 1);
+      const lk = LOOK[rz.key] || LOOK.si;
+      const rim = seg.map((p) => off(p, side * p.h, RIM_H));
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      line(ctx, rim);
+      ctx.strokeStyle = rz.key === 'liver' || rz.key === 'core' ? shade(lk.serosaDark, -0.2) : '#a63a44';
+      ctx.lineWidth = 5.5;
+      ctx.stroke();
+      ctx.strokeStyle = rz.key === 'liver' || rz.key === 'core' ? lk.serosa : '#f2dccb';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+      ctx.strokeStyle = lk.glint;
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+    }
+  }
 }
 
-function drawSurfaceDetail(ctx, geom) {
-  const { T, W, H } = geom;
-  ctx.save();
-  tissueClip(ctx, geom);
-
-  // soft key light from the upper left
-  const b = geom.groundBounds;
-  const lg = ctx.createLinearGradient(b.x0, b.y0, b.x1, b.y1);
-  lg.addColorStop(0, 'rgba(255,240,245,0.16)');
-  lg.addColorStop(0.55, 'rgba(255,240,245,0)');
-  lg.addColorStop(1, 'rgba(60,10,30,0.16)');
-  ctx.fillStyle = lg;
-  ctx.fillRect(b.x0, b.y0, b.x1 - b.x0, b.y1 - b.y0);
-
-  // epithelial cobblestones and crypt openings
-  for (let i = 0; i < W; i++) {
-    for (let j = 0; j < H; j++) {
-      if (geom.isPath(i, j)) continue;
-      const c = tileCorners(T, i, j, GROUND_H);
-      for (let k = 0; k < 6; k++) {
-        const u = hash01(i, j, 10 + k) * 0.8 + 0.1;
-        const v = hash01(i, j, 20 + k) * 0.8 + 0.1;
-        const x = c.top.x + (c.right.x - c.top.x) * u + (c.left.x - c.top.x) * v;
-        const y = c.top.y + (c.right.y - c.top.y) * u + (c.left.y - c.top.y) * v;
-        const r = 5 + hash01(i, j, 30 + k) * 5;
-        ctx.fillStyle = 'rgba(255,236,240,0.2)';
+function drawMucosa(ctx, pts) {
+  const n = pts.length;
+  // stomach rugae: thick longitudinal folds
+  const stomach = pts.filter((p) => p.zone === 'stomach');
+  if (stomach.length > 2) {
+    for (const f of [-0.68, -0.34, 0, 0.34, 0.68]) {
+      const path = stomach.map((p) => off(p, (f + Math.sin(p.s * 0.035 + f * 9) * 0.07) * p.h, 0));
+      smoothLine(ctx, path);
+      ctx.strokeStyle = rgba(LOOK.stomach.fold, 0.5);
+      ctx.lineWidth = 5.5;
+      ctx.stroke();
+      smoothLine(ctx, path.map((p) => ({ x: p.x, y: p.y - 1.6 })));
+      ctx.strokeStyle = rgba(LOOK.stomach.glint, 0.6);
+      ctx.lineWidth = 1.8;
+      ctx.stroke();
+    }
+  }
+  for (let i = 0; i < n; i++) {
+    const p = pts[i];
+    if (p.zone === 'si' && i % 2 === 0) {
+      // plicae circulares: close transverse folds
+      const a = off(p, -0.94 * p.h, 0), b = off(p, 0.94 * p.h, 0);
+      const m = iso(p.x + p.tx * 3, p.y + p.ty * 3, 0);
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y);
+      ctx.quadraticCurveTo(m.x, m.y, b.x, b.y);
+      ctx.strokeStyle = rgba(LOOK.si.fold, 0.45);
+      ctx.lineWidth = 2.6;
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y - 1.2);
+      ctx.quadraticCurveTo(m.x, m.y - 1.2, b.x, b.y - 1.2);
+      ctx.strokeStyle = rgba(LOOK.si.glint, 0.55);
+      ctx.lineWidth = 1.1;
+      ctx.stroke();
+    } else if (p.zone === 'colon' && i % 5 === 0) {
+      // haustra: deep semilunar folds with puckered sacs between
+      const a = off(p, -0.96 * p.h, 0), b = off(p, 0.96 * p.h, 0);
+      const m = iso(p.x + p.tx * 7, p.y + p.ty * 7, 0);
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y);
+      ctx.quadraticCurveTo(m.x, m.y, b.x, b.y);
+      ctx.strokeStyle = rgba(LOOK.colon.fold, 0.55);
+      ctx.lineWidth = 4.2;
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y - 1.8);
+      ctx.quadraticCurveTo(m.x, m.y - 1.8, b.x, b.y - 1.8);
+      ctx.strokeStyle = rgba(LOOK.colon.glint, 0.6);
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      const c = iso(p.x + p.tx * 15, p.y + p.ty * 15, 0);
+      ctx.fillStyle = 'rgba(255,240,232,0.18)';
+      ctx.beginPath();
+      ctx.ellipse(c.x, c.y, p.h * 0.45, p.h * 0.18, 0, 0, TAU);
+      ctx.fill();
+    } else if ((p.zone === 'liver' || p.zone === 'core') && i % 3 === 0) {
+      // blood inside the portal vein and the vessel to the marrow
+      for (let k = 0; k < 2; k++) {
+        const d = (hash01(i, k, 3) - 0.5) * 1.6 * p.h;
+        const q = off(p, d, 0);
+        const red = hash01(i, k, 9) < 0.8;
+        ctx.fillStyle = red ? 'rgba(220,50,70,0.75)' : 'rgba(250,245,255,0.8)';
         ctx.beginPath();
-        ctx.ellipse(x, y, r, r * 0.5, 0, 0, TAU);
+        ctx.ellipse(q.x, q.y, 3.2, 1.9, 0, 0, TAU);
         ctx.fill();
-        if (k < 2) {
-          ctx.fillStyle = 'rgba(150,40,70,0.28)';
+        if (red) {
+          ctx.fillStyle = 'rgba(120,10,30,0.55)';
           ctx.beginPath();
-          ctx.ellipse(x + 1, y + 0.5, 1.8, 1, 0, 0, TAU);
+          ctx.ellipse(q.x, q.y, 1.3, 0.8, 0, 0, TAU);
           ctx.fill();
         }
       }
     }
-  }
-
-  // capillary network (arterioles red, venules blue)
-  const rnd = seeded(20251);
-  const lifted = (x, y) => {
-    const q = toIso(x, y);
-    return { x: q.x, y: q.y - GROUND_H };
-  };
-  const trace = (pts, width, color) => {
-    ctx.strokeStyle = color;
-    ctx.lineWidth = width;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    ctx.beginPath();
-    const q0 = lifted(pts[0][0], pts[0][1]);
-    ctx.moveTo(q0.x, q0.y);
-    for (let k = 1; k < pts.length - 1; k++) {
-      const a = lifted(pts[k][0], pts[k][1]);
-      const n = lifted((pts[k][0] + pts[k + 1][0]) / 2, (pts[k][1] + pts[k + 1][1]) / 2);
-      ctx.quadraticCurveTo(a.x, a.y, n.x, n.y);
-    }
-    const ql = lifted(pts[pts.length - 1][0], pts[pts.length - 1][1]);
-    ctx.lineTo(ql.x, ql.y);
-    ctx.stroke();
-  };
-  for (let v = 0; v < 18; v++) {
-    let x = (rnd() * W - 0.5) * T, y = (rnd() * H - 0.5) * T;
-    let ang = rnd() * TAU;
-    const vein = v % 3 === 0;
-    const pts = [[x, y]];
-    const twigs = [];
-    for (let k = 0; k < 9; k++) {
-      ang += (rnd() - 0.5) * 1.1;
-      const step = 45 + rnd() * 40;
-      x += Math.cos(ang) * step;
-      y += Math.sin(ang) * step;
-      pts.push([x, y]);
-      if (rnd() < 0.45) {
-        let tx = x, ty = y, ta = ang + (rnd() < 0.5 ? 1 : -1) * (0.7 + rnd() * 0.6);
-        const tw = [[tx, ty]];
-        for (let q = 0; q < 3; q++) {
-          ta += (rnd() - 0.5) * 0.8;
-          tx += Math.cos(ta) * (22 + rnd() * 18);
-          ty += Math.sin(ta) * (22 + rnd() * 18);
-          tw.push([tx, ty]);
-        }
-        twigs.push(tw);
+    // villi velvet in the small intestine
+    if (p.zone === 'si' && i % 3 === 1) {
+      for (let k = 0; k < 4; k++) {
+        const q = off(p, (hash01(i, k, 21) - 0.5) * 1.8 * p.h, 0);
+        ctx.fillStyle = 'rgba(255,215,200,0.4)';
+        ctx.fillRect(q.x, q.y, 1.4, 1.4);
       }
     }
-    const col = vein ? 'rgba(88,92,190,' : 'rgba(196,36,60,';
-    trace(pts, vein ? 4.2 : 3.4, col + '0.16)');
-    trace(pts, vein ? 2.2 : 1.8, col + '0.42)');
-    for (const tw of twigs) trace(tw, 1.1, col + '0.34)');
   }
-  ctx.restore();
+  // wet sheen along the lumen
+  ctx.lineCap = 'round';
+  for (let i = 0; i < n - 4; i += 4) {
+    if (hash01(i, 5, 5) < 0.35) continue;
+    const p = pts[i], q = pts[i + 3];
+    const side = (p.nx + p.ny) > 0 ? -1 : 1;
+    const a = off(p, side * p.h * 0.45, 0), b = off(q, side * q.h * 0.45, 0);
+    ctx.strokeStyle = 'rgba(255,255,255,0.28)';
+    ctx.lineWidth = 2.2;
+    line(ctx, [a, b]);
+    ctx.stroke();
+  }
+  // soft shading towards the walls
+  for (const side of [1, -1]) {
+    const edge = pts.map((p) => off(p, side * p.h * 0.92, 0));
+    line(ctx, edge);
+    ctx.strokeStyle = 'rgba(70,10,20,0.18)';
+    ctx.lineWidth = 9;
+    ctx.stroke();
+  }
 }
 
-// ---------------------------------------------------------------- props
-
-function villusFrond(ctx, x, y, h, w, sway, tint) {
-  const g = ctx.createLinearGradient(x - w, 0, x + w, 0);
-  g.addColorStop(0, shade(tint, 0.18));
-  g.addColorStop(0.45, tint);
-  g.addColorStop(1, shade(tint, -0.25));
-  ctx.fillStyle = g;
-  ctx.strokeStyle = 'rgba(90,20,45,0.45)';
-  ctx.lineWidth = 0.9;
-  ctx.beginPath();
-  ctx.moveTo(x - w, y);
-  ctx.bezierCurveTo(x - w * 1.05, y - h * 0.6, x - w * 0.7 + sway, y - h, x + sway, y - h);
-  ctx.bezierCurveTo(x + w * 0.7 + sway, y - h, x + w * 1.05, y - h * 0.6, x + w, y);
-  ctx.closePath();
-  ctx.fill();
-  ctx.stroke();
-  ctx.strokeStyle = 'rgba(200,30,55,0.55)';
-  ctx.lineWidth = 0.9;
-  ctx.beginPath();
-  ctx.moveTo(x - w * 0.35, y - 1);
-  ctx.quadraticCurveTo(x - w * 0.4 + sway * 0.6, y - h * 0.85, x + sway * 0.8, y - h * 0.86);
-  ctx.quadraticCurveTo(x + w * 0.4 + sway * 0.6, y - h * 0.85, x + w * 0.35, y - 1);
-  ctx.stroke();
-  ctx.fillStyle = 'rgba(255,255,255,0.5)';
-  ctx.beginPath();
-  ctx.ellipse(x - w * 0.3 + sway * 0.8, y - h * 0.82, w * 0.25, h * 0.08, -0.3, 0, TAU);
-  ctx.fill();
-}
-
-function glossyBall(ctx, x, y, r, color, edge) {
-  const g = ctx.createRadialGradient(x - r * 0.35, y - r * 0.4, r * 0.1, x, y, r);
-  g.addColorStop(0, shade(color, 0.6));
-  g.addColorStop(0.5, color);
-  g.addColorStop(1, shade(color, -0.3));
-  ctx.fillStyle = g;
-  ctx.beginPath();
-  ctx.arc(x, y, r, 0, TAU);
-  ctx.fill();
-  ctx.strokeStyle = edge;
-  ctx.lineWidth = 0.9;
-  ctx.stroke();
-}
-
-function propShadow(ctx, x, y, rx, ry) {
-  ctx.fillStyle = 'rgba(80,15,40,0.22)';
-  ctx.beginPath();
-  ctx.ellipse(x + 3, y + 2, rx, ry, 0, 0, TAU);
-  ctx.fill();
-}
-
-function drawProp(ctx, kind, x, y, seed, big) {
-  const r = (k) => hash01(seed, k, 91);
-  if (kind === 'villi') {
-    const n = big ? 6 : 3 + Math.floor(r(1) * 3);
-    const fr = [];
-    for (let k = 0; k < n; k++) {
-      fr.push({ dx: (r(10 + k) - 0.5) * 46, dy: (r(20 + k) - 0.5) * 20, h: (big ? 26 : 16) + r(30 + k) * (big ? 16 : 10) });
+function decorateWall(ctx, seg, side, zone, top, bot) {
+  if (zone === 'stomach') {
+    // gastro-epiploic arcade along the greater curvature
+    const mid = seg.map((p) => off(p, side * (p.h + WALL_W * 0.5), (RIM_H + G) / 2));
+    smoothLine(ctx, mid);
+    ctx.strokeStyle = '#a81f2e';
+    ctx.lineWidth = 1.8;
+    ctx.stroke();
+    ctx.lineWidth = 1;
+    for (let k = 2; k < seg.length; k += 6) {
+      line(ctx, [mid[k], top[k]]);
+      ctx.stroke();
     }
-    fr.sort((a, b) => a.dy - b.dy);
-    propShadow(ctx, x, y + 2, big ? 30 : 22, big ? 13 : 9);
-    for (const f of fr) villusFrond(ctx, x + f.dx, y + f.dy, f.h, big ? 6 : 4.6, (r(40) - 0.5) * 4, '#f0a3b2');
-  } else if (kind === 'fat') {
-    const n = 2 + Math.floor(r(1) * 3);
-    propShadow(ctx, x, y + 2, 20, 8);
-    const bs = [];
-    for (let k = 0; k < n; k++) bs.push({ dx: (r(10 + k) - 0.5) * 28, dy: (r(20 + k) - 0.5) * 12, s: 6 + r(30 + k) * 5 });
-    bs.sort((a, b) => a.dy - b.dy);
-    for (const b of bs) glossyBall(ctx, x + b.dx, y + b.dy - b.s * 0.8, b.s, '#ffd67a', 'rgba(150,100,30,0.6)');
-  } else if (kind === 'lymph') {
-    propShadow(ctx, x, y + 2, 20, 9);
-    ctx.strokeStyle = 'rgba(160,190,90,0.6)';
+  } else if (zone === 'colon') {
+    // taenia coli and epiploic appendages
+    const mid = seg.map((p) => off(p, side * (p.h + WALL_W * 0.45), (RIM_H + G) / 2 + 1));
+    line(ctx, mid);
+    ctx.strokeStyle = 'rgba(250,236,220,0.85)';
+    ctx.lineWidth = 2.6;
+    ctx.stroke();
+    for (let k = 3; k < seg.length; k += 9) {
+      const b = bot[k];
+      const gr = ctx.createRadialGradient(b.x - 2, b.y - 1, 1, b.x, b.y + 2, 8);
+      gr.addColorStop(0, '#fff2b8');
+      gr.addColorStop(1, '#e2b04c');
+      ctx.fillStyle = gr;
+      ctx.beginPath();
+      ctx.ellipse(b.x, b.y + 3, 5.5, 4, 0.3, 0, TAU);
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(150,100,30,0.6)';
+      ctx.lineWidth = 0.7;
+      ctx.stroke();
+    }
+  } else if (zone === 'si') {
+    ctx.strokeStyle = 'rgba(170,30,45,0.45)';
+    ctx.lineWidth = 0.9;
+    for (let k = 1; k < seg.length; k += 3) {
+      line(ctx, [bot[k], lerp(bot[k], top[k], 0.85)]);
+      ctx.stroke();
+    }
+  } else {
+    // vessel walls: a sheen along the near side
+    line(ctx, top.map((p, k) => lerp(p, bot[k], 0.35)));
+    ctx.strokeStyle = 'rgba(255,255,255,0.3)';
     ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(x - 26, y + 6);
-    ctx.quadraticCurveTo(x - 14, y - 2, x - 6, y - 2);
-    ctx.moveTo(x + 6, y - 1);
-    ctx.quadraticCurveTo(x + 18, y + 4, x + 28, y - 4);
     ctx.stroke();
-    const g = ctx.createRadialGradient(x - 4, y - 12, 2, x, y - 6, 18);
-    g.addColorStop(0, '#e6d6ff');
-    g.addColorStop(0.6, '#a985d8');
-    g.addColorStop(1, '#7552a8');
-    ctx.fillStyle = g;
-    ctx.strokeStyle = 'rgba(60,30,90,0.55)';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(x - 15, y);
-    ctx.bezierCurveTo(x - 15, y - 18, x + 15, y - 18, x + 15, y);
-    ctx.ellipse(x, y, 15, 6, 0, 0, Math.PI);
-    ctx.fill();
-    ctx.stroke();
-    ctx.fillStyle = 'rgba(255,255,255,0.55)';
-    ctx.beginPath();
-    ctx.ellipse(x - 5, y - 10, 4, 2, -0.3, 0, TAU);
-    ctx.fill();
-  } else if (kind === 'mucus') {
-    const g = ctx.createRadialGradient(x - 6, y - 2, 2, x, y, 22);
-    g.addColorStop(0, 'rgba(235,252,255,0.85)');
-    g.addColorStop(1, 'rgba(150,215,235,0.35)');
-    ctx.fillStyle = g;
-    ctx.beginPath();
-    ctx.ellipse(x, y, 20, 8, 0, 0, TAU);
-    ctx.fill();
-    ctx.strokeStyle = 'rgba(110,180,210,0.55)';
-    ctx.lineWidth = 1;
-    ctx.stroke();
-    for (let k = 0; k < 2; k++) glossyBall(ctx, x - 8 + k * 14, y - 5 - k * 2, 3.4 - k, '#bfe9f7', 'rgba(80,150,190,0.6)');
-  } else if (kind === 'crypt') {
-    for (let k = 0; k < 3; k++) {
-      const px = x + (r(10 + k) - 0.5) * 40, py = y + (r(20 + k) - 0.5) * 16;
-      ctx.fillStyle = 'rgba(255,215,222,0.8)';
-      ctx.beginPath();
-      ctx.ellipse(px, py, 7, 3.6, 0, 0, TAU);
-      ctx.fill();
-      ctx.fillStyle = 'rgba(120,25,55,0.75)';
-      ctx.beginPath();
-      ctx.ellipse(px, py + 0.4, 3.8, 1.8, 0, 0, TAU);
-      ctx.fill();
-    }
-  } else if (kind === 'vessel') {
-    // a raised vessel loop arching over the mucosa
-    for (const [col, off] of [['#b52437', -5], ['#5462b6', 5]]) {
-      ctx.strokeStyle = shade(col, -0.25);
-      ctx.lineWidth = 5.5;
-      ctx.lineCap = 'round';
-      ctx.beginPath();
-      ctx.moveTo(x - 28, y + off * 0.5);
-      ctx.bezierCurveTo(x - 14, y - 22 + off, x + 14, y - 22 + off, x + 28, y + off * 0.5);
-      ctx.stroke();
-      ctx.strokeStyle = col;
-      ctx.lineWidth = 3.6;
-      ctx.stroke();
-      ctx.strokeStyle = 'rgba(255,255,255,0.45)';
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.moveTo(x - 18, y - 8 + off);
-      ctx.bezierCurveTo(x - 10, y - 16 + off, x + 4, y - 17 + off, x + 10, y - 15 + off);
-      ctx.stroke();
-    }
   }
-}
-
-function propPlan(geom) {
-  const { W, H, T } = geom;
-  const blocked = new Set();
-  const core = geom.siteList.find((s) => s.kind === 'core');
-  for (const info of geom.sites.values()) {
-    if (info.inLumen) continue;
-    const i = Math.round(info.x / T), j = Math.round(info.y / T);
-    blocked.add(i + ',' + j);
-  }
-  if (core) {
-    for (let di = -1; di <= 1; di++) for (let dj = -1; dj <= 1; dj++) blocked.add((core.x + di) + ',' + (core.y + dj));
-  }
-  const mouth = { i: Math.round(geom.mouth.x / T), j: Math.round(geom.mouth.y / T) };
-  for (let dj = -1; dj <= 1; dj++) blocked.add(mouth.i + ',' + (mouth.j + dj));
-  const out = [];
-  for (let i = 0; i < W; i++) {
-    for (let j = 0; j < H; j++) {
-      if (geom.isPath(i, j) || blocked.has(i + ',' + j)) continue;
-      const nearLumen = geom.isPath(i + 1, j) || geom.isPath(i - 1, j) || geom.isPath(i, j + 1) || geom.isPath(i, j - 1);
-      const edge = i === 0 || j === 0 || i === W - 1 || j === H - 1;
-      const roll = hash01(i, j, 777);
-      let kind = null;
-      let big = false;
-      if (nearLumen) {
-        if (roll < 0.2) kind = roll < 0.12 ? 'crypt' : 'mucus';
-      } else if (edge) {
-        if (roll < 0.75) { kind = roll < 0.5 ? 'villi' : roll < 0.62 ? 'fat' : 'lymph'; big = kind === 'villi'; }
-      } else if (roll < 0.42) {
-        kind = ['villi', 'fat', 'lymph', 'crypt', 'villi', 'fat', 'mucus'][Math.floor(hash01(i, j, 778) * 7)];
-      }
-      if (kind) out.push({ i, j, kind, big });
-    }
-  }
-  out.sort((a, b) => a.i + a.j - (b.i + b.j));
-  return out;
 }
 
 function drawPlinth(ctx, geom, info) {
-  const T = geom.T;
+  if (info.inLumen) return;
   const q = toIso(info.x, info.y);
-  const y = q.y - GROUND_H;
-  if (info.kind === 'slot' || info.kind === 'core' || info.kind === 'moat' || info.kind === 'peristalsis') {
-    const hw = info.kind === 'core' ? 70 : 40, hh = hw / 2;
-    ctx.fillStyle = 'rgba(120,40,70,0.16)';
-    ctx.beginPath();
-    ctx.moveTo(q.x, y - hh);
-    ctx.lineTo(q.x + hw, y);
-    ctx.lineTo(q.x, y + hh);
-    ctx.lineTo(q.x - hw, y);
-    ctx.closePath();
-    ctx.fill();
-    ctx.strokeStyle = 'rgba(255,240,244,0.45)';
-    ctx.setLineDash([5, 5]);
-    ctx.lineWidth = 1.4;
-    ctx.stroke();
-    ctx.setLineDash([]);
-  } else if (info.kind === 'wall' || info.kind === 'kupffer') {
-    const d = geom.dirAt(info.s);
-    const half = T * 0.46;
-    const ends = d.dx !== 0
-      ? [toIso(info.x, info.y - half), toIso(info.x, info.y + half)]
-      : [toIso(info.x - half, info.y), toIso(info.x + half, info.y)];
-    ctx.strokeStyle = 'rgba(255,255,255,0.32)';
-    ctx.setLineDash([3, 4]);
-    ctx.lineWidth = 1.2;
-    ctx.beginPath();
-    ctx.moveTo(ends[0].x, ends[0].y);
-    ctx.lineTo(ends[1].x, ends[1].y);
-    ctx.stroke();
-    ctx.setLineDash([]);
-  }
+  const y = q.y - G;
+  const hw = info.kind === 'core' ? 70 : 40, hh = hw / 2;
+  ctx.fillStyle = 'rgba(120,60,20,0.14)';
+  ctx.beginPath();
+  ctx.moveTo(q.x, y - hh);
+  ctx.lineTo(q.x + hw, y);
+  ctx.lineTo(q.x, y + hh);
+  ctx.lineTo(q.x - hw, y);
+  ctx.closePath();
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(255,248,230,0.55)';
+  ctx.setLineDash([5, 5]);
+  ctx.lineWidth = 1.3;
+  ctx.stroke();
+  ctx.setLineDash([]);
+}
+
+function drawLight(ctx, geom) {
+  const c = topCorners(geom);
+  ctx.save();
+  poly(ctx, [c.top, c.right, c.bottom, c.left]);
+  ctx.clip();
+  const lg = ctx.createLinearGradient(c.left.x, c.top.y, c.right.x, c.bottom.y);
+  lg.addColorStop(0, 'rgba(255,245,235,0.14)');
+  lg.addColorStop(0.5, 'rgba(255,245,235,0)');
+  lg.addColorStop(1, 'rgba(50,10,20,0.18)');
+  ctx.fillStyle = lg;
+  ctx.fillRect(c.left.x, c.top.y, c.right.x - c.left.x, c.bottom.y - c.top.y);
+  ctx.restore();
+  ctx.strokeStyle = 'rgba(255,240,220,0.5)';
+  ctx.lineWidth = 1.4;
+  line(ctx, [c.left, c.top, c.right]);
+  ctx.stroke();
 }
 
 export function drawGround(ctx, geom) {
-  const { T, W, H } = geom;
   drawSlab(ctx, geom);
-  const order = [];
-  for (let i = 0; i < W; i++) for (let j = 0; j < H; j++) order.push([i, j]);
-  order.sort((a, b) => (a[0] + a[1]) - (b[0] + b[1]) || a[0] - b[0]);
-  const pathTileMap = new Map(geom.pathTiles.map((t) => [t.i + ',' + t.j, t]));
-  for (const [i, j] of order) {
-    const pt = pathTileMap.get(i + ',' + j);
-    if (pt) drawLumenTile(ctx, geom, pt);
-    else drawTissueTile(ctx, geom, i, j);
-  }
-  drawSurfaceDetail(ctx, geom);
-  for (const p of propPlan(geom)) {
-    const q = toIso(p.i * T, p.j * T);
-    drawProp(ctx, p.kind, q.x, q.y - GROUND_H, p.i * 131 + p.j * 17, p.big);
-  }
+  ctx.save();
+  clipTop(ctx, geom);
+  drawFat(ctx, geom);
+  drawVessels(ctx, geom);
+  drawSpleen(ctx, geom);
+  drawLiver(ctx, geom);
+  drawBone(ctx, geom);
+  drawLoops(ctx, geom);
+  ctx.restore();
+  drawEsophagus(ctx, geom);
+  drawTube(ctx, geom);
   for (const info of geom.sites.values()) drawPlinth(ctx, geom, info);
+  drawLight(ctx, geom);
 }
 
 export class GroundCache {
@@ -782,7 +947,7 @@ const BACKDROP_CELLS = Array.from({ length: 16 }, (_, k) => ({
   red: hash01(k, 6, 5) < 0.7,
 }));
 
-// Screen-space backdrop: the body cavity behind the floating gut diorama.
+// Screen-space backdrop: the body cavity behind the floating dissection.
 export function drawBackdrop(ctx, vw, vh, t) {
   const g = ctx.createRadialGradient(vw * 0.5, vh * 0.42, Math.min(vw, vh) * 0.1, vw * 0.5, vh * 0.5, Math.max(vw, vh) * 0.75);
   g.addColorStop(0, '#5b2038');
@@ -807,27 +972,33 @@ export function drawBackdrop(ctx, vw, vh, t) {
 }
 
 const FLOW = Array.from({ length: 46 }, (_, k) => ({
-  f: hash01(k, 11, 3), off: (hash01(k, 12, 3) - 0.5) * 64, sp: 26 + hash01(k, 13, 3) * 30, kind: k % 4,
+  f: hash01(k, 11, 3), off: hash01(k, 12, 3) - 0.5, sp: 26 + hash01(k, 13, 3) * 30, kind: k % 4,
 }));
 
-// Chyme and bubbles drifting along the lumen, mouth to core.
+// Chyme, bubbles and (in the vessels) blood drifting along the lumen, mouth to core.
 export function drawLumenFlow(ctx, geom, t, speed = 1) {
   ctx.save();
   for (const p of FLOW) {
     const s = (p.f * geom.len + t * p.sp * speed) % geom.len;
     const pos = geom.posAt(s);
     const d = geom.dirAt(s);
-    const q = toIso(pos.x - d.dy * p.off, pos.y + d.dx * p.off);
-    const z = geom.zoneOf(s);
+    const lat = p.off * 1.5 * geom.lumenHalf(s);
+    const q = toIso(pos.x - d.dy * lat, pos.y + d.dx * lat);
+    const z = geom.zoneOf(s).key;
     const fadeIn = Math.min(1, s / 120, (geom.len - s) / 160);
-    if (p.kind === 0) {
-      ctx.strokeStyle = `rgba(255,255,255,${(0.55 * fadeIn).toFixed(3)})`;
+    if (z === 'liver' || z === 'core') {
+      ctx.fillStyle = `rgba(225,55,75,${(0.7 * fadeIn).toFixed(2)})`;
+      ctx.beginPath();
+      ctx.ellipse(q.x, q.y - 1, 3.2, 1.9, 0, 0, TAU);
+      ctx.fill();
+    } else if (p.kind === 0) {
+      ctx.strokeStyle = `rgba(255,255,255,${(0.6 * fadeIn).toFixed(2)})`;
       ctx.lineWidth = 1;
       ctx.beginPath();
       ctx.arc(q.x, q.y - 3, 2.6, 0, TAU);
       ctx.stroke();
     } else {
-      ctx.fillStyle = rgba(shade(z.color, -0.35), (0.45 * fadeIn).toFixed(2));
+      ctx.fillStyle = `rgba(150,105,40,${(0.45 * fadeIn).toFixed(2)})`;
       ctx.beginPath();
       ctx.ellipse(q.x, q.y - 1, 3 + p.kind * 0.6, 1.7, 0, 0, TAU);
       ctx.fill();
@@ -836,29 +1007,29 @@ export function drawLumenFlow(ctx, geom, t, speed = 1) {
   ctx.restore();
 }
 
-function pathTilesBetween(geom, s0, s1) {
-  return geom.pathTiles.filter((t) => t.s >= s0 - 1 && t.s < s1);
+function floorBetween(geom, s0, s1) {
+  const pts = tube(geom).pts.filter((p) => p.s >= s0 && p.s <= s1);
+  return pts.length >= 2 ? pts : null;
 }
 
 export function drawAcidSheen(ctx, geom, s0, s1, t, strength) {
-  const tiles = pathTilesBetween(geom, s0, s1);
+  const pts = floorBetween(geom, s0, s1);
+  if (!pts) return;
   ctx.save();
-  for (const tile of tiles) {
-    const c = tileCorners(geom.T, tile.i, tile.j, 0);
-    const a = 0.16 + 0.06 * Math.sin(t * 2 + tile.i * 0.7 + tile.j) * strength;
-    ctx.fillStyle = `rgba(190,230,60,${(a * strength).toFixed(3)})`;
-    tileFill(ctx, c);
-    ctx.fill();
-    for (let k = 0; k < 3; k++) {
-      const ph = (t * 0.7 + hash01(tile.i, tile.j, k)) % 1;
-      const cx = (c.top.x + c.bottom.x) / 2 + (hash01(tile.i, tile.j, k + 5) - 0.5) * 44;
-      const cy = (c.top.y + c.bottom.y) / 2 + (hash01(tile.i, tile.j, k + 9) - 0.5) * 18 - ph * 12;
-      ctx.strokeStyle = `rgba(230,255,140,${(0.8 * (1 - ph) * strength).toFixed(3)})`;
-      ctx.lineWidth = 1.2;
-      ctx.beginPath();
-      ctx.arc(cx, cy, 2 + ph * 3, 0, TAU);
-      ctx.stroke();
-    }
+  poly(ctx, floorPoly(pts));
+  const a = (0.16 + 0.05 * Math.sin(t * 2)) * strength;
+  ctx.fillStyle = `rgba(190,230,60,${a.toFixed(3)})`;
+  ctx.fill();
+  ctx.clip();
+  for (let k = 0; k < 24; k++) {
+    const p = pts[Math.floor(hash01(k, 3, 7) * pts.length)];
+    const ph = (t * 0.7 + hash01(k, 1, 7)) % 1;
+    const q = off(p, (hash01(k, 2, 7) - 0.5) * 1.6 * p.h, ph * 10);
+    ctx.strokeStyle = `rgba(230,255,140,${(0.8 * (1 - ph) * strength).toFixed(3)})`;
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.arc(q.x, q.y, 2 + ph * 3, 0, TAU);
+    ctx.stroke();
   }
   ctx.restore();
 }
@@ -872,7 +1043,7 @@ export function drawPeristalsisBands(ctx, geom, s0, s1, t, period) {
     const s = s0 + ((phase + k / 3) % 1) * span;
     const p = geom.posAt(s);
     const d = geom.dirAt(s);
-    const half = geom.T * 0.45;
+    const half = geom.lumenHalf(s) + WALL_W * 0.5;
     const a = d.dx !== 0 ? toIso(p.x, p.y - half) : toIso(p.x - half, p.y);
     const b = d.dx !== 0 ? toIso(p.x, p.y + half) : toIso(p.x + half, p.y);
     ctx.lineCap = 'round';
@@ -890,23 +1061,17 @@ export function drawPeristalsisBands(ctx, geom, s0, s1, t, period) {
 }
 
 export function drawPathSpan(ctx, geom, s0, s1, fill, stroke) {
-  const tiles = pathTilesBetween(geom, Math.max(0, s0 - geom.T / 2), Math.min(geom.len + 1, s1 + geom.T / 2));
+  const pts = floorBetween(geom, Math.max(0, s0), Math.min(geom.len, s1));
+  if (!pts) return;
   ctx.save();
+  poly(ctx, floorPoly(pts));
   ctx.fillStyle = fill;
-  for (const tile of tiles) {
-    const c = tileCorners(geom.T, tile.i, tile.j, 0);
-    tileFill(ctx, c);
-    ctx.fill();
-  }
+  ctx.fill();
   if (stroke) {
     ctx.strokeStyle = stroke;
     ctx.lineWidth = 2;
     ctx.setLineDash([6, 5]);
-    for (const tile of tiles) {
-      const c = tileCorners(geom.T, tile.i, tile.j, 0);
-      tileFill(ctx, c);
-      ctx.stroke();
-    }
+    ctx.stroke();
     ctx.setLineDash([]);
   }
   ctx.restore();
@@ -947,14 +1112,13 @@ export function drawRangeRing(ctx, ix, iy, r, color) {
 
 export function drawMouth(ctx, geom, t, open) {
   const q = toIso(geom.mouth.x, geom.mouth.y);
-  const x = q.x, y = q.y - GROUND_H - 18;
+  const x = q.x, y = q.y - G - 18;
   const o = 4 + open * 11 + Math.sin(t * 3) * 0.9;
   ctx.save();
   ctx.fillStyle = 'rgba(60,10,30,0.3)';
   ctx.beginPath();
-  ctx.ellipse(x + 3, q.y - GROUND_H + 6, 36, 13, 0, 0, TAU);
+  ctx.ellipse(x + 3, q.y - G + 6, 36, 13, 0, 0, TAU);
   ctx.fill();
-  // oral cavity
   const cav = ctx.createRadialGradient(x, y, 2, x, y, 28);
   cav.addColorStop(0, '#2a0614');
   cav.addColorStop(1, '#6a1832');
@@ -962,12 +1126,10 @@ export function drawMouth(ctx, geom, t, open) {
   ctx.beginPath();
   ctx.ellipse(x, y, 25, o + 1, 0, 0, TAU);
   ctx.fill();
-  // tongue
   ctx.fillStyle = '#e46a86';
   ctx.beginPath();
   ctx.ellipse(x + 2, y + o * 0.45, 15, Math.max(1.5, o * 0.45), 0, Math.PI, 0);
   ctx.fill();
-  // teeth
   ctx.fillStyle = '#fffaf2';
   ctx.strokeStyle = 'rgba(120,90,70,0.5)';
   ctx.lineWidth = 0.6;
@@ -984,7 +1146,6 @@ export function drawMouth(ctx, geom, t, open) {
       ctx.stroke();
     }
   }
-  // lips
   const lip = ctx.createLinearGradient(0, y - o - 16, 0, y + o + 16);
   lip.addColorStop(0, '#f48aa2');
   lip.addColorStop(0.5, '#d94a6c');

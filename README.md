@@ -33,11 +33,11 @@ C. difficile.
   scripted waves; stars reward the correct treatment.
 - **Multiplayer**: attack other players' saved bases (or training bases); your base defends itself.
 - **League**: 10 identical tournament bases (one scored attempt each) and 3 Defence Trials.
-- **Clan Wars**: college clans, base snapshots, vaccination-based herd immunity.
+- **Cohort Challenges**: college cohorts, base snapshots, vaccination-based herd immunity.
 - **Classroom**: a teacher creates a session with a QR code; groups play on phones without accounts;
   results update live on a projector page.
-- **Organiser tools**: approvals (guardian consent for under-18s), league phases, Clan Wars, awards
-  (Champion, Best Clan, Best Steward, Best Defender), CSV exports, fair-play review with replays,
+- **Organiser tools**: approvals (guardian consent for under-18s), league phases, Cohort Challenges, awards
+  (Champion, Best Cohort, Best Steward, Best Defender), CSV exports, fair-play review with replays,
   and one-click deletion of all player data after the event (DPDP Act 2023).
 
 ## Run it locally
@@ -121,7 +121,7 @@ Then players on the same Wi-Fi open `http://<laptop-ip>:8000`. Change the passwo
    key `privacy`), decide `AUTO_APPROVE`, and have faculty review the matrix, questions and cards.
 2. Practice week: League phase = *practice* (Admin > League).
 3. League round: phase = *league* (one scored attempt per base and per trial).
-4. Clan Wars: Admin > Clan Wars > pair two clans (bases and herd immunity are snapshotted).
+4. Cohort Challenges: Admin > Cohort Challenges > pair two cohorts (bases and herd immunity are snapshotted).
 5. Live final: open `/#/live` on the projector; classroom sessions have their own `/#/projector/CODE`.
 6. Awards and exports: Admin > Awards, Admin > Data (CSV).
 7. After results are published: Admin > Data > **Delete all player data**.

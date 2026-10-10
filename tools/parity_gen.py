@@ -100,6 +100,20 @@ class Gen:
         self.bdefs = {b['key']: b for b in gd['buildings']}
         self.sites = gd['map']['sites']
         self.vacc_germs = list(gd['vaccines'].keys())
+        bst = gd.get('boosters', {})
+        self.boosts = {'attack': [b['key'] for b in bst.get('attack', [])],
+                       'defence': [b['key'] for b in bst.get('defence', [])]}
+
+    def boost_commands(self, side, horizon):
+        r = self.r
+        other = 'defence' if side == 'attack' else 'attack'
+        keys = self.boosts[side] * 3 + self.boosts[other][:1] + ['bogus_boost']
+        out = []
+        if r.random() < 0.65:
+            for _ in range(r.randint(1, 7)):
+                out.append({'t': r.randint(0, horizon), 'c': 'boost', 'k': r.choice(keys),
+                            'z': r.choice([0, 1, 2, 3, 0, 1, 2, 3, -1, 4, 1.0, '1', None])})
+        return out
 
     def rx(self):
         r = self.r
@@ -184,6 +198,7 @@ class Gen:
                              's': r.choice([r.randint(0, 5200), r.randint(0, 2000), r.randint(-50, 5300)])})
         if r.random() < 0.1:
             cmds.append({'t': r.randint(0, horizon + 200), 'c': 'end'})
+        cmds.extend(self.boost_commands('attack', horizon + 900))
         if r.random() < 0.15:
             cmds.extend(self.junk_commands(horizon))
         r.shuffle(cmds)
@@ -309,6 +324,7 @@ class Gen:
         if r.random() < 0.1:
             cmds.append({'t': r.randint(0, mt), 'c': 'deploy', 'u': 'cholera'})
             cmds.append({'t': r.randint(0, mt), 'c': 'end'})
+        cmds.extend(self.boost_commands('defence', mt))
         if r.random() < 0.1:
             cmds.extend(self.junk_commands(mt))
         return 'campaign_%s_%d' % (tag, idx), setup, cmds

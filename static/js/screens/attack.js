@@ -56,7 +56,7 @@ export async function render(root, params) {
       h('div', { class: 'row between' },
         h('div', null,
           h('h2', { class: 'mt-0 mb-0' }, o.name),
-          h('p', { class: 'muted small mb-0' }, `${o.kind === 'bot' ? 'Training base' : o.college || 'Player'} • Core level ${o.core_level} • ${fmt(o.trophies)} trophies`)),
+          h('p', { class: 'muted small mb-0' }, `${o.kind === 'bot' ? 'Training base' : o.college || 'Player'} • Core level ${o.core_level} • ${fmt(o.trophies)} merit points`)),
         next),
       h('p', { class: 'small mb-0 mt-1' }, icon('atp', { size: 16 }), ` Up to ${fmt(found.loot[0])} ATP and `, icon('leaf', { size: 16 }), ` ${fmt(found.loot[1])} nutrients to win.`));
     if (view) view.update(found.layout, { coreLevel: found.core_level, highlightSites: [], showRanges: false });

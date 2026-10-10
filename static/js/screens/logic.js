@@ -10,6 +10,7 @@ export const ROUTES = [
   { name: 'result', path: 'result', public: true },
   { name: 'campaign', path: 'campaign/:id?' },
   { name: 'league', path: 'league' },
+  { name: 'clan', path: 'cohort' },
   { name: 'clan', path: 'clan' },
   { name: 'leaderboards', path: 'leaderboards/:kind?' },
   { name: 'guide', path: 'guide/:tab?', public: true },

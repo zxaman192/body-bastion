@@ -248,6 +248,12 @@ export async function runBattle(root, run) {
     mode: rmode,
     title: run.title || 'Battle',
     scored: !!run.scored || !!run.apiOpts.groupToken,
+    checkpoints: rmode === 'replay' || !run.battleId ? null : {
+      ask: (z) => post(`/api/battle/${run.battleId}/checkpoint`, { z }, { ...run.apiOpts, silent: true })
+        .then((r) => (r && r.question) || null).catch(() => null),
+      answer: (z, choice) => post(`/api/battle/${run.battleId}/checkpoint/answer`, { z, choice }, { ...run.apiOpts, silent: true })
+        .catch(() => null),
+    },
     onFinish,
     onExit,
     ...levelProps(gd, run),
@@ -399,7 +405,7 @@ export function armyBuilder(gd, state, { onChange } = {}) {
   const spells = (gd.spells || []).map((s) => s.name).join(', ');
   const el = h('div', null,
     units.length ? grid : h('p', { class: 'muted' }, 'You have no deployable germs yet.'),
-    h('p', { class: 'muted small mt-1' }, `You also get one of each spell: ${spells}.`),
+    h('p', { class: 'muted small mt-1' }, `You also get one of each tactic: ${spells}.`),
     h('div', { class: 'capacity' },
       h('div', { class: 'card flat' },
         h('div', { class: 'row between' }, usedText,

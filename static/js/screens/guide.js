@@ -93,7 +93,7 @@ export async function render(root, params) {
       p.append(h('div', { class: 'grid-cards' }, Object.entries(gd.vaccines).map(([germ, v]) => h('div', { class: 'card guide-card' },
         h('h3', { class: 'mt-0' }, (idx(gd).units.get(germ) || {}).name || germ), h('p', null, h('strong', null, `About ${v.efficacy}% protection. `), v.note),
         (g.vaccines || {})[germ] ? h('p', { class: 'muted small mb-0' }, g.vaccines[germ]) : null))));
-      p.append(h('p', { class: 'muted small mt-2' }, `Herd immunity: when ${gd.herd.coverageFullPct}% or more of a clan is vaccinated, every member's base gets indirect protection worth up to ${gd.herd.indirectSharePct}% of the vaccine effect.`));
+      p.append(h('p', { class: 'muted small mt-2' }, `Herd immunity: when ${gd.herd.coverageFullPct}% or more of a cohort is vaccinated, every member's base gets indirect protection worth up to ${gd.herd.indirectSharePct}% of the vaccine effect.`));
     },
     changes: (p) => {
       const list = Array.isArray(g.corrections) ? g.corrections : [];

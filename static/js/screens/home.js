@@ -150,14 +150,14 @@ export async function render(root, params) {
     h('span', { class: 'hud-pinfo' },
       h('span', { class: 'hud-pname' }, user.display_name || user.username || 'Player'),
       h('span', { class: 'hud-psub' }, user.is_guest ? 'Guest player' : (user.college || 'Body Bastion'))));
-  const trophies = h('div', { class: 'hud-chip trophy', title: 'Trophies', 'data-tour': 'trophies' }, icon('trophy', { size: 18 }), h('strong', null, fmt(state.trophies)));
+  const trophies = h('div', { class: 'hud-chip merit', title: 'Merit points', 'data-tour': 'trophies' }, icon('trophy', { size: 18 }), h('strong', null, fmt(state.trophies)));
   const shieldChip = shield
-    ? h('div', { class: 'hud-chip shield', title: 'Shield: nobody can attack you until it ends' }, icon('shield', { size: 18 }), h('strong', null, fmtDuration(shield)))
+    ? h('div', { class: 'hud-chip shield', title: 'Recovery: nobody can attack your base until it ends' }, icon('shield', { size: 18 }), h('strong', null, fmtDuration(shield)))
     : null;
 
   const side = h('nav', { class: 'hud-side', 'aria-label': 'More' },
     hudButton('#/league', 'trophy', 'League', 'c-league', { 'data-tour': 'league' }),
-    hudButton('#/clan', 'clan', 'Clan', 'c-clan'),
+    hudButton('#/cohort', 'clan', 'Cohort', 'c-clan'),
     hudButton('#/leaderboards', 'bars', 'Ranks', 'c-ranks'),
     hudButton('#/log', 'shieldcheck', 'Defence log', 'c-log'),
     hudButton('#/guide', 'book', 'Guide', 'c-guide', { 'data-tour': 'guide' }),
@@ -180,7 +180,7 @@ export async function render(root, params) {
     h('span', { class: 'hud-big-label' }, 'Research'));
 
   const guestRibbon = user.is_guest
-    ? h('a', { class: 'hud-ribbon', href: '#/register' }, icon('user', { size: 16 }), 'Guest: create an account to join clans and the league')
+    ? h('a', { class: 'hud-ribbon', href: '#/register' }, icon('user', { size: 16 }), 'Guest: create an account to join cohorts and the league')
     : null;
 
   mount(root,

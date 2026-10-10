@@ -51,8 +51,23 @@ export async function render(root) {
       defence ? stat('Unnecessary shots', fmt(st.unnecessary || 0)) : stat('Time left', `${res.timeLeft || 0}s`),
       defence ? stat('Drug shots', fmt(st.totalShots || 0)) : stat('Germs sent', fmt(Object.values(st.deployed || {}).reduce((a, b) => a + b, 0))),
       r.rewards && (r.rewards.atp || r.rewards.nutrients) ? stat('Loot', `${fmt(r.rewards.atp)} ATP / ${fmt(r.rewards.nutrients)} N`) : null,
-      r.rewards && r.rewards.trophies ? stat('Trophies', `${r.rewards.trophies > 0 ? '+' : ''}${r.rewards.trophies}`) : null));
+      r.rewards && r.rewards.trophies ? stat('Merit points', `${r.rewards.trophies > 0 ? '+' : ''}${r.rewards.trophies}`) : null));
   root.append(hero);
+
+  const cps = Array.isArray(r.checkpoints) ? r.checkpoints.filter((c) => c.answered) : [];
+  if (cps.length) {
+    const right = cps.filter((c) => c.correct).length;
+    const used = (res.stats && res.stats.boosters) || {};
+    const boostNames = Object.keys(used).map((k) => {
+      const all = [...((gd.boosters || {}).attack || []), ...((gd.boosters || {}).defence || [])];
+      const d = all.find((x) => x.key === k);
+      return d ? d.name : k;
+    });
+    root.append(h('section', { class: 'section' }, h('h2', null, icon('flask'), ' Checkpoint questions'),
+      h('p', null, `You answered ${right} of ${cps.length} correctly.`, boostNames.length ? ` Boosters used: ${boostNames.join(', ')}.` : ''),
+      h('ul', { class: 'objectives' }, cps.map((c) => h('li', { class: c.correct ? 'met' : 'unmet' },
+        icon(c.correct ? 'check' : 'close'), h('span', null, `${c.name}: ${c.correct ? 'correct, booster earned' : 'missed'}`))))));
+  }
 
   if (Array.isArray(r.objectives) && (level || ctx.mode === 'classroom')) {
     const objs = (level ? level.objectives : []) || [];

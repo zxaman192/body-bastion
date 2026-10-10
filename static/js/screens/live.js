@@ -2,7 +2,7 @@ import { h, setTitle, onLeave, fmt, fmtDate } from '../ui.js';
 import { get } from '../api.js';
 import { phaseText } from './logic.js';
 
-const MODE = { multiplayer: 'Attack', tournament: 'League', trial: 'Trial', clanwar: 'Clan War' };
+const MODE = { multiplayer: 'Attack', tournament: 'League', trial: 'Trial', clanwar: 'Cohort Challenge' };
 
 export async function render(root, params) {
   setTitle('Live');
@@ -27,9 +27,9 @@ export async function render(root, params) {
     }
     if (!params.isCurrent()) return;
     head.replaceChildren(h('div', null, h('h1', null, 'Body Bastion - Live'), h('p', null, phaseText(d.phase))));
-    const panels = [table('League top 10', d.league_top, 'Score'), table('Clans', d.clans_top, 'War stars')];
+    const panels = [table('League top 10', d.league_top, 'Score'), table('Cohorts', d.clans_top, 'Challenge stars')];
     if (d.war) {
-      panels.push(h('div', { class: 'proj-panel center' }, h('h2', null, 'Clan War'),
+      panels.push(h('div', { class: 'proj-panel center' }, h('h2', null, 'Cohort Challenge'),
         h('p', { class: 'proj-war' }, h('strong', null, d.war.clan_a), ` ${d.war.stars_a} ★  vs  ${d.war.stars_b} ★ `, h('strong', null, d.war.clan_b)),
         h('p', null, `Ends ${fmtDate(d.war.ends_at)}`)));
     }

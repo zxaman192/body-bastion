@@ -5,7 +5,7 @@ import { unitName } from './logic.js';
 import { armyBuilder, boostToggle, startBattle } from './battleflow.js';
 
 export async function render(root, params) {
-  setTitle('Clan');
+  setTitle('Cohort');
   root.append(spinnerBlock());
   let gd;
   try {
@@ -15,9 +15,9 @@ export async function render(root, params) {
     return;
   }
   if (!params.isCurrent()) return;
-  root.replaceChildren(screenHeader('Clan', { subtitle: 'One clan per college. Vaccinate together for herd immunity, then fight Clan Wars.', back: '#/home' }));
+  root.replaceChildren(screenHeader('Cohort', { subtitle: 'One cohort per college. Vaccinate together for herd immunity, then fight Cohort Challenges.', back: '#/home' }));
   if (isGuest()) {
-    root.append(h('div', { class: 'callout callout-warn' }, icon('user'), h('p', { class: 'mb-0' }, 'Guests cannot join clans. Register an account from your profile to play Clan Wars.')));
+    root.append(h('div', { class: 'callout callout-warn' }, icon('user'), h('p', { class: 'mb-0' }, 'Guests cannot join cohorts. Register an account from your profile to play Cohort Challenges.')));
     return;
   }
   const clan = store.state.clan;
@@ -37,18 +37,18 @@ async function renderNoClan(root, gd, params) {
     return;
   }
   if (!params.isCurrent()) return;
-  const name = h('input', { class: 'input', placeholder: 'e.g. MAMC Mucosal Guardians', maxlength: '40', 'aria-label': 'Clan name' });
+  const name = h('input', { class: 'input', placeholder: 'e.g. MAMC Mucosal Guardians', maxlength: '40', 'aria-label': 'Cohort name' });
   const college = h('input', { class: 'input', placeholder: 'College', value: (store.user && store.user.college) || '', maxlength: '120', 'aria-label': 'College' });
-  const create = h('button', { class: 'btn btn-primary', type: 'button' }, icon('plus', { size: 18 }), 'Create clan');
+  const create = h('button', { class: 'btn btn-primary', type: 'button' }, icon('plus', { size: 18 }), 'Create cohort');
   create.addEventListener('click', () => busy(create, async () => {
     try {
       const r = await post('/api/clans', { name: name.value, college: college.value });
       if (r.state) setState(r.state);
-      toast(`Clan "${r.name}" created.`, 'ok');
+      toast(`Cohort "${r.name}" created.`, 'ok');
       window.dispatchEvent(new Event('bb:rerender'));
     } catch { /* toast shown */ }
   }));
-  root.append(h('div', { class: 'card' }, h('h2', { class: 'mt-0' }, 'Start a clan'),
+  root.append(h('div', { class: 'card' }, h('h2', { class: 'mt-0' }, 'Start a cohort'),
     h('div', { class: 'form' }, name, college, create)));
   const rows = h('ul', { class: 'list mt-2' });
   for (const c of list.rows) {
@@ -63,7 +63,7 @@ async function renderNoClan(root, gd, params) {
     }));
     rows.append(h('li', { class: 'list-item' }, icon('clan'), h('div', { class: 'grow' }, h('strong', null, c.name), h('small', { class: 'muted' }, `${c.college || 'No college'} • ${c.members}/${list.max_members} members`)), join));
   }
-  root.append(h('section', { class: 'section' }, h('h2', null, 'Join a clan'), list.rows.length ? rows : emptyBlock('No clans yet. Start the first one for your college!')));
+  root.append(h('section', { class: 'section' }, h('h2', null, 'Join a cohort'), list.rows.length ? rows : emptyBlock('No cohorts yet. Start the first one for your college!')));
 }
 
 async function renderClan(root, gd, clan, params) {
@@ -76,9 +76,9 @@ async function renderClan(root, gd, clan, params) {
     return;
   }
   if (!params.isCurrent()) return;
-  const leave = h('button', { class: 'btn btn-ghost', type: 'button' }, icon('logout', { size: 18 }), 'Leave clan');
+  const leave = h('button', { class: 'btn btn-ghost', type: 'button' }, icon('logout', { size: 18 }), 'Leave cohort');
   leave.addEventListener('click', () => busy(leave, async () => {
-    if (!(await confirmDialog(`Leave ${detail.clan.name}?`, { title: 'Leave clan', okLabel: 'Leave', danger: true }))) return;
+    if (!(await confirmDialog(`Leave ${detail.clan.name}?`, { title: 'Leave cohort', okLabel: 'Leave', danger: true }))) return;
     try {
       setState(await post('/api/clans/leave', {}));
       window.dispatchEvent(new Event('bb:rerender'));
@@ -88,7 +88,7 @@ async function renderClan(root, gd, clan, params) {
     h('div', { class: 'row between' }, h('div', null, h('h2', { class: 'mt-0 mb-0' }, detail.clan.name), h('p', { class: 'muted small mb-0' }, `${detail.clan.college || ''} • ${detail.clan.members} members`)), leave)));
 
   const herd = h('section', { class: 'section' }, h('h2', null, icon('syringe'), ' Vaccination and herd immunity'),
-    h('p', { class: 'muted small' }, `When at least ${gd.herd.coverageFullPct}% of the clan is vaccinated, every clan base - even unvaccinated ones - gets indirect protection (up to ${gd.herd.indirectSharePct}% of the vaccine's effect). Research vaccines in the Vaccine Lab.`));
+    h('p', { class: 'muted small' }, `When at least ${gd.herd.coverageFullPct}% of the cohort is vaccinated, every cohort base - even unvaccinated ones - gets indirect protection (up to ${gd.herd.indirectSharePct}% of the vaccine's effect). Research vaccines in the Vaccine Lab.`));
   for (const [germ, eff] of Object.entries(detail.vaccine_efficacy || {})) {
     const cov = (detail.coverage || {})[germ] || 0;
     const ind = (detail.herd || {})[germ] || 0;
@@ -98,15 +98,15 @@ async function renderClan(root, gd, clan, params) {
   }
   root.append(herd);
 
-  const members = h('table', { class: 'table' }, h('thead', null, h('tr', null, h('th', null, 'Member'), h('th', { class: 'num' }, 'Core'), h('th', { class: 'num' }, 'Trophies'), h('th', null, 'Vaccines'))),
+  const members = h('table', { class: 'table' }, h('thead', null, h('tr', null, h('th', null, 'Member'), h('th', { class: 'num' }, 'Core'), h('th', { class: 'num' }, 'Merit points'), h('th', null, 'Vaccines'))),
     h('tbody', null, detail.members.map((m) => h('tr', { class: store.user && m.id === store.user.id ? 'me' : '' },
       h('td', null, m.name), h('td', { class: 'num' }, m.core_level), h('td', { class: 'num' }, fmt(m.trophies)),
       h('td', null, m.vaccines.map((g) => unitName(gd, g).split(' ')[0]).join(', ') || '-')))));
   root.append(h('section', { class: 'section' }, h('h2', null, icon('clan'), ' Members'), h('div', { class: 'table-wrap' }, members)));
 
-  const ws = h('section', { class: 'section' }, h('h2', null, icon('flag'), ' Clan War'));
+  const ws = h('section', { class: 'section' }, h('h2', null, icon('flag'), ' Cohort Challenge'));
   if (!war.war) {
-    ws.append(emptyBlock('No war right now. Organisers pair clans for Clan Wars.'));
+    ws.append(emptyBlock('No challenge right now. Organisers pair cohorts for Cohort Challenges.'));
   } else {
     const w = war.war;
     ws.append(h('div', { class: 'card' },
@@ -132,7 +132,7 @@ function warAttack(root, gd, war, enemy) {
   const boost = boostToggle(gd, false);
   const m = openModal({
     title: `Attack ${enemy.name}`,
-    body: h('div', null, h('p', { class: 'muted small' }, 'Clan War attacks use your own army and cost no nutrients. Your best stars on each enemy base count for the clan.'), army.el, boost.el),
+    body: h('div', null, h('p', { class: 'muted small' }, 'Cohort Challenge attacks use your own army and cost no nutrients. Your best stars on each enemy base count for the cohort.'), army.el, boost.el),
     actions: [{ label: 'Cancel', value: false }, { label: 'Attack!', kind: 'primary', icon: 'germ', value: true }],
   });
   m.result.then(async (ok) => {
@@ -140,7 +140,7 @@ function warAttack(root, gd, war, enemy) {
     if (army.empty) { toast('Choose some germs first.', 'warn'); return; }
     await startBattle(root, {
       mode: 'clanwar', target: { war_id: war.id, user_id: enemy.user_id }, army: army.army, boost: boost.value,
-      title: `Clan War: ${enemy.name}`, back: '#/clan', again: '#/clan',
+      title: `Cohort Challenge: ${enemy.name}`, back: '#/cohort', again: '#/cohort',
     });
   });
 }

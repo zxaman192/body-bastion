@@ -123,7 +123,7 @@ def projector():
             sc = scoring.war_scores(conn, wd)
             cn = {c.id: c.name for c in conn.execute(
                 select(db.clans.c.id, db.clans.c.name).where(db.clans.c.id.in_((w.clan_a, w.clan_b)))).all()}
-            war = {"id": w.id, "clan_a": cn.get(w.clan_a, "Clan A"), "clan_b": cn.get(w.clan_b, "Clan B"),
+            war = {"id": w.id, "clan_a": cn.get(w.clan_a, "Cohort A"), "clan_b": cn.get(w.clan_b, "Cohort B"),
                    "stars_a": sc["a"]["stars"], "stars_b": sc["b"]["stars"], "pct_a": sc["a"]["pct"],
                    "pct_b": sc["b"]["pct"], "ends_at": clock.iso(w.ends_at)}
     return {"phase": phase, "league_top": league_top, "clans_top": clans_top, "recent": recent, "war": war,

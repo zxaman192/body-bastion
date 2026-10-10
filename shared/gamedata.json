@@ -1316,7 +1316,7 @@
   },
   {
    "key": "neutrophil_barracks",
-   "name": "Neutrophil Barracks",
+   "name": "Neutrophil Reserve",
    "cat": "tower",
    "splash": true,
    "sites": [
@@ -1898,7 +1898,7 @@
    "name": "Biofilm Dome",
    "duration": 80,
    "radius": 300,
-   "desc": "A shield: germs inside take 70% less drug damage and 40% less immune damage for 8 seconds. Biofilms tolerate antibiotics."
+   "desc": "A barrier: germs inside take 70% less drug damage and 40% less immune damage for 8 seconds. Biofilms tolerate antibiotics."
   }
  ],
  "stopflow": {
@@ -4999,5 +4999,93 @@
     }
    ]
   }
- ]
+ ],
+ "boosters": {
+  "seconds": 20,
+  "checkpoints": [
+   {
+    "zone": "si",
+    "name": "Small intestine",
+    "topics": [
+     "cholera",
+     "etec",
+     "rotavirus",
+     "worm",
+     "candida"
+    ]
+   },
+   {
+    "zone": "colon",
+    "name": "Colon",
+    "topics": [
+     "shigella",
+     "cdiff",
+     "amoeba"
+    ]
+   },
+   {
+    "zone": "liver",
+    "name": "Liver gate",
+    "topics": [
+     "amoeba",
+     "typhoid"
+    ]
+   },
+   {
+    "zone": "core",
+    "name": "Bone Marrow Core",
+    "topics": [
+     "typhoid",
+     "hpylori",
+     "candida"
+    ]
+   }
+  ],
+  "attack": [
+   {
+    "key": "replication",
+    "name": "Rapid Replication",
+    "effect": "heal",
+    "pct": 30,
+    "desc": "Binary fission at full speed: every living germ regains 30% of its health."
+   },
+   {
+    "key": "quorum_surge",
+    "name": "Quorum Surge",
+    "effect": "quorum",
+    "ticks": 80,
+    "desc": "Quorum sensing switches on everywhere: all germs move 40% faster and hit 30% harder for 8 seconds."
+   },
+   {
+    "key": "capsule_cloak",
+    "name": "Capsule Cloak",
+    "effect": "evasion",
+    "ticks": 60,
+    "desc": "A polysaccharide capsule hides every germ from immune cells for 6 seconds (drugs still hit)."
+   }
+  ],
+  "defence": [
+   {
+    "key": "ors_bolus",
+    "name": "ORS Bolus",
+    "effect": "rehydrate",
+    "pct": 15,
+    "desc": "A big drink of oral rehydration solution: hydration jumps up by 15% at once."
+   },
+   {
+    "key": "complement",
+    "name": "Complement Cascade",
+    "effect": "complement",
+    "pct": 20,
+    "desc": "Membrane attack complexes punch holes in every germ: each loses 20% of its full health."
+   },
+   {
+    "key": "siga_flood",
+    "name": "Secretory IgA Flood",
+    "effect": "neutralise",
+    "ticks": 100,
+    "desc": "Secretory IgA neutralises toxins: diarrhoea drains much less hydration for 10 seconds."
+   }
+  ]
+ }
 }

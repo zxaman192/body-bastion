@@ -7,6 +7,9 @@ import { toIso, formatTime } from './render/geom.js';
 import { audio } from './audio.js';
 
 const TICK_MS = 100;
+const BOOSTER_ICON = {
+  heal: '\u{1F9EC}', quorum: '\u{1F4E2}', evasion: '\u{1F47B}', rehydrate: '\u{1F4A7}', complement: '\u{1F4A5}', neutralise: '\u{1F6E1}',
+};
 
 function el(tag, attrs, ...kids) {
   const e = document.createElement(tag);
@@ -70,6 +73,10 @@ export function mountBattle(container, props = {}) {
   let flushPulse = 0;
   let lastHydFrac = 1;
   let replayCmds = [];
+  let quiz = null;
+  const cpAsked = new Set();
+  const boosterDefs = ((gd.boosters || {})[defence ? 'defence' : 'attack']) || [];
+  const checkpointDefs = (gd.boosters || {}).checkpoints || [];
   const prevS = new Map();
   const hurtAt = new Map();
   const bviews = new Map();
@@ -130,6 +137,8 @@ export function mountBattle(container, props = {}) {
   root.append(sheet);
   const overlay = el('div', { class: 'bb-overlay', hidden: true });
   root.append(overlay);
+  const quizLayer = el('div', { class: 'bb-overlay bb-quiz-layer', hidden: true });
+  root.append(quizLayer);
 
   function paintSound() {
     soundBtn.textContent = audio.muted ? '\u{1F507}' : '\u{1F50A}';
@@ -224,6 +233,23 @@ export function mountBattle(container, props = {}) {
     const bl = src.buildings;
     for (const ev of src.events || []) {
       switch (ev.type) {
+        case 'checkpoint': {
+          const cp = checkpointDefs[ev.z] || {};
+          say(`Checkpoint: germs have reached the ${cp.name || 'next part of the gut'}`, defence ? 'warn' : 'good', 'cp' + ev.z, 0);
+          audio.play('alarm');
+          if (mode !== 'replay' && props.checkpoints && !cpAsked.has(ev.z)) {
+            cpAsked.add(ev.z);
+            startQuiz(ev.z);
+          }
+          break;
+        }
+        case 'boost': {
+          const bd = boosterDefs.find((x) => x.key === ev.k);
+          say(`Booster: ${bd ? bd.name : ev.k}!`, 'good', 'boost' + ev.z, 0);
+          audio.play('spell');
+          fx.shake = Math.max(fx.shake || 0, 4);
+          break;
+        }
         case 'shot': {
           const b = bl[ev.b];
           const u = src.units[ev.u];
@@ -411,7 +437,7 @@ export function mountBattle(container, props = {}) {
   }
 
   function liveTick() {
-    return phase === 'run' && !paused && !battle.over;
+    return phase === 'run' && !paused && !battle.over && !quiz;
   }
 
   // ---------------------------------------------------------------- render
@@ -424,7 +450,7 @@ export function mountBattle(container, props = {}) {
     if (liveTick()) {
       acc += dt * speed;
       let n = 0;
-      while (acc >= TICK_MS && !battle.over && n < 12) {
+      while (acc >= TICK_MS && !battle.over && n < 12 && !quiz) {
         stepOnce();
         acc -= TICK_MS;
         n++;
@@ -708,7 +734,7 @@ export function mountBattle(container, props = {}) {
     if (mode === 'attack' && targetingSpell && phase === 'run') {
       const ns = scene.pathSAt(x, y);
       if (ns.dist > 220) {
-        say('Tap on the gut to cast the spell', 'info', 'spelltap', 2500);
+        say('Tap on the gut to use the tactic', 'info', 'spelltap', 2500);
         return;
       }
       const s = Math.max(0, Math.min(pathLen, Math.round(ns.s)));
@@ -749,6 +775,107 @@ export function mountBattle(container, props = {}) {
   function cleanupAndExit() {
     finished = true;
     if (props.onExit) props.onExit();
+  }
+
+  // ---------------------------------------------------------------- checkpoint questions
+  // The first germ to cross into each part of the gut pauses the battle for one question.
+  // A correct answer (checked by the server) lets the player pick a booster.
+  function startQuiz(z) {
+    const cp = checkpointDefs[z] || {};
+    const state = { z, timer: 0, done: false };
+    quiz = state;
+    state.close = () => {
+      if (state.done) return;
+      state.done = true;
+      clearInterval(state.timer);
+      quizLayer.hidden = true;
+      quizLayer.replaceChildren();
+      if (quiz === state) quiz = null;
+      last = performance.now();
+    };
+    const head = el('div', { class: 'bb-quiz-head' },
+      el('span', { class: 'bb-quiz-flag' }, `Checkpoint ${z + 1} of ${checkpointDefs.length}`),
+      el('h2', { id: 'bbq-title' }, `${cp.name || 'New gut zone'} reached!`),
+      el('p', { class: 'bb-small bb-muted' }, defence
+        ? 'Germs have pushed deeper into your patient. Answer correctly to call in a defence booster.'
+        : 'Your germs broke through. Answer correctly to unlock a booster for your army.'));
+    const body = el('div', { class: 'bb-quiz-body' }, el('p', { class: 'bb-small' }, 'Loading the question...'));
+    const box = el('div', { class: 'bb-dialog bb-quiz', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'bbq-title' }, head, body);
+    quizLayer.replaceChildren(box);
+    quizLayer.hidden = false;
+    audio.play('click');
+    props.checkpoints.ask(z).then((q) => {
+      if (state.done || !alive) return;
+      if (!q || !Array.isArray(q.options)) { state.close(); return; }
+      showQuestion(state, body, q);
+    }).catch(() => state.close());
+  }
+
+  function showQuestion(state, body, q) {
+    const secs = Math.max(5, q.seconds || 20);
+    const fill = el('div', { class: 'bb-quiz-timefill' });
+    const timeTxt = el('span', { class: 'bb-quiz-secs' }, String(secs));
+    const opts = q.options.map((text, i) => el('button', { class: 'bb-quiz-opt', type: 'button' },
+      el('span', { class: 'bb-quiz-letter' }, 'ABCDEFGH'[i] || String(i + 1)), el('span', null, text)));
+    const feedback = el('div', { class: 'bb-quiz-feedback', 'aria-live': 'polite' });
+    body.replaceChildren(
+      el('div', { class: 'bb-quiz-time' }, el('div', { class: 'bb-quiz-timebar' }, fill), timeTxt),
+      el('p', { class: 'bb-quiz-q' }, q.text || q.q),
+      el('div', { class: 'bb-quiz-opts' }, ...opts),
+      feedback);
+    const started = performance.now();
+    let answered = false;
+    const submit = (choice) => {
+      if (answered || state.done) return;
+      answered = true;
+      clearInterval(state.timer);
+      for (const b of opts) b.disabled = true;
+      if (choice >= 0 && opts[choice]) opts[choice].classList.add('picked');
+      feedback.replaceChildren(el('p', { class: 'bb-small' }, 'Checking...'));
+      props.checkpoints.answer(state.z, choice).then((res) => {
+        if (state.done || !alive) return;
+        if (!res) { state.close(); return; }
+        if (opts[res.answer]) opts[res.answer].classList.add('right');
+        if (!res.correct && choice >= 0 && opts[choice]) opts[choice].classList.add('wrong');
+        audio.play(res.correct ? 'correct' : 'wrong');
+        const why = res.explanation ? el('p', { class: 'bb-small bb-quiz-why' }, res.explanation) : null;
+        if (res.correct) {
+          feedback.replaceChildren(el('p', { class: 'bb-quiz-verdict good' }, 'Correct! Choose your booster:'), why, boosterPicker(state));
+        } else {
+          feedback.replaceChildren(
+            el('p', { class: 'bb-quiz-verdict bad' }, res.in_time === false ? 'Time is up.' : 'Not quite.'), why,
+            el('div', { class: 'bb-sheet-actions' }, el('button', { class: 'bb-btn bb-primary', type: 'button', onclick: () => state.close() }, 'Continue')));
+        }
+        const focusTarget = feedback.querySelector('button');
+        if (focusTarget) focusTarget.focus();
+      }).catch(() => state.close());
+    };
+    opts.forEach((b, i) => b.addEventListener('click', () => submit(i)));
+    state.timer = setInterval(() => {
+      const left = secs - (performance.now() - started) / 1000;
+      fill.style.width = `${Math.max(0, (left / secs) * 100)}%`;
+      fill.classList.toggle('low', left < 6);
+      timeTxt.textContent = String(Math.max(0, Math.ceil(left)));
+      if (left <= 0) submit(-1);
+    }, 100);
+    if (opts[0]) opts[0].focus();
+  }
+
+  function boosterPicker(state) {
+    const wrap = el('div', { class: 'bb-boosters' });
+    for (const bd of boosterDefs) {
+      const card = el('button', { class: `bb-booster bb-booster-${bd.effect}`, type: 'button' },
+        el('span', { class: 'bb-booster-ico', 'aria-hidden': 'true' }, BOOSTER_ICON[bd.effect] || '✨'),
+        el('strong', null, bd.name),
+        el('small', null, bd.desc));
+      card.addEventListener('click', () => {
+        if (state.done) return;
+        battle.command({ c: 'boost', k: bd.key, z: state.z });
+        state.close();
+      });
+      wrap.append(card);
+    }
+    return wrap;
   }
 
   function confirmBox(text, okLabel, onOk) {
@@ -808,7 +935,7 @@ export function mountBattle(container, props = {}) {
     if (mode === 'attack') {
       if (phase === 'intro') {
         bottom.append(el('div', { class: 'bb-bar bb-intro' },
-          el('div', { class: 'bb-small' }, el('strong', null, 'Scout the base. '), 'Germs enter at the mouth (top left). Tap a germ card to release it; hold to release several. Spells: tap the spell, then tap the gut.'),
+          el('div', { class: 'bb-small' }, el('strong', null, 'Scout the base. '), 'Germs enter at the mouth (top left). Tap a germ card to release it; hold to release several. Tactics: tap the tactic, then tap the gut.'),
           el('button', { class: 'bb-btn bb-primary bb-big', type: 'button', onclick: () => { phase = 'run'; last = performance.now(); audio.unlock(); audio.music(!audio.muted); renderBottom(); } }, 'Start battle')));
         return;
       }
@@ -1040,6 +1167,7 @@ export function mountBattle(container, props = {}) {
   return {
     destroy() {
       alive = false;
+      if (quiz && quiz.close) quiz.close();
       cancelAnimationFrame(raf);
       if (hudRo) hudRo.disconnect();
       stopHold();

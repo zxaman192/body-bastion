@@ -3,7 +3,7 @@ import { get } from '../api.js';
 
 const MODE_LABEL = {
   multiplayer: 'Multiplayer', practice: 'Practice', tournament: 'League', trial: 'Defence Trial', campaign: 'Campaign',
-  clanwar: 'Clan War', classroom: 'Classroom',
+  clanwar: 'Cohort Challenge', classroom: 'Classroom',
 };
 
 export function render(root, params) {

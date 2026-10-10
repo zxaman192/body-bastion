@@ -185,7 +185,7 @@ const HOME_STEPS = [
     title: 'Your Bone Marrow Core',
     target: '[data-tour="player"]',
     body: [
-      'The number in the star is your Bone Marrow Core level: your "town hall". The castle in the gut is the Core itself.',
+      'The number in the star is your Bone Marrow Core level. The fortress at the end of the gut is the Core itself: the bone marrow that makes every immune cell.',
       'Upgrading it raises storage and unlocks more and stronger defences.',
     ],
   },
@@ -213,20 +213,20 @@ const HOME_STEPS = [
     round: true,
     body: [
       'Raid other players\' guts with an army of germs. Watch which drugs a base uses: germs resistant to them get through.',
-      'Spells such as Quorum Sensing, Immune Evasion and a Biofilm Dome help your germs, and a quick knowledge question can boost them.',
+      'Tactics such as Quorum Sensing, Immune Evasion and a Biofilm Dome help your germs, and a quick knowledge question can boost them.',
     ],
   },
   {
     title: 'Research drugs and vaccines',
     target: '[data-tour="research"]',
     round: true,
-    body: 'Unlock new antimicrobials and vaccines here. Vaccines protect your base, and your clan\'s vaccination rate builds herd immunity.',
+    body: 'Unlock new antimicrobials and vaccines here. Vaccines protect your base, and your cohort\'s vaccination rate builds herd immunity.',
   },
   {
-    title: 'League, clans and the guide',
+    title: 'League, cohorts and the guide',
     target: '.hud-side',
     body: [
-      'League: identical tournament bases, one scored attempt each: pure skill. Clan: team up with your college. Ranks and Defence log show how you are doing.',
+      'League: identical tournament bases, one scored attempt each: pure skill. Cohort: team up with your college. Ranks and Defence log show how you are doing.',
       'The Guide has every germ, drug and the drug-bug matrix. Use it whenever you are unsure.',
     ],
   },

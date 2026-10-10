@@ -11,6 +11,7 @@ from sqlalchemy import (
     Text,
     create_engine,
     event,
+    inspect,
     select,
 )
 from sqlalchemy.engine import Engine
@@ -99,6 +100,7 @@ battles = Table(
     Column("question_at", Float),
     Column("answered_at", Float),
     Column("boost_correct", Boolean, nullable=False, default=False),
+    Column("checkpoints", JSON),
     Column("practice", Boolean, nullable=False, default=False),
     Column("scored", Boolean, nullable=False, default=False),
     Column("league_key", String(80), unique=True),
@@ -208,8 +210,24 @@ def init_engine(url: str | None = None) -> Engine:
         def _sqlite_begin(conn):
             conn.exec_driver_sql("BEGIN IMMEDIATE")
     metadata.create_all(eng)
+    _add_missing_columns(eng)
     _engine = eng
     return eng
+
+
+def _add_missing_columns(eng: Engine) -> None:
+    """Lightweight migration: add nullable columns introduced after a database was created."""
+    insp = inspect(eng)
+    for table in metadata.sorted_tables:
+        if not insp.has_table(table.name):
+            continue
+        have = {c["name"] for c in insp.get_columns(table.name)}
+        for col in table.columns:
+            if col.name in have or not col.nullable or col.primary_key:
+                continue
+            ddl = col.type.compile(dialect=eng.dialect)
+            with eng.begin() as conn:
+                conn.exec_driver_sql(f"ALTER TABLE {table.name} ADD COLUMN {col.name} {ddl}")
 
 
 def engine() -> Engine:

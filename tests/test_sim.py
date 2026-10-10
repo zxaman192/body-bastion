@@ -159,3 +159,40 @@ def test_full_battle_is_fast(tb):
     t0 = time.perf_counter()
     attack(copy.deepcopy(tb["layout"]), dict(army), cmds, coreLevel=tb["coreLevel"])
     assert time.perf_counter() - t0 < 2.0
+
+
+def _first_checkpoint(layout, army, cmds):
+    b = sim.Battle(GD, {"mode": "attack", "seed": 7, "defender": {"layout": layout, "coreLevel": 5},
+                        "attacker": {"army": army}})
+    b.load_commands(cmds)
+    while not b.over and b.cpTick[0] < 0:
+        b.step()
+    return b.cpTick[0]
+
+
+def test_checkpoints_and_attack_boosts():
+    layout = {"CORE": {"b": "core", "lv": 5}}
+    cmds = deploy("cholera", 6)
+    reach = _first_checkpoint(layout, {"cholera": 6}, cmds)
+    assert reach > 0
+    early = {"t": reach - 1, "c": "boost", "k": "replication", "z": 0}
+    _, r = attack(layout, {"cholera": 6}, cmds + [early])
+    assert r["stats"]["boosters"] == {} and r["checkpointTicks"][0] == reach
+    good = [{"t": reach + 1, "c": "boost", "k": "quorum_surge", "z": 0},
+            {"t": reach + 2, "c": "boost", "k": "replication", "z": 0},
+            {"t": reach + 3, "c": "boost", "k": "ors_bolus", "z": 0}]
+    _, r = attack(layout, {"cholera": 6}, cmds + good)
+    assert r["stats"]["boosters"] == {"quorum_surge": 1}
+
+
+def test_defence_boosts_help_the_patient():
+    _, r0, lv = campaign(3, [])
+    reach = r0["checkpointTicks"][0]
+    assert reach >= 0 and lv["germ"]
+    _, r1, _ = campaign(3, [{"t": reach + 1, "c": "boost", "k": "complement", "z": 0}])
+    assert r1["stats"]["boosters"] == {"complement": 1}
+    assert sum(r1["stats"]["kills"].values()) >= sum(r0["stats"]["kills"].values())
+    _, r2, _ = campaign(3, [{"t": reach + 1, "c": "boost", "k": "ors_bolus", "z": 0}])
+    assert r2["hydrationMin"] >= r0["hydrationMin"]
+    _, r3, _ = campaign(3, [{"t": reach + 1, "c": "boost", "k": "replication", "z": 0}])
+    assert r3["stats"]["boosters"] == {}

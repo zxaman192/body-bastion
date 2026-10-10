@@ -124,6 +124,54 @@ def test_multiplayer_vs_bot_and_mismatch_flag(client):
     assert client.post("/api/battle/start", headers=H, json={"mode": "multiplayer", "target": {"token": tok}, "army": big}).status_code == 422
 
 
+def test_checkpoint_questions_earn_boosts(client):
+    from app.gamedata import questions
+    answers = {q["id"]: q["answer"] for q in questions()}
+    H = guest(client)
+    army = {"cholera": 10}
+    deploys = [{"t": i * 3, "c": "deploy", "u": "cholera"} for i in range(10)]
+    reach = -1
+    for _ in range(12):
+        # opponents are drawn at random: use one where the germs reach the small intestine (checkpoint 0)
+        tok = client.post("/api/battle/find", headers=H).json()["token"]
+        r = client.post("/api/battle/start", headers=H, json={"mode": "multiplayer", "target": {"token": tok}, "army": army})
+        assert r.status_code == 200
+        bid, setup = r.json()["battle_id"], r.json()["setup"]
+        b = sim.Battle(GD, setup)
+        b.load_commands(deploys)
+        while not b.over and b.cpTick[0] < 0:
+            b.step()
+        reach = b.cpTick[0]
+        if reach >= 0:
+            break
+    assert reach >= 0
+    assert client.post(f"/api/battle/{bid}/checkpoint/answer", headers=H, json={"z": 0, "choice": 0}).status_code == 409
+    q = client.post(f"/api/battle/{bid}/checkpoint", headers=H, json={"z": 0})
+    assert q.status_code == 200
+    pub = q.json()["question"]
+    assert "answer" not in pub and pub["options"]
+    again = client.post(f"/api/battle/{bid}/checkpoint", headers=H, json={"z": 0}).json()["question"]
+    assert again["id"] == pub["id"]
+    a = client.post(f"/api/battle/{bid}/checkpoint/answer", headers=H, json={"z": 0, "choice": answers[pub["id"]]})
+    assert a.status_code == 200 and a.json()["correct"] is True
+    assert client.post(f"/api/battle/{bid}/checkpoint/answer", headers=H, json={"z": 0, "choice": 0}).status_code == 409
+    # checkpoint 1 is asked but answered wrongly
+    q1 = client.post(f"/api/battle/{bid}/checkpoint", headers=H, json={"z": 1}).json()["question"]
+    assert q1["id"] != pub["id"]
+    wrong = (answers[q1["id"]] + 1) % len(q1["options"])
+    assert client.post(f"/api/battle/{bid}/checkpoint/answer", headers=H, json={"z": 1, "choice": wrong}).json()["correct"] is False
+    earned = {"t": reach + 1, "c": "boost", "k": "replication", "z": 0}
+    forged = {"t": reach + 2, "c": "boost", "k": "quorum_surge", "z": 1}
+    honest = sim.simulate(GD, setup, deploys + [earned])
+    f = client.post(f"/api/battle/{bid}/finish", headers=H,
+                    json={"commands": deploys + [earned, forged], "claimed": {"hash": honest["hash"]}})
+    body = f.json()
+    assert f.status_code == 200
+    assert body["result"]["stats"]["boosters"] == {"replication": 1}
+    assert "boost_rejected" in body["flags"] and body["mismatch"] is False
+    assert [c["correct"] for c in body["checkpoints"]] == [True, False]
+
+
 def test_multiplayer_vs_player_updates_defender(client):
     register(client, "defender")
     register(client, "attacker")

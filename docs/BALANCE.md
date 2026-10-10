@@ -42,7 +42,7 @@ code 1 if an expectation fails, then re-run the parity check (`python tools/pari
 | T4 Hostel Mess | 1 star (66%) | T9 Teaching Hospital | 1 star (55%) |
 | T5 Flooded Relief Camp | 1 star (61%) | T10 AIIMS Grand Bastion | 1 star (53%) |
 
-Human players who time spells (biofilm dome over batteries, immune evasion at the Kupffer gate,
+Human players who time tactics (biofilm dome over batteries, immune evasion at the Kupffer gate,
 quorum sensing on a raider pack) do better than these heuristics.
 
 ## Key tuning decisions
@@ -56,7 +56,7 @@ quorum sensing on a raider pack) do better than these heuristics.
 - Building levels scale stats by 100/120/140/160/180%. Raiding germs hit harder (Shigella 30, worm
   55) so that a skilled 3-minute attack can still reach the core of the hardest bases.
 - Tournament army (fixed for everyone): 10 cholera, 4 rotavirus, 4 ETEC, 8 Shigella, 3 typhoid,
-  2 amoeba, 1 H. pylori, 2 worms, plus one of each spell.
+  2 amoeba, 1 H. pylori, 2 worms, plus one of each tactic.
 - Battery reload has a seeded jitter (0-2 ticks around the base interval) so that a command sequence
   optimised offline for one battle seed is not optimal for another.
 

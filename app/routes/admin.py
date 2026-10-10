@@ -119,26 +119,26 @@ def list_wars(admin: dict = Depends(admin_dep)):
 @router.post("/admin/clanwar")
 def create_war(payload: dict = Body(default=None), admin: dict = Depends(admin_dep)):
     p = as_dict(payload)
-    a = get_int(p, "clan_a", lo=1, label="first clan")
-    b = get_int(p, "clan_b", lo=1, label="second clan")
+    a = get_int(p, "clan_a", lo=1, label="first cohort")
+    b = get_int(p, "clan_b", lo=1, label="second cohort")
     hours = get_int(p, "hours", required=False, lo=1, hi=24 * 14, default=48)
     apm = get_int(p, "attacks_per_member", required=False, lo=1, hi=10, default=2)
     if a == b:
-        raise HTTPException(422, "Choose two different clans.")
+        raise HTTPException(422, "Choose two different cohorts.")
     gd = get_gd()
     now = clock.now()
     with db.engine().begin() as conn:
         close_expired_wars(conn, now)
         for cid in (a, b):
             if conn.execute(select(db.clans.c.id).where(db.clans.c.id == cid)).first() is None:
-                raise HTTPException(404, f"Clan {cid} not found.")
+                raise HTTPException(404, f"Cohort {cid} not found.")
             busy = conn.execute(select(db.clan_wars.c.id).where(and_(
                 db.clan_wars.c.status == "active", or_(db.clan_wars.c.clan_a == cid, db.clan_wars.c.clan_b == cid)))).first()
             if busy is not None:
-                raise HTTPException(409, f"Clan {cid} is already at war.")
+                raise HTTPException(409, f"Cohort {cid} is already in a challenge.")
         snaps = {"a": snapshot_clan(gd, conn, a, now), "b": snapshot_clan(gd, conn, b, now)}
         if not snaps["a"] or not snaps["b"]:
-            raise HTTPException(409, "Both clans need at least one member.")
+            raise HTTPException(409, "Both cohorts need at least one member.")
         res = conn.execute(db.clan_wars.insert().values(
             clan_a=a, clan_b=b, status="active", attacks_per_member=apm, starts_at=now,
             ends_at=now + hours * 3600, snapshots=snaps, created_at=now))
@@ -152,7 +152,7 @@ def stop_war(wid: int, admin: dict = Depends(admin_dep)):
     with db.engine().begin() as conn:
         w = conn.execute(select(db.clan_wars).where(db.clan_wars.c.id == wid)).first()
         if w is None:
-            raise HTTPException(404, "War not found.")
+            raise HTTPException(404, "Challenge not found.")
         wd = dict(w._mapping)
         if wd["status"] != "ended":
             wd = end_war(conn, wd)

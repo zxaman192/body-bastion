@@ -17,9 +17,9 @@ const SCALAR_STATS = [
 ];
 const MAP_STATS = [
   'deployed', 'kills', 'shots', 'shotsOn', 'drugKills', 'towerKills', 'acidDamage',
-  'vaccinatedSpawns', 'reachedLiver', 'spellsUsed',
+  'vaccinatedSpawns', 'reachedLiver', 'spellsUsed', 'boosters',
 ];
-const COMMANDS = ['deploy', 'spell', 'end', 'build', 'sell', 'rx', 'stopflow', 'vaccinate'];
+const COMMANDS = ['deploy', 'spell', 'end', 'build', 'sell', 'rx', 'stopflow', 'vaccinate', 'boost'];
 
 function div(a, b) {
   return Math.floor(a / b);
@@ -411,6 +411,22 @@ export class Battle {
     const vc = asInt(camp.vaccineCost);
     this.vaccineCost = vc !== null ? clamp(vc, 0, 1000000000) : 0;
 
+    // Checkpoints: the first germ to cross into each listed zone earns the player a knowledge
+    // question; a correct answer (checked by the server) allows one 'boost' command there.
+    const bst = obj(gd.boosters);
+    const zstart = new Map();
+    for (const z of gd.map.zones) zstart.set(z.key, z.s0);
+    this.cpBounds = [];
+    for (const cp of bst.checkpoints || []) {
+      if (isObj(cp) && zstart.has(cp.zone)) this.cpBounds.push(zstart.get(cp.zone));
+    }
+    this.cpTick = this.cpBounds.map(() => -1);
+    this.boostUsed = this.cpBounds.map(() => false);
+    this.boostDefs = new Map();
+    for (const bd of bst[this.mode === 'attack' ? 'attack' : 'defence'] || []) {
+      if (isObj(bd) && typeof bd.key === 'string') this.boostDefs.set(bd.key, bd);
+    }
+
     this.hydrationMax = gd.hydrationMax;
     this.tick = 0;
     this.hydration = this.hydrationMax;
@@ -597,6 +613,11 @@ export class Battle {
       if (mapGetObj(this.spellsLeft, k) - this._queuedCount('spell', 'k', k) <= 0) return false;
     } else if (c === 'end') {
       if (this.mode !== 'attack') return false;
+    } else if (c === 'boost') {
+      const k = cmd.k;
+      const z = asInt(cmd.z);
+      if (typeof k !== 'string' || !this.boostDefs.has(k) || z === null || z < 0 || z >= this.cpTick.length) return false;
+      if (this.cpTick[z] < 0 || this.boostUsed[z] || this._queuedCount('boost', 'z', cmd.z) > 0) return false;
     } else {
       if (this.mode !== 'campaign') return false;
       if (c === 'build') {
@@ -681,6 +702,8 @@ export class Battle {
       this.events.push({ type: 'spell', k, s });
     } else if (c === 'end') {
       if (this.mode === 'attack') this.surrendered = true;
+    } else if (c === 'boost') {
+      this._boost(cmd, t);
     } else if (this.mode !== 'campaign') {
       return;
     } else if (c === 'build') {
@@ -713,6 +736,60 @@ export class Battle {
       this.vaccines[u] = clamp(vd.efficacy, 0, 100);
       this.budget -= this.vaccineCost;
       this.stats.vaccinated.push(u);
+    }
+  }
+
+  _boost(cmd, t) {
+    const k = cmd.k;
+    const z = asInt(cmd.z);
+    if (typeof k !== 'string' || !this.boostDefs.has(k) || z === null || z < 0 || z >= this.cpTick.length) return;
+    if (this.cpTick[z] < 0 || this.boostUsed[z]) return;
+    this.boostUsed[z] = true;
+    const bd = this.boostDefs.get(k);
+    const eff = bd.effect;
+    let pct = asInt(bd.pct);
+    if (pct === null) pct = 0;
+    let ticks = asInt(bd.ticks);
+    if (ticks === null) ticks = 0;
+    const until = t + ticks;
+    if (eff === 'heal') {
+      for (const u of this.units) {
+        if (u.alive) u.hp = Math.min(u.maxHp, u.hp + mulpct(u.maxHp, pct));
+      }
+    } else if (eff === 'quorum') {
+      for (const u of this.units) {
+        if (u.alive && u.quorumUntil < until) u.quorumUntil = until;
+      }
+    } else if (eff === 'evasion') {
+      for (const u of this.units) {
+        if (u.alive && u.invisibleUntil < until) u.invisibleUntil = until;
+      }
+    } else if (eff === 'neutralise') {
+      for (const u of this.units) {
+        if (u.alive && u.neutralisedUntil < until) u.neutralisedUntil = until;
+      }
+    } else if (eff === 'rehydrate') {
+      const h = this.hydration + mulpct(this.hydrationMax, pct);
+      this.hydration = h < this.hydrationMax ? h : this.hydrationMax;
+    } else if (eff === 'complement') {
+      for (const u of this.units) {
+        if (u.alive) {
+          const dmg = mulpct(u.maxHp, pct);
+          this._damageUnit(u, dmg > 0 ? dmg : 1, t, 'booster', null);
+        }
+      }
+    }
+    inc(this.stats.boosters, k);
+    this.events.push({ type: 'boost', k, z, effect: eff });
+  }
+
+  _cross(prev, s, t) {
+    const cb = this.cpBounds;
+    for (let i = 0; i < cb.length; i++) {
+      if (this.cpTick[i] < 0 && prev < cb[i] && cb[i] <= s) {
+        this.cpTick[i] = t;
+        this.events.push({ type: 'checkpoint', z: i });
+      }
     }
   }
 
@@ -933,12 +1010,16 @@ export class Battle {
       }
     }
     if (blk !== null && u.s + move >= blk.s - this.gd.contact) {
+      const prev = u.s;
       u.s = Math.max(u.s, blk.s - this.gd.contact);
+      this._cross(prev, u.s, t);
       u.state = 'attack';
       if (u.cd === 0) this._hit(u, blk, t);
       return;
     }
+    const prev = u.s;
     u.s = Math.min(u.s + move, L);
+    this._cross(prev, u.s, t);
     u.state = 'move';
     if (d.worm && t % um.wormStealEvery === 0) {
       const z = st.zoneOf(u.s);
@@ -1156,7 +1237,7 @@ export class Battle {
       inc(stats.kills, T);
       if (kind === 'battery') inc2(stats.drugKills, b.drug, T);
       else if (kind === 'building') inc2(stats.towerKills, b.key, T);
-      this.events.push({ type: 'kill', u: u.id, by: b.idx, kind });
+      this.events.push({ type: 'kill', u: u.id, by: b ? b.idx : -1, kind });
       if (T === 'amoeba') {
         for (let i = 0; i < this.gd.amoebaCyst.perDeath; i++) this.pending.push([t + 1, 'amoeba_cyst', u.s, 'cyst']);
       }
@@ -1405,6 +1486,7 @@ export class Battle {
       atpLeft: this.atp,
       budgetLeft: this.budget,
       stats: this.stats,
+      checkpointTicks: this.cpTick.slice(),
       hash: this.hash,
     };
   }
