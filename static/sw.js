@@ -1,6 +1,6 @@
 // Network-first service worker: always fetch fresh code when online, fall back to the cache offline.
 // API calls are never cached.
-const CACHE = 'bb-shell-v1.3.0';
+const CACHE = 'bb-shell-v1.4.0';
 const SHELL = ['/', '/index.html', '/css/app.css', '/css/battle.css', '/css/game.css', '/js/app.js', '/js/intro.js', '/manifest.webmanifest', '/icons/icon-192.png'];
 
 self.addEventListener('install', (event) => {

@@ -22,13 +22,13 @@ no Gradle is used. From the repository root:
 bash android/build_apk.sh
 ```
 
-The signed APK is written to `dist/BodyBastion-<version>.apk`. The first build creates a signing key
+The signed APK is written to `dist/BodyBastion-<version>-<release name>.apk`; older builds are kept. The first build creates a signing key
 in `../android-signing/` (outside the repository) with its password in `keystore.properties`. Back
 both files up: every later update must be signed with the same key or phones will refuse to install
 it over the old version.
 
-Set `VERSION_NAME` and `VERSION_CODE` (higher than the last release) for a new release, for example
-`VERSION_NAME=1.3.1 VERSION_CODE=131 bash android/build_apk.sh`.
+Set `VERSION_NAME`, `VERSION_CODE` (higher than the last release) and `RELEASE_NAME` for a new release, for
+example `VERSION_NAME=1.4.1 VERSION_CODE=141 RELEASE_NAME=Laparotomy bash android/build_apk.sh`.
 
 ## Install on a phone
 

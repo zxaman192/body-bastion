@@ -13,8 +13,9 @@ PLATFORM_JAR="${PLATFORM_JAR:-$(ls -d "$ANDROID_SDK"/platforms/*/android.jar | s
 JAVA_HOME="${JAVA_HOME:-/c/Program Files/Android/Android Studio/jbr}"
 export JAVA_HOME PATH="$JAVA_HOME/bin:$PATH"
 KEYSTORE_DIR="${KEYSTORE_DIR:-$ROOT/../android-signing}"
-VERSION_NAME="${VERSION_NAME:-1.3.0}"
-VERSION_CODE="${VERSION_CODE:-130}"
+VERSION_NAME="${VERSION_NAME:-1.4.0}"
+VERSION_CODE="${VERSION_CODE:-140}"
+RELEASE_NAME="${RELEASE_NAME:-Laparotomy}"
 MIN_SDK=26
 TARGET_SDK=35
 EXE=""; [ -f "$BUILD_TOOLS/aapt2.exe" ] && EXE=".exe"
@@ -34,7 +35,7 @@ python_inline() {
   local before after
   before="$(sed -n '1,/\/\*INTRO_JS\*\//p' "$tpl" | sed '$d')"
   after="$(sed -n '/\/\*INTRO_JS\*\//,$p' "$tpl" | sed '1d')"
-  printf '%s\n%s\n%s\n' "$before" "$INTRO" "$after" > "$OUT/assets/splash.html"
+  printf '%s\n%s\n%s\n' "$before" "$INTRO" "$after" | sed "s/__VERSION__/v$VERSION_NAME \\\"$RELEASE_NAME\\\"/" > "$OUT/assets/splash.html"
 }
 python_inline
 grep -q "function playIntro" "$OUT/assets/splash.html"
@@ -70,7 +71,7 @@ if [ ! -f "$KS" ]; then
   echo "   created signing key $KS (password in $PROPS) - back both up; updates must be signed with the same key"
 fi
 PASS="$(grep '^storePassword=' "$PROPS" | cut -d= -f2-)"
-APK="$DIST/BodyBastion-$VERSION_NAME.apk"
+APK="$DIST/BodyBastion-$VERSION_NAME-$RELEASE_NAME.apk"
 "$BUILD_TOOLS/apksigner$BAT" sign --ks "$KS" --ks-key-alias bodybastion --ks-pass "pass:$PASS" --key-pass "pass:$PASS" \
   --out "$APK" "$OUT/app-aligned.apk"
 "$BUILD_TOOLS/apksigner$BAT" verify --verbose "$APK" | head -5

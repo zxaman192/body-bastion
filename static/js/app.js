@@ -8,6 +8,7 @@ import {
   store, setUser, loadGameData, loadCards, subscribe, clearSession, pref, setPref, applyTheme, rememberLoginTarget,
 } from './store.js';
 import { loadAudio } from './screens/engine.js';
+import { VERSION, VERSION_NAME } from './version.js';
 
 const SCREEN_FILES = {
   login: 'login',
@@ -200,7 +201,7 @@ function startIntro() {
   if (parsed.route && parsed.route.bare) return;
   const seen = !!pref('intro.seen', false);
   import('./intro.js')
-    .then((m) => m.playIntro({ short: seen }))
+    .then((m) => m.playIntro({ short: seen, version: `v${VERSION} "${VERSION_NAME}"` }))
     .then(async () => {
       setPref('intro.seen', true);
       const audio = await loadAudio();

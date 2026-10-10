@@ -46,7 +46,7 @@ export function mountBaseView(container, opts = {}) {
       const key = b.info.id + ':' + r;
       let iv = rangeCache.get(key);
       if (!iv) {
-        iv = geom.rangeIntervals(b.info.x, b.info.y, r);
+        iv = geom.rangeIntervals(b.info.gx, b.info.gy, r);
         rangeCache.set(key, iv);
       }
       const col = rangeColor(gd, b);
@@ -84,7 +84,7 @@ export function mountBaseView(container, opts = {}) {
       for (const id of highlight) {
         const info = geom.sites.get(id);
         if (info && !layout[id]) {
-          items.push({ depth: info.x + info.y + 1, order: 3, draw: (ctx) => {
+          items.push({ depth: info.y + 1, order: 3, draw: (ctx) => {
             const a = siteAnchorIso(geom, info);
             textLabel(ctx, 'Selected', a.x, a.y - 40, { size: 12, color: '#2a0f1f', bg: '#ffd34d' });
           } });

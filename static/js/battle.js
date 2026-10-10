@@ -225,7 +225,7 @@ export function mountBattle(container, props = {}) {
   function unitIso(u, alpha = 1) {
     const w = unitWorld(u, alpha);
     const q = toIso(w.x, w.y);
-    return { x: q.x, y: q.y, depth: w.x + w.y, dir: w.dir, s: w.s };
+    return { x: q.x, y: q.y, depth: w.y, dir: w.dir, s: w.s };
   }
 
   // ---------------------------------------------------------------- events
@@ -288,7 +288,7 @@ export function mountBattle(container, props = {}) {
           if (!b) break;
           const v = buildingView(b);
           const a = siteAnchorIso(geom, v.info);
-          fx.ring(a.x, a.y, 10, ((defs.get(b.key) || {}).range || 240) * 0.62, '#ffffff', 520, v.info.x + v.info.y + 5);
+          fx.ring(a.x, a.y, 10, ((defs.get(b.key) || {}).range || 240) * 0.62, '#ffffff', 520, v.info.y + 5);
           for (const id of ev.units || []) {
             const u = src.units[id];
             if (!u) continue;
@@ -306,7 +306,7 @@ export function mountBattle(container, props = {}) {
           v.shake = 1;
           if (Math.random() < 0.3) {
             const a = siteAnchorIso(geom, v.info);
-            fx.burst(a.x, a.y - 14, '#e6c3a3', 3, 320, v.info.x + v.info.y + 3, 26);
+            fx.burst(a.x, a.y - 14, '#e6c3a3', 3, 320, v.info.y + 3, 26);
           }
           break;
         }
@@ -324,8 +324,8 @@ export function mountBattle(container, props = {}) {
           if (!b) break;
           const v = buildingView(b);
           const a = siteAnchorIso(geom, v.info);
-          fx.burst(a.x, a.y - 20, '#b48a6c', 16, 900, v.info.x + v.info.y + 5, 70);
-          fx.puff(a.x, a.y - 10, 'rgba(90,60,50,0.9)', 900, v.info.x + v.info.y + 6, 22);
+          fx.burst(a.x, a.y - 20, '#b48a6c', 16, 900, v.info.y + 5, 70);
+          fx.puff(a.x, a.y - 10, 'rgba(90,60,50,0.9)', 900, v.info.y + 6, 22);
           fx.quake(b.key === 'core' ? 10 : 5);
           audio.play('crumble');
           const name = defs.get(b.key) ? defs.get(b.key).name : 'Building';
@@ -367,7 +367,7 @@ export function mountBattle(container, props = {}) {
           for (let k = 0; k < 2; k++) {
             const p = geom.posAt(Math.random() * 950);
             const q = toIso(p.x, p.y);
-            fx.bubbles(q.x, q.y, '#d6ff6a', 900, p.x + p.y);
+            fx.bubbles(q.x, q.y, '#d6ff6a', 900, p.y);
           }
           audio.play('acid');
           break;
@@ -388,7 +388,7 @@ export function mountBattle(container, props = {}) {
           const p = geom.posAt(ev.s);
           const q = toIso(p.x, p.y);
           const sp = spells.get(ev.k);
-          fx.ring(q.x, q.y, 10, (sp && sp.radius ? sp.radius : 300) * 0.7, ev.k === 'biofilm_dome' ? '#8fe3ff' : ev.k === 'quorum_sensing' ? '#d6ff3d' : ev.k === 'immune_evasion' ? '#ffffff' : '#6fb3ff', 900, p.x + p.y + 5);
+          fx.ring(q.x, q.y, 10, (sp && sp.radius ? sp.radius : 300) * 0.7, ev.k === 'biofilm_dome' ? '#8fe3ff' : ev.k === 'quorum_sensing' ? '#d6ff3d' : ev.k === 'immune_evasion' ? '#ffffff' : '#6fb3ff', 900, p.y + 5);
           fx.text(q.x, q.y - 20, sp ? sp.name : ev.k, '#ffffff', 1300, 1e9, 13);
           audio.play('spell');
           break;
@@ -396,7 +396,7 @@ export function mountBattle(container, props = {}) {
         case 'cdiff': {
           const p = geom.posAt(ev.s);
           const q = toIso(p.x, p.y);
-          fx.puff(q.x, q.y, 'rgba(204,121,167,0.95)', 1200, p.x + p.y + 3, 26);
+          fx.puff(q.x, q.y, 'rgba(204,121,167,0.95)', 1200, p.y + 3, 26);
           say('C. difficile appeared - broad-spectrum antibiotics wiped out the gut flora', 'bad', 'cdiff', 12000);
           audio.play('alarm');
           break;
@@ -406,7 +406,7 @@ export function mountBattle(container, props = {}) {
           if (b) {
             const v = buildingView(b);
             const a = buildingTop(geom, v.info, b.key);
-            fx.drops(a.x, a.y, '#6fc3ff', 1500, v.info.x + v.info.y + 4);
+            fx.drops(a.x, a.y, '#6fc3ff', 1500, v.info.y + 4);
           }
           say("IV Ringer's lactate started - severe dehydration needs IV fluids", 'good', 'iv', 8000);
           audio.play('iv');
@@ -503,7 +503,7 @@ export function mountBattle(container, props = {}) {
           let iv = rangeCache.get(k);
           if (!iv) {
             const info = geom.sites.get(sheetSite);
-            iv = geom.rangeIntervals(info.x, info.y, r);
+            iv = geom.rangeIntervals(info.gx, info.gy, r);
             rangeCache.set(k, iv);
           }
           scene.drawRanges([{ intervals: iv, color: rangeColor(gd, b) + '99' }]);
@@ -935,7 +935,7 @@ export function mountBattle(container, props = {}) {
     if (mode === 'attack') {
       if (phase === 'intro') {
         bottom.append(el('div', { class: 'bb-bar bb-intro' },
-          el('div', { class: 'bb-small' }, el('strong', null, 'Scout the base. '), 'Germs enter at the mouth (top left). Tap a germ card to release it; hold to release several. Tactics: tap the tactic, then tap the gut.'),
+          el('div', { class: 'bb-small' }, el('strong', null, 'Scout the base. '), 'Germs enter at the mouth (top) and travel down the digestive tract. Tap a germ card to release it; hold to release several. Tactics: tap the tactic, then tap the gut.'),
           el('button', { class: 'bb-btn bb-primary bb-big', type: 'button', onclick: () => { phase = 'run'; last = performance.now(); audio.unlock(); audio.music(!audio.muted); renderBottom(); } }, 'Start battle')));
         return;
       }

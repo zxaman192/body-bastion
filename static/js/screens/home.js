@@ -205,7 +205,7 @@ export async function render(root, params) {
     highlightSites: [],
     showRanges: false,
     insets: hudInsets(),
-    fillTall: true,
+    fillTall: false,
   }, params.isCurrent);
   if (view) {
     onLeave(root, () => view.destroy && view.destroy());

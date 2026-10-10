@@ -42,14 +42,9 @@ export function buildingTop(geom, info, key) {
 function lumenEnds(geom, info, frac = 0.46) {
   const d = geom.dirAt(info.s);
   const half = (geom.lumenHalf ? geom.lumenHalf(info.s) + 4 : geom.T * 0.46) * (frac / 0.46);
-  let e1, e2;
-  if (d.dx !== 0) {
-    e1 = toIso(info.x, info.y - half);
-    e2 = toIso(info.x, info.y + half);
-  } else {
-    e1 = toIso(info.x - half, info.y);
-    e2 = toIso(info.x + half, info.y);
-  }
+  // across the lumen, perpendicular to the route at this point
+  const e1 = toIso(info.x - d.dy * half, info.y + d.dx * half);
+  const e2 = toIso(info.x + d.dy * half, info.y - d.dx * half);
   return e1.y <= e2.y ? [e1, e2] : [e2, e1];
 }
 

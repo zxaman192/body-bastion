@@ -2,6 +2,7 @@ import { h, icon, setTitle, screenHeader, busy, toast, confirmDialog, promptDial
 import { post, del, clearToken } from '../api.js';
 import { store, loadPrivacy, loadGuide, clearSession, pref, setPref, applyTheme } from '../store.js';
 import { loadAudio } from './engine.js';
+import { VERSION, VERSION_NAME, RELEASES } from '../version.js';
 
 export async function render(root) {
   setTitle('Profile');
@@ -38,6 +39,11 @@ export async function render(root) {
     h('label', { class: 'switch' }, sound, h('span', { class: 'track', 'aria-hidden': 'true' }), h('span', null, 'Sound and music')),
     h('label', { class: 'field', for: 'pref-volume' }, h('span', { class: 'field-label' }, 'Volume'), vol, volText),
     h('label', { class: 'field' }, h('span', { class: 'field-label' }, 'Theme'), theme)));
+
+  root.append(h('div', { class: 'card mt-2' },
+    h('h2', { class: 'mt-0' }, `Version ${VERSION} "${VERSION_NAME}"`),
+    h('ul', { class: 'list' }, RELEASES.map((r) => h('li', { class: 'list-item' },
+      h('div', { class: 'grow' }, h('strong', null, `${r.version} "${r.name}"`), h('small', { class: 'muted' }, `${r.date}: ${r.notes}`)))))));
 
   const logout = h('button', { class: 'btn', type: 'button' }, icon('logout', { size: 18 }), 'Log out');
   logout.addEventListener('click', () => busy(logout, async () => {

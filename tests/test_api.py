@@ -128,22 +128,16 @@ def test_checkpoint_questions_earn_boosts(client):
     from app.gamedata import questions
     answers = {q["id"]: q["answer"] for q in questions()}
     H = guest(client)
-    army = {"cholera": 10}
+    # practice on a fixed tournament base: free and deterministic
+    r = client.post("/api/battle/start", headers=H, json={"mode": "practice", "target": {"base_id": "T1"}})
+    assert r.status_code == 200, r.text
+    bid, setup = r.json()["battle_id"], r.json()["setup"]
     deploys = [{"t": i * 3, "c": "deploy", "u": "cholera"} for i in range(10)]
-    reach = -1
-    for _ in range(12):
-        # opponents are drawn at random: use one where the germs reach the small intestine (checkpoint 0)
-        tok = client.post("/api/battle/find", headers=H).json()["token"]
-        r = client.post("/api/battle/start", headers=H, json={"mode": "multiplayer", "target": {"token": tok}, "army": army})
-        assert r.status_code == 200
-        bid, setup = r.json()["battle_id"], r.json()["setup"]
-        b = sim.Battle(GD, setup)
-        b.load_commands(deploys)
-        while not b.over and b.cpTick[0] < 0:
-            b.step()
-        reach = b.cpTick[0]
-        if reach >= 0:
-            break
+    b = sim.Battle(GD, setup)
+    b.load_commands(deploys)
+    while not b.over and b.cpTick[0] < 0:
+        b.step()
+    reach = b.cpTick[0]
     assert reach >= 0
     assert client.post(f"/api/battle/{bid}/checkpoint/answer", headers=H, json={"z": 0, "choice": 0}).status_code == 409
     q = client.post(f"/api/battle/{bid}/checkpoint", headers=H, json={"z": 0})

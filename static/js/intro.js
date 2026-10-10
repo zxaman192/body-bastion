@@ -468,7 +468,7 @@ export function playIntro(opts = {}) {
           ctx.font = `600 ${Math.max(11, M * 0.02)}px system-ui, sans-serif`;
           ctx.fillStyle = 'rgba(255,220,232,0.7)';
           ctx.globalAlpha = tap * 0.8;
-          ctx.fillText('Maulana Azad Medical College, New Delhi - Department of Pharmacology', W / 2, H - Math.max(18, H * 0.035));
+          ctx.fillText('Maulana Azad Medical College, New Delhi - Department of Pharmacology' + (opts.version ? `   |   ${opts.version}` : ''), W / 2, H - Math.max(18, H * 0.035));
         }
         ctx.globalAlpha = 1;
         if (ready && opts.autoClose && t > titleAt + opts.autoClose) finish();

@@ -22,7 +22,7 @@ function guideFace() {
 }
 
 function gutRoute() {
-  const stops = [['Mouth', '#e8577a'], ['Stomach', '#f4c7b0'], ['Small intestine', '#f3dfa2'], ['Colon', '#cfe8c4'], ['Liver gate', '#e9b8b4'], ['Core', '#dccbef']];
+  const stops = [['Mouth', '#e8577a'], ['Oesophagus and stomach', '#f4c7b0'], ['Small intestine', '#f3dfa2'], ['Caecum and colon', '#cfe8c4'], ['Portal vein to the liver', '#e9b8b4'], ['Rib marrow (Core)', '#dccbef']];
   return h('ol', { class: 'tour-route', 'aria-label': 'The route germs take' },
     stops.map(([n, c], i) => h('li', { style: { '--c': c } }, h('span', { class: 'tour-stop' }, String(i + 1)), n)));
 }
@@ -168,7 +168,7 @@ const HOME_STEPS = [
     pad: -40,
     at: 'bottom',
     body: () => [
-      'Germs enter at the mouth (top left) and march along the lumen, the glowing channel through the gut:',
+      'This is a real human body, opened as in theatre: every organ is in its true place, shape and colour. Germs enter at the mouth (top) and travel down the opened digestive tract:',
       gutRoute(),
       'If they reach the Bone Marrow Core, or if the patient dehydrates, the base falls.',
     ],
@@ -185,7 +185,7 @@ const HOME_STEPS = [
     title: 'Your Bone Marrow Core',
     target: '[data-tour="player"]',
     body: [
-      'The number in the star is your Bone Marrow Core level. The fortress at the end of the gut is the Core itself: the bone marrow that makes every immune cell.',
+      'The number in the star is your Bone Marrow Core level. The fortress on the right ribs is the Core itself: the red marrow that makes every blood and immune cell.',
       'Upgrading it raises storage and unlocks more and stronger defences.',
     ],
   },

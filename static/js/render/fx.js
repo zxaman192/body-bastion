@@ -116,7 +116,7 @@ function drawFx(ctx, it, t) {
       ctx.globalAlpha = 1 - k;
       ctx.strokeStyle = it.color;
       ctx.lineWidth = 4 * (1 - k) + 1;
-      ellipse(ctx, it.x, it.y, r, r * 0.5);
+      ellipse(ctx, it.x, it.y, r, r * 0.8);
       ctx.stroke();
       break;
     }

@@ -18,6 +18,8 @@ real enteric germs. The hydration meter makes dehydration, not tower damage, the
 dies; wrong antibiotics waste ATP, breed resistance and can wipe out the flora and summon
 C. difficile.
 
+Current version: **1.4.0 "Laparotomy"**. Every release is named and kept: see [CHANGELOG.md](CHANGELOG.md).
+
 | What | Where |
 |---|---|
 | Plan analysis and the 53 corrections (v1.1 -> v1.2) | [docs/ANALYSIS.md](docs/ANALYSIS.md) |

@@ -213,6 +213,82 @@ const BUILDERS = {
     }
     return out;
   },
+  // Lung: pink spongy parenchyma with a fine alveolar grain and grey anthracotic flecks.
+  lung(size) {
+    const c = hex('#d78e9a');
+    const n = fbm(size, 5, 4, 71);
+    const r = rand(72);
+    const out = canvasOf(size, (d) => {
+      for (let k = 0; k < size * size; k++) {
+        const v = 0.8 + n[k] * 0.38 + (r() - 0.5) * 0.16;
+        d[k * 4] = clamp255(c[0] * v);
+        d[k * 4 + 1] = clamp255(c[1] * v);
+        d[k * 4 + 2] = clamp255(c[2] * v);
+        d[k * 4 + 3] = 255;
+      }
+    });
+    const { ctx } = out;
+    for (let i = 0; i < 160; i++) {
+      ctx.fillStyle = `rgba(70,60,70,${0.15 + r() * 0.35})`;
+      ctx.beginPath();
+      ctx.arc(r() * size, r() * size, 0.6 + r() * 1.8, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.strokeStyle = 'rgba(150,70,85,0.25)';
+    for (let i = 0; i < 40; i++) {
+      const x = r() * size, y = r() * size;
+      ctx.lineWidth = 0.6;
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(x + (r() - 0.5) * 30, y + (r() - 0.5) * 30);
+      ctx.stroke();
+    }
+    return out;
+  },
+  // Skeletal muscle: red fibre bundles.
+  muscle(size, base = '#a3343f', seed = 81) {
+    const c = hex(base);
+    const n = fbm(size, 4, 3, seed);
+    const r = rand(seed + 1);
+    const rows = new Float32Array(size);
+    for (let y = 0; y < size; y++) rows[y] = 0.85 + r() * 0.3;
+    return canvasOf(size, (d) => {
+      for (let y = 0; y < size; y++) {
+        for (let x = 0; x < size; x++) {
+          const k = y * size + x;
+          const v = rows[y] * (0.85 + n[k] * 0.3) * (y % 6 === 0 ? 0.82 : 1);
+          d[k * 4] = clamp255(c[0] * v);
+          d[k * 4 + 1] = clamp255(c[1] * v);
+          d[k * 4 + 2] = clamp255(c[2] * v);
+          d[k * 4 + 3] = 255;
+        }
+      }
+    });
+  },
+  // Surgical drape: green woven cotton.
+  drape(size) {
+    const c = hex('#2c7b72');
+    const n = fbm(size, 4, 3, 91);
+    return canvasOf(size, (d) => {
+      for (let y = 0; y < size; y++) {
+        for (let x = 0; x < size; x++) {
+          const k = y * size + x;
+          const weave = ((x >> 1) + (y >> 1)) % 2 ? 0.96 : 1.04;
+          const v = weave * (0.9 + n[k] * 0.2);
+          d[k * 4] = clamp255(c[0] * v);
+          d[k * 4 + 1] = clamp255(c[1] * v);
+          d[k * 4 + 2] = clamp255(c[2] * v);
+          d[k * 4 + 3] = 255;
+        }
+      }
+    });
+  },
+  skin(size) {
+    return BUILDERS.mucosa(size, '#c98d6d', 101, 12);
+  },
+  heart(size) {
+    return BUILDERS.muscle(size, '#962a32', 111);
+  },
   blood(size) {
     return BUILDERS.mucosa(size, '#8f1f33', 51, 20);
   },
@@ -230,6 +306,11 @@ const SPECS = {
   serosa: { size: 256, build: (s) => BUILDERS.serosa(s) },
   core: { size: 128, build: (s) => BUILDERS.blood(s) },
   vein: { size: 128, build: (s) => BUILDERS.vein(s) },
+  lung: { size: 256, build: (s) => BUILDERS.lung(s) },
+  muscle: { size: 256, build: (s) => BUILDERS.muscle(s) },
+  drape: { size: 256, build: (s) => BUILDERS.drape(s) },
+  skin: { size: 256, build: (s) => BUILDERS.skin(s) },
+  heart: { size: 256, build: (s) => BUILDERS.heart(s) },
 };
 
 // A canvas pattern for `name`, scaled so `worldSize` iso units span one tile of the texture.

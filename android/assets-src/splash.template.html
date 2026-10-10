@@ -21,6 +21,7 @@
   playIntro({
     short: seen,
     autoClose: seen ? 1.6 : 0,
+    version: '__VERSION__',
     waitFor: ready,
     statusText: function () {
       var s = (Date.now() - started) / 1000;

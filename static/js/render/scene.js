@@ -258,14 +258,14 @@ export class Scene {
     for (const b of buildings) {
       const info = b.info;
       if (!info) continue;
-      out.push({ depth: info.x + info.y + (info.inLumen ? -20 : 0), order: 0, draw: (ctx) => drawBuilding(ctx, this.geom, b, env) });
+      out.push({ depth: info.y + (info.inLumen ? -20 : 0), order: 0, draw: (ctx) => drawBuilding(ctx, this.geom, b, env) });
     }
     return out;
   }
 
   slotMarkerItems(sites, color) {
     return sites.map((info) => ({
-      depth: info.x + info.y - 30,
+      depth: info.y - 30,
       order: -1,
       draw: (ctx) => drawBuildSlotMarker(ctx, this.geom, info, this.t, color),
     }));
