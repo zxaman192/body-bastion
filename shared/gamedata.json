@@ -1,5 +1,5 @@
 {
- "version": "1.4.0",
+ "version": "1.4.2",
  "tps": 10,
  "maxTicks": 1800,
  "hydrationMax": 100000,
@@ -2064,7 +2064,6 @@
    },
    "allowed": [
     "ors_station",
-    "drug_battery",
     "iga_cannon",
     "paneth_tower",
     "mucus_wall"
@@ -2108,8 +2107,11 @@
      "n": 0
     },
     {
-     "key": "min_hydration",
-     "pct": 40
+     "key": "treated_with",
+     "drugs": [
+      "ors"
+     ],
+     "n": 2
     }
    ],
    "rewards": [
@@ -2148,7 +2150,6 @@
    },
    "allowed": [
     "ors_station",
-    "drug_battery",
     "paneth_tower",
     "iga_cannon",
     "mucus_wall"
@@ -2193,8 +2194,11 @@
      "n": 0
     },
     {
-     "key": "min_hydration",
-     "pct": 50
+     "key": "treated_with",
+     "drugs": [
+      "ors"
+     ],
+     "n": 2
     }
    ],
    "rewards": [
@@ -2242,7 +2246,6 @@
    "allowed": [
     "ors_station",
     "iv_drip",
-    "drug_battery",
     "iga_cannon",
     "paneth_tower"
    ],
@@ -2345,7 +2348,6 @@
     }
    },
    "allowed": [
-    "drug_battery",
     "neutrophil_barracks",
     "macrophage_tower",
     "ors_station",
@@ -2440,7 +2442,6 @@
     }
    },
    "allowed": [
-    "drug_battery",
     "macrophage_tower",
     "iga_cannon",
     "ors_station"
@@ -2486,8 +2487,12 @@
      "key": "survive"
     },
     {
-     "key": "building_standing",
-     "site": "KUPF"
+     "key": "killed_with",
+     "drugs": [
+      "ceftriaxone",
+      "azithromycin"
+     ],
+     "n": 3
     },
     {
      "key": "vaccinated",
@@ -2537,7 +2542,6 @@
     }
    },
    "allowed": [
-    "drug_battery",
     "macrophage_tower",
     "neutrophil_barracks",
     "ors_station"
@@ -2633,7 +2637,6 @@
     }
    },
    "allowed": [
-    "drug_battery",
     "paneth_tower",
     "iga_cannon",
     "mucus_wall"
@@ -2742,7 +2745,6 @@
     }
    },
    "allowed": [
-    "drug_battery",
     "flora_garden",
     "ors_station",
     "neutrophil_barracks"
@@ -2849,7 +2851,6 @@
     }
    },
    "allowed": [
-    "drug_battery",
     "macrophage_tower",
     "mucus_wall",
     "villi_wall"
@@ -2949,7 +2950,6 @@
    "allowed": [
     "ors_station",
     "iv_drip",
-    "drug_battery",
     "iga_cannon",
     "macrophage_tower",
     "neutrophil_barracks",
@@ -3027,11 +3027,11 @@
     },
     {
      "key": "max_unnecessary",
-     "n": 10
+     "n": 1
     },
     {
      "key": "min_hydration",
-     "pct": 30
+     "pct": 60
     }
    ],
    "rewards": [
@@ -5087,5 +5087,14 @@
     "desc": "Secretory IgA neutralises toxins: diarrhoea drains much less hydration for 10 seconds."
    }
   ]
+ },
+ "treatment": {
+  "pulseEvery": 10,
+  "pulses": 12,
+  "pulsePct": 25,
+  "orsPulsePct": 2,
+  "collateralMult": 4,
+  "pressureMult": 12,
+  "perWave": 1
  }
 }

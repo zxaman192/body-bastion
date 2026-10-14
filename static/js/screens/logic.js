@@ -227,6 +227,10 @@ export function objectiveText(gd, obj, level) {
     }
     case 'building_standing':
       return `Keep the ${siteBuildingName(gd, obj.site, level)} (${obj.site}) standing.`;
+    case 'treated_with': {
+      const names = (obj.drugs || []).map((d) => shortDrugName(gd, d));
+      return `When germs attack, treat with ${joinOr(names)} at least ${n} time${n === 1 ? '' : 's'}.`;
+    }
     case 'vaccinated': {
       const r = (gd.research || []).find((x) => x.kind === 'vaccine' && x.germ === obj.germ);
       const vname = r ? r.name.replace(/\s*\(.*\)\s*$/, '') : `${unitName(gd, obj.germ)} vaccine`;
@@ -470,4 +474,40 @@ export function displayResources(resources, production, elapsedSeconds) {
     nutrients: resources.nutrients >= cap ? resources.nutrients : add(resources.nutrients || 0, p.nutrients_per_hour),
     cap: resources.cap,
   };
+}
+
+// The verdict on one treatment choice: was it the right drug for the germ that is attacking?
+// kind: 'good' (right), 'warn' (works partly, or not needed), 'bad' (does nothing).
+export function treatmentVerdict(gd, germ, drug) {
+  const u = idx(gd).units.get(germ);
+  if (!u) return { kind: 'info', right: false, text: '' };
+  const gname = u.name;
+  if (drug === 'ors') {
+    return u.drain > 0
+      ? { kind: 'good', right: true, text: `ORS given: it replaces the water and salt that ${gname} makes the gut lose.` }
+      : { kind: 'info', right: false, text: `ORS keeps the patient hydrated, but ${gname} does not cause much fluid loss. It needs a drug.` };
+  }
+  const row = (gd.matrix || {})[germ] || {};
+  const letter = row[drug] || 'N';
+  const dn = shortDrugName(gd, drug);
+  const note = (gd.matrixNotes || {})[`${germ}.${drug}`] || '';
+  if (letter === 'Y') {
+    if (u.antibioticsNotNeeded) return { kind: 'warn', right: false, text: `${dn} works on ${gname}, but no antibiotic is needed here: ORS is the treatment.` };
+    return { kind: 'good', right: true, text: `Right choice! ${dn} kills ${gname}.` };
+  }
+  if (letter === 'P') {
+    const why = u.antibioticsNotNeeded ? ' No antibiotic is needed here: ORS is the treatment.' : note ? ` ${note}` : ' Many of these germs resist it.';
+    return { kind: 'warn', right: false, text: `${dn} only partly works on ${gname}.${why}` };
+  }
+  if (letter === 'X') return { kind: 'warn', right: false, text: `${dn} hurts ${gname} a little but is not the right treatment: an unnecessary antibiotic.` };
+  return { kind: 'bad', right: false, text: `Wrong drug: ${dn} does nothing to ${gname}. The course is wasted, breeds resistance and harms the good gut bacteria.` };
+}
+
+// The right treatments for a germ, for "best practice" hints after a wrong choice.
+export function rightTreatments(gd, germ) {
+  const u = idx(gd).units.get(germ);
+  const row = (gd.matrix || {})[germ] || {};
+  const out = Object.keys(row).filter((d) => d !== 'ors' && row[d] === 'Y');
+  if (u && (u.drain > 0 || u.antibioticsNotNeeded)) out.unshift('ors');
+  return u && u.antibioticsNotNeeded ? ['ors'] : out;
 }

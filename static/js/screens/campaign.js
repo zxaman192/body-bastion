@@ -1,7 +1,7 @@
 import { h, append, icon, setTitle, screenHeader, starsEl, busy, mount, spinnerBlock, errorBlock, chip } from '../ui.js';
 import { loadGameData, refreshState, store } from '../store.js';
-import { idx, objectiveText, levelUnlocked, unitName } from './logic.js';
-import { boostToggle, startBattle } from './battleflow.js';
+import { idx, objectiveText, levelUnlocked, unitName, shortDrugName } from './logic.js';
+import { startBattle } from './battleflow.js';
 
 function patientChip(p) {
   return chip(p === 'child' ? 'Child patient' : 'Adult patient', { className: 'patient' });
@@ -50,25 +50,27 @@ export async function render(root, params) {
     return;
   }
   const s = Number(stars[String(id)] || 0);
-  const boost = boostToggle(gd, true);
   const go = h('button', { class: 'btn btn-primary btn-big btn-block', type: 'button' }, icon('play'), s ? 'Play again' : 'Start the case');
   go.addEventListener('click', () => busy(go, () => startBattle(root, {
-    mode: 'campaign', target: { level: id }, boost: boost.value, title: `Case ${id}: ${lv.title}`, levelId: id,
+    mode: 'campaign', target: { level: id }, boost: false, title: `Case ${id}: ${lv.title}`, levelId: id,
     back: '#/campaign', again: `#/campaign/${id}`,
   })));
   const allowed = (lv.allowed || []).map((k) => (idx(gd).buildings.get(k) || {}).name || k);
   append(root, [
     screenHeader(`Case ${id}: ${lv.title}`, { subtitle: s ? `Best so far: ${s} star${s === 1 ? '' : 's'}` : 'Not yet won', back: '#/campaign' }),
     h('div', { class: 'card vignette' },
-      h('div', { class: 'row' }, patientChip(lv.patient), chip(`Budget ${lv.budget}`), chip(`Drug ATP ${lv.atp}`)),
+      h('div', { class: 'row' }, patientChip(lv.patient), chip(`Budget ${lv.budget}`),
+        Object.values(lv.layout || {}).some((e) => e && e.b === 'drug_battery') ? chip(`Drug ATP ${lv.atp}`) : null),
       h('p', { class: 'mt-1' }, lv.case),
       lv.patient === 'child' ? h('p', { class: 'small muted' }, icon('child', { size: 16 }), ' Child patient: Stop-Flow (loperamide) is locked - antimotility drugs are never given to children with acute diarrhoea.') : null),
     h('section', { class: 'section' }, h('h2', null, icon('star'), ' Earn your stars'),
       h('ol', { class: 'objectives' }, (lv.objectives || []).map((o) => h('li', { class: 'plain' }, icon('star'), h('span', null, objectiveText(gd, o, lv)))))),
     h('section', { class: 'section' }, h('h2', null, icon('build'), ' Your tools'),
       h('p', { class: 'muted' }, `You can build: ${allowed.join(', ')}.`),
-      h('p', { class: 'muted small' }, 'Drug batteries only fire at the germs you prescribe. You choose the drug and tick the germs - no hints. Wrong choices waste ATP, breed resistance and can wipe out the gut flora.')),
-    boost.el,
+      h('div', { class: 'callout callout-ok mt-1' }, icon('pill'), h('div', null,
+        h('strong', null, 'When germs attack, you choose the treatment. '),
+        `Options: ${['ors', ...(lv.allowedDrugs || [])].map((d) => shortDrugName(gd, d)).join(', ')}. `,
+        'The right drug clears the germ and saves the patient; a wrong one does nothing, breeds resistance and can harm the good gut bacteria.'))),
     h('div', { class: 'mt-2' }, go),
     s ? h('details', { class: 'card mt-2' }, h('summary', null, 'Show best practice'), h('p', { class: 'mb-0 mt-1' }, lv.best)) : null]);
 }

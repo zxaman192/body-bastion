@@ -23,9 +23,8 @@ def attack(layout, army, commands, **kw):
     return b, b.run()
 
 
-def campaign(level_id, commands):
-    lv = next(c for c in GD["campaign"] if c["id"] == level_id)
-    setup = {
+def campaign_setup(lv):
+    return {
         "mode": "campaign", "seed": 3, "maxTicks": lv["maxTicks"], "patient": lv["patient"],
         "defender": {"layout": copy.deepcopy(lv["layout"]), "coreLevel": lv["coreLevel"], "research": lv["research"],
                      "vaccines": {}, "resistance": lv["resistance"], "memory": {}, "policy": {"stopflow_at": 0},
@@ -34,6 +33,11 @@ def campaign(level_id, commands):
         "campaign": {"budget": lv["budget"], "allowed": lv["allowed"], "allowedDrugs": lv["allowedDrugs"],
                      "allowedVaccines": lv.get("allowedVaccines", []), "vaccineCost": lv.get("vaccineCost", 0), "waves": lv["waves"]},
     }
+
+
+def campaign(level_id, commands):
+    lv = next(c for c in GD["campaign"] if c["id"] == level_id)
+    setup = campaign_setup(lv)
     b = sim.Battle(GD, setup)
     b.load_commands(commands)
     return b, b.run(), lv
@@ -98,8 +102,8 @@ def test_stopflow_locked_for_children():
 
 
 def test_amoeba_death_leaves_cyst_and_luminal_agent_clears_it():
-    b, r, _ = campaign(6, [{"t": 0, "c": "build", "site": "C5", "b": "drug_battery", "drug": "metronidazole", "rx": ["amoeba"]},
-                           {"t": 0, "c": "build", "site": "D3", "b": "drug_battery", "drug": "luminal_agent", "rx": ["amoeba_cyst"]}])
+    b, r, _ = campaign(6, [{"t": 31, "c": "treat", "d": "metronidazole"}, {"t": 551, "c": "treat", "d": "luminal_agent"},
+                           {"t": 1001, "c": "treat", "d": "metronidazole"}])
     assert r["stats"]["cystsSpawned"] == r["stats"]["kills"].get("amoeba", 0) > 0
     assert r["stats"]["drugKills"].get("luminal_agent", {}).get("amoeba_cyst", 0) > 0
 
@@ -128,7 +132,8 @@ def test_vaccination_reduces_spawn_hp():
 
 
 def test_objectives_and_scores():
-    b, r, lv = campaign(1, [{"t": 0, "c": "build", "site": "E2", "b": "ors_station"}, {"t": 0, "c": "build", "site": "B4", "b": "iga_cannon"}])
+    b, r, lv = campaign(1, [{"t": 0, "c": "build", "site": "E2", "b": "ors_station"}, {"t": 0, "c": "build", "site": "B4", "b": "iga_cannon"},
+                            {"t": 31, "c": "treat", "d": "ors"}, {"t": 331, "c": "treat", "d": "ors"}])
     objs = sim.evaluate_objectives(GD, lv["objectives"], r)
     assert objs == [True, True, True]
     _, r0, _ = campaign(1, [])
@@ -196,3 +201,45 @@ def test_defence_boosts_help_the_patient():
     assert r2["hydrationMin"] >= r0["hydrationMin"]
     _, r3, _ = campaign(3, [{"t": reach + 1, "c": "boost", "k": "replication", "z": 0}])
     assert r3["stats"]["boosters"] == {}
+
+
+def test_right_drug_clears_the_wave_and_wrong_drug_does_nothing():
+    _, right, _ = campaign(3, [{"t": 21, "c": "treat", "d": "doxycycline"}])
+    _, wrong, _ = campaign(3, [{"t": 21, "c": "treat", "d": "ceftriaxone"}])
+    _, none, _ = campaign(3, [])
+    assert right["stats"]["drugKills"]["doxycycline"]["cholera"] >= 10
+    assert sum(right["stats"]["kills"].values()) > sum(none["stats"]["kills"].values())
+    assert "ceftriaxone" not in wrong["stats"]["drugKills"]
+    assert wrong["stats"]["wasted"] == 1 and wrong["stats"]["unnecessary"] == 1
+    assert wrong["stats"]["shotsOn"]["cholera"] == {"N": 1}
+    assert wrong["stats"]["collateral"] > 0
+
+
+def test_one_treatment_per_wave_and_only_after_germs_attack():
+    lv = next(c for c in GD["campaign"] if c["id"] == 3)
+    b = sim.Battle(GD, campaign_setup(lv))
+    assert b.command({"c": "treat", "d": "doxycycline"}) is False  # no wave has attacked yet
+    for _ in range(21):
+        b.step()
+    assert b.command({"c": "treat", "d": "doxycycline"}) is True
+    assert b.command({"c": "treat", "d": "azithromycin"}) is False  # one course per wave
+    assert b.command({"c": "treat", "d": "albendazole"}) is False  # not a drug this case offers
+    # the server ignores anything the client should not have sent
+    _, r, _ = campaign(3, [{"t": 0, "c": "treat", "d": "doxycycline"}, {"t": 21, "c": "treat", "d": "doxycycline"},
+                           {"t": 22, "c": "treat", "d": "doxycycline"}])
+    assert r["stats"]["treatments"] == {"doxycycline": 1}
+
+
+def test_ors_treatment_refills_hydration():
+    cmds = [{"t": 31, "c": "treat", "d": "ors"}, {"t": 331, "c": "treat", "d": "ors"}, {"t": 701, "c": "treat", "d": "ors"}]
+    _, with_ors, _ = campaign(1, [{"t": 0, "c": "build", "site": "B4", "b": "iga_cannon"}] + cmds)
+    _, without, _ = campaign(1, [{"t": 0, "c": "build", "site": "B4", "b": "iga_cannon"}])
+    assert with_ors["stats"]["orsRefill"] > 0 and with_ors["stats"]["totalShots"] == 0
+    assert with_ors["hydrationMinPct"] > without["hydrationMinPct"]
+    assert sim.evaluate_objectives(GD, [{"key": "treated_with", "drugs": ["ors"], "n": 3}], with_ors) == [True]
+
+
+def test_cases_offer_treatments_instead_of_prescription_batteries():
+    for lv in GD["campaign"]:
+        assert "drug_battery" not in lv["allowed"]
+        assert lv["allowedDrugs"], lv["id"]

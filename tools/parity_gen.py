@@ -325,6 +325,15 @@ class Gen:
             cmds.append({'t': r.randint(0, mt), 'c': 'deploy', 'u': 'cholera'})
             cmds.append({'t': r.randint(0, mt), 'c': 'end'})
         cmds.extend(self.boost_commands('defence', mt))
+        # treatments: mostly a tick or a few after a wave starts, sometimes at random or with junk
+        starts = sorted({w['t'] for w in level.get('waves') or [] if isinstance(w.get('t'), int)})
+        options = ['ors'] + list(level.get('allowedDrugs') or [])
+        for ws in starts:
+            if r.random() < 0.7:
+                cmds.append({'t': ws + r.choice([0, 1, 1, 3, 40]), 'c': 'treat', 'd': r.choice(options)})
+        for _ in range(r.choice([0, 0, 1, 3])):
+            cmds.append({'t': r.randint(0, mt), 'c': 'treat',
+                         'd': r.choice(options + [r.choice(self.drugs), 'placebo', None, 7])})
         if r.random() < 0.1:
             cmds.extend(self.junk_commands(mt))
         return 'campaign_%s_%d' % (tag, idx), setup, cmds

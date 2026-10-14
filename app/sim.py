@@ -20,9 +20,19 @@ SCALAR_STATS = (
 )
 MAP_STATS = (
     'deployed', 'kills', 'shots', 'shotsOn', 'drugKills', 'towerKills', 'acidDamage',
-    'vaccinatedSpawns', 'reachedLiver', 'spellsUsed', 'boosters',
+    'vaccinatedSpawns', 'reachedLiver', 'spellsUsed', 'boosters', 'treatments',
 )
-COMMANDS = ('deploy', 'spell', 'end', 'build', 'sell', 'rx', 'stopflow', 'vaccinate', 'boost')
+COMMANDS = ('deploy', 'spell', 'end', 'build', 'sell', 'rx', 'stopflow', 'vaccinate', 'boost', 'treat')
+LETTER_RANK = {'Y': 4, 'P': 3, 'X': 2, 'S': 1, '-': 0, 'N': 0}
+
+
+class _TreatSource:
+    """Stands in for a drug battery when a treatment course kills a germ (drugKills by drug)."""
+    __slots__ = ('drug', 'idx')
+
+    def __init__(self, drug):
+        self.drug = drug
+        self.idx = -1
 
 
 def div(a, b):
@@ -446,6 +456,7 @@ class Battle:
         self.qi = 0
 
         self.waveAt = {}
+        self.waveStarts = {}
         self.lastWaveTick = -1
         waves = camp.get('waves') if isinstance(camp.get('waves'), list) else []
         for w in waves:
@@ -461,6 +472,8 @@ class Battle:
             n = _clamp(n, 0, 1000)
             if gap is None:
                 gap = 0
+            if 0 <= wt < self.maxTicks and wt not in self.waveStarts:
+                self.waveStarts[wt] = u
             for i in range(n):
                 tk = wt + i * gap
                 if tk > self.lastWaveTick:
@@ -471,6 +484,24 @@ class Battle:
                         self.waveAt[tk] = [u]
                     else:
                         lst.append(u)
+
+        # Treatment: each wave that attacks lets the doctor give one course of ORS or a drug.
+        tc = _obj(gd.get('treatment'))
+
+        def tint(k):
+            v = as_int(tc.get(k))
+            return v if v is not None and v > 0 else 0
+
+        self.treatEvery = tint('pulseEvery') or 10
+        self.treatPulses = tint('pulses')
+        self.treatPulsePct = tint('pulsePct')
+        self.treatOrsPct = tint('orsPulsePct')
+        self.treatCollateral = tint('collateralMult')
+        self.treatPressure = tint('pressureMult')
+        self.treatPerWave = tint('perWave')
+        self.treatSlots = 0
+        self.treatTarget = None
+        self.treatments = []
 
         layout = _obj(de.get('layout'))
         for idx, site in enumerate(st.sites):
@@ -633,6 +664,13 @@ class Battle:
                 u = cmd.get('u')
                 if t != 0 or not isinstance(u, str) or u not in self.allowedVaccines:
                     return False
+            elif c == 'treat':
+                d = cmd.get('d')
+                if not isinstance(d, str) or (d != 'ors' and d not in self.allowedDrugs):
+                    return False
+                opening = self.treatPerWave if t in self.waveStarts else 0
+                if self.treatSlots + opening - self._queued_count('treat', 'c', 'treat') <= 0:
+                    return False
         q = dict(cmd)
         q['t'] = t
         self.commands.append(q)
@@ -733,6 +771,8 @@ class Battle:
             b.rx = self._filter_rx(rx)
         elif c == 'stopflow':
             self._stopflow(t)
+        elif c == 'treat':
+            self._treat(cmd, t)
         elif c == 'vaccinate':
             u = cmd.get('u')
             if t != 0 or not isinstance(u, str) or u not in self.allowedVaccines:
@@ -788,6 +828,90 @@ class Battle:
                     dmg = mulpct(u.maxHp, pct)
                     self._damage_unit(u, dmg if dmg > 0 else 1, t, 'booster', None)
         _inc(self.stats['boosters'], k)
+
+    # One course of treatment for the wave that is attacking. The drug then acts on every germ in the
+    # body for a while: full effect on germs it treats, partial where resistance lowers it, none otherwise.
+    def _treat(self, cmd, t):
+        d = cmd.get('d')
+        st = self.st
+        if not isinstance(d, str) or self.treatSlots <= 0:
+            return
+        if d != 'ors' and (d not in self.allowedDrugs or d not in st.ddefs):
+            return
+        self.treatSlots -= 1
+        stats = self.stats
+        _inc(stats['treatments'], d)
+        T = self.treatTarget
+        if d != 'ors':
+            dd = st.ddefs[d]
+            if T is not None:
+                L = st.letter[T][d]
+                for u in self.units:
+                    if not u.alive:
+                        continue
+                    lu = st.letter[u.type][d]
+                    if LETTER_RANK[lu] > LETTER_RANK[L]:
+                        L = lu
+                        T = u.type
+                stats['totalShots'] += 1
+                _inc2(stats['shots'], d, L)
+                _inc2(stats['shotsOn'], T, L)
+                if L == 'N' or L == 'X' or st.udefs[T].abx_not_needed:
+                    stats['unnecessary'] += 1
+                if L == 'N':
+                    stats['wasted'] += 1
+                _inc(self.pressure, d, self.gd['pressure'].get(L, 0) * self.treatPressure)
+                if T == 'hpylori' and d != 'hpylori_combo':
+                    stats['hpyloriSingleDrugHits'] += 1
+                    hp = self.gd['hpyloriSingleDrugPressure'].get(d)
+                    if hp is not None:
+                        _inc(self.pressure, 'hpylori_combo', hp * self.treatPressure)
+            c = dd.get('collateral', 0) * self.treatCollateral
+            if c > 0:
+                self._collateral(c, t)
+            pt = dd.get('ppiTicks')
+            if pt is not None:
+                self.ppiUntil = t + pt
+        if self.treatPulses > 0:
+            self.treatments.append({'d': d, 'next': t, 'left': self.treatPulses})
+
+    def _treat_turn(self, t):
+        keep = []
+        for tr in self.treatments:
+            if tr['next'] == t:
+                self._treat_pulse(tr['d'], t)
+                tr['left'] -= 1
+                tr['next'] = t + self.treatEvery
+            if tr['left'] > 0:
+                keep.append(tr)
+        self.treatments = keep
+
+    def _treat_pulse(self, d, t):
+        st = self.st
+        if d == 'ors':
+            hmax = self.hydrationMax
+            add = mulpct(hmax, self.treatOrsPct)
+            ors = st.bdefs.get('ors_station')
+            if ors is not None and self.hydration * 100 < ors['severeBelowPct'] * hmax:
+                add = mulpct(add, ors['severeOrsPct'])
+            h = self.hydration + add
+            nh = h if h < hmax else hmax
+            self.stats['orsRefill'] += nh - self.hydration
+            self.hydration = nh
+            return
+        R = self.resistance.get(d, 0)
+        src = _TreatSource(d)
+        for u in self.units:
+            if not u.alive:
+                continue
+            pct = st.dpct[u.type][d]
+            if pct <= 0:
+                continue
+            dmg = mulpct(mulpct(u.maxHp, self.treatPulsePct), pct)
+            dmg = mulpct(dmg, 100 - R)
+            if dmg < 1:
+                dmg = 1
+            self._damage_unit(u, dmg, t, 'treat', src)
 
     def _cross(self, prev, s, t):
         cb = self.cpBounds
@@ -899,6 +1023,10 @@ class Battle:
         if wl is not None:
             for ut in wl:
                 self._spawn(ut, 0, True, 'wave', t)
+        ws = self.waveStarts.get(t)
+        if ws is not None:
+            self.treatSlots += self.treatPerWave
+            self.treatTarget = ws
         q = self.queue
         while self.qi < len(q) and q[self.qi]['t'] < t:
             self.qi += 1
@@ -931,6 +1059,8 @@ class Battle:
                     self._peri_turn(b, t, live)
                 elif role == 'flora':
                     self._flora_turn(b, t, live)
+        if self.treatments:
+            self._treat_turn(t)
         self._hydration(t)
         if (self.mode == 'attack' and self.stopflowAt > 0 and not self.autoStopflowUsed
                 and self.patient != 'child'
@@ -1228,7 +1358,7 @@ class Battle:
             T = u.type
             stats = self.stats
             _inc(stats['kills'], T)
-            if kind == 'battery':
+            if kind == 'battery' or kind == 'treat':
                 _inc2(stats['drugKills'], b.drug, T)
             elif kind == 'building':
                 _inc2(stats['towerKills'], b.key, T)
@@ -1517,6 +1647,14 @@ def evaluate_objectives(gd, objectives, result):
                     row = _obj(dk.get(d))
                     for v in row.values():
                         n += _num(v)
+                ok = n >= _num(ob.get('n'))
+            elif k == 'treated_with':
+                tr = _obj(stats.get('treatments'))
+                n = 0
+                drugs = ob.get('drugs') if isinstance(ob.get('drugs'), list) else []
+                for d in drugs:
+                    if isinstance(d, str):
+                        n += _num(tr.get(d))
                 ok = n >= _num(ob.get('n'))
             elif k == 'building_standing':
                 site = ob.get('site')

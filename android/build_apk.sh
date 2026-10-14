@@ -13,9 +13,9 @@ PLATFORM_JAR="${PLATFORM_JAR:-$(ls -d "$ANDROID_SDK"/platforms/*/android.jar | s
 JAVA_HOME="${JAVA_HOME:-/c/Program Files/Android/Android Studio/jbr}"
 export JAVA_HOME PATH="$JAVA_HOME/bin:$PATH"
 KEYSTORE_DIR="${KEYSTORE_DIR:-$ROOT/../android-signing}"
-VERSION_NAME="${VERSION_NAME:-1.4.0}"
-VERSION_CODE="${VERSION_CODE:-140}"
-RELEASE_NAME="${RELEASE_NAME:-Laparotomy}"
+VERSION_NAME="${VERSION_NAME:-1.4.2}"
+VERSION_CODE="${VERSION_CODE:-152}"
+RELEASE_NAME="${RELEASE_NAME:-Duodenum}"
 MIN_SDK=26
 TARGET_SDK=35
 EXE=""; [ -f "$BUILD_TOOLS/aapt2.exe" ] && EXE=".exe"

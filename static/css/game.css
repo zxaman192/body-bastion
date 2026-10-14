@@ -508,3 +508,9 @@ body.home-hud .view { max-width: none; padding: 0; }
 .bb-booster-neutralise { --b1: #80deea; --b2: #00838f; }
 
 input.range { width: 100%; accent-color: #43a523; min-height: 32px; }
+
+/* 1.4.2: treatment choice when germs attack */
+.bb-treat-opt { border-left-width: 6px; border-left-style: solid; text-align: left; }
+.bb-treat-opt strong { display: block; font-size: 1rem; }
+.bb-treat-opt small { display: block; font-size: 0.8rem; font-weight: 700; opacity: 0.75; line-height: 1.3; }
+.bb-treat .bb-sheet-actions { justify-content: center; padding: 8px 0 12px; }

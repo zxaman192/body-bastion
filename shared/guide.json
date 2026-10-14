@@ -10,9 +10,14 @@
   "Win stars. One star for destroying at least 50% of the buildings (walls do not count), one for destroying the Bone Marrow Core, one for 100%. If the defender's hydration reaches zero the base collapses: 3 stars and 100%.",
   "Read the 'Why did this happen?' cards after each battle. They explain the real mechanism behind what you saw.",
   "Upgrade. Mitochondria Plants make ATP and Nutrient Absorbers make nutrients over time. Spend them on buildings, upgrades, a stronger Bone Marrow Core, and research: new drugs in the Pharmacy Lab, vaccines in the Vaccine Lab and T cells in the Peyer's Patch.",
-  "Play the case campaign. You are the doctor: each level is a real clinical case in which scripted germ waves attack a base you set up within a budget. Pause, speed up, build, sell, change prescriptions and use Stop-Flow during the battle. Stars come from surviving and meeting the case's two treatment objectives."
+  "Play the case campaign. You are the doctor: each level is a real clinical case. Build defences within a budget, vaccinate where offered, then press Start. Every time a wave of germs attacks, the game pauses and you choose the treatment: ORS or one of the case's drugs. The right drug clears the germ and saves the patient; a wrong one does nothing, breeds resistance and harms the good gut bacteria. Stars come from surviving and meeting the case's treatment goals."
  ],
  "rules": [
+  {
+   "title": "Treat when germs attack",
+   "game": "In cases and Defence Trials, each wave that attacks lets you give one treatment. A drug acts on every germ in the body for 12 seconds: full effect on germs it treats, reduced effect where they resist it, none on germs outside its spectrum. A wrong or unneeded drug still counts as an antibiotic shot, adds resistance pressure and damages the gut flora. ORS refills hydration for 12 seconds (only a fifth as well below 25% hydration, when IV fluids are needed).",
+   "teaching": "Treatment starts with the question: which germ is this? Watery diarrhoea needs fluids first; antibiotics help only for specific bacteria (cholera, Shigella, typhoid), never for viruses, and the drug must match the germ and local resistance."
+  },
   {
    "title": "Hydration first",
    "game": "Toxin germs (Cholera, Rotavirus, ETEC, Shigella, C. difficile) drain the hydration meter once they are past the stomach, and toxins next to a Villi Wall make it leak. ORS stations refill the meter, but below 25% hydration ORS works at only 20% of its rate; the IV Ringer's Lactate Stand then switches on automatically and runs until hydration is back to 50%. At zero hydration the base collapses even if every tower stands.",

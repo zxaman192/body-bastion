@@ -97,7 +97,8 @@ def test_base_editing_and_validation(client):
 def test_campaign_flow_and_unlocks(client):
     H = guest(client)
     assert client.post("/api/battle/start", headers=H, json={"mode": "campaign", "target": {"level": 2}}).status_code == 403
-    cmds = [{"t": 0, "c": "build", "site": "E2", "b": "ors_station"}, {"t": 0, "c": "build", "site": "B4", "b": "iga_cannon"}]
+    cmds = [{"t": 0, "c": "build", "site": "E2", "b": "ors_station"}, {"t": 0, "c": "build", "site": "B4", "b": "iga_cannon"},
+            {"t": 31, "c": "treat", "d": "ors"}, {"t": 331, "c": "treat", "d": "ors"}]
     start, f = play(client, H, {"mode": "campaign", "target": {"level": 1}, "boost": True}, cmds, answer=0)
     body = f.json()
     assert f.status_code == 200 and body["verified"] is True
@@ -327,3 +328,18 @@ def test_secret_key_is_generated_once_and_persisted(tmp_path, monkeypatch):
     db.dispose_engine()
     config.reset_config()
     assert keys[0] == keys[1] and len(keys[0]) >= 32
+
+
+def test_treatment_choices_are_verified_by_the_server(client):
+    H = guest(client)
+    good = [{"t": 0, "c": "build", "site": "E2", "b": "ors_station"}, {"t": 0, "c": "build", "site": "B4", "b": "iga_cannon"},
+            {"t": 31, "c": "treat", "d": "ors"}, {"t": 331, "c": "treat", "d": "ors"}, {"t": 701, "c": "treat", "d": "ors"}]
+    _, f = play(client, H, {"mode": "campaign", "target": {"level": 1}}, good)
+    body = f.json()
+    assert body["verified"] is True and body["stars_campaign"] == 3
+    assert body["result"]["stats"]["treatments"] == {"ors": 3}
+    # an antibiotic for a virus is an unnecessary shot: the "no antibiotics" star is lost
+    bad = good[:2] + [{"t": 31, "c": "treat", "d": "azithromycin"}, {"t": 331, "c": "treat", "d": "azithromycin"}]
+    _, f = play(client, H, {"mode": "campaign", "target": {"level": 1}}, bad)
+    body = f.json()
+    assert body["objectives"][1] is False and body["result"]["stats"]["unnecessary"] == 2

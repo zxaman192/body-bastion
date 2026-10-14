@@ -17,9 +17,10 @@ const SCALAR_STATS = [
 ];
 const MAP_STATS = [
   'deployed', 'kills', 'shots', 'shotsOn', 'drugKills', 'towerKills', 'acidDamage',
-  'vaccinatedSpawns', 'reachedLiver', 'spellsUsed', 'boosters',
+  'vaccinatedSpawns', 'reachedLiver', 'spellsUsed', 'boosters', 'treatments',
 ];
-const COMMANDS = ['deploy', 'spell', 'end', 'build', 'sell', 'rx', 'stopflow', 'vaccinate', 'boost'];
+const COMMANDS = ['deploy', 'spell', 'end', 'build', 'sell', 'rx', 'stopflow', 'vaccinate', 'boost', 'treat'];
+const LETTER_RANK = { Y: 4, P: 3, X: 2, S: 1, '-': 0, N: 0 };
 
 function div(a, b) {
   return Math.floor(a / b);
@@ -460,6 +461,7 @@ export class Battle {
     this.qi = 0;
 
     this.waveAt = new Map();
+    this.waveStarts = new Map();
     this.lastWaveTick = -1;
     const waves = Array.isArray(camp.waves) ? camp.waves : [];
     for (let w of waves) {
@@ -472,6 +474,7 @@ export class Battle {
       if (wt === null || n === null || n < 1) continue;
       n = clamp(n, 0, 1000);
       if (gap === null) gap = 0;
+      if (wt >= 0 && wt < this.maxTicks && !this.waveStarts.has(wt)) this.waveStarts.set(wt, u);
       for (let i = 0; i < n; i++) {
         const tk = wt + i * gap;
         if (tk > this.lastWaveTick) this.lastWaveTick = tk;
@@ -482,6 +485,23 @@ export class Battle {
         }
       }
     }
+
+    // Treatment: each wave that attacks lets the doctor give one course of ORS or a drug.
+    const tc = obj(gd.treatment);
+    const tint = (k) => {
+      const v = asInt(own(tc, k));
+      return v !== null && v > 0 ? v : 0;
+    };
+    this.treatEvery = tint('pulseEvery') || 10;
+    this.treatPulses = tint('pulses');
+    this.treatPulsePct = tint('pulsePct');
+    this.treatOrsPct = tint('orsPulsePct');
+    this.treatCollateral = tint('collateralMult');
+    this.treatPressure = tint('pressureMult');
+    this.treatPerWave = tint('perWave');
+    this.treatSlots = 0;
+    this.treatTarget = null;
+    this.treatments = [];
 
     const layout = obj(de.layout);
     st.sites.forEach((site, idx) => {
@@ -634,6 +654,11 @@ export class Battle {
       } else if (c === 'vaccinate') {
         const u = cmd.u;
         if (t !== 0 || typeof u !== 'string' || !this.allowedVaccines.includes(u)) return false;
+      } else if (c === 'treat') {
+        const d = cmd.d;
+        if (typeof d !== 'string' || (d !== 'ors' && !this.allowedDrugs.includes(d))) return false;
+        const opening = this.waveStarts.has(t) ? this.treatPerWave : 0;
+        if (this.treatSlots + opening - this._queuedCount('treat', 'c', 'treat') <= 0) return false;
       }
     }
     const q = Object.assign({}, cmd);
@@ -727,6 +752,8 @@ export class Battle {
       b.rx = this._filterRx(rx);
     } else if (c === 'stopflow') {
       this._stopflow(t);
+    } else if (c === 'treat') {
+      this._treat(cmd, t);
     } else if (c === 'vaccinate') {
       const u = cmd.u;
       if (t !== 0 || typeof u !== 'string' || !this.allowedVaccines.includes(u)) return;
@@ -781,6 +808,94 @@ export class Battle {
     }
     inc(this.stats.boosters, k);
     this.events.push({ type: 'boost', k, z, effect: eff });
+  }
+
+  // One course of treatment for the wave that is attacking. The drug then acts on every germ in the
+  // body for a while: full effect on germs it treats, partial where resistance lowers it, none otherwise.
+  _treat(cmd, t) {
+    const d = cmd.d;
+    const st = this.st;
+    if (typeof d !== 'string' || this.treatSlots <= 0) return;
+    if (d !== 'ors' && (!this.allowedDrugs.includes(d) || !st.ddefs.has(d))) return;
+    this.treatSlots -= 1;
+    const stats = this.stats;
+    inc(stats.treatments, d);
+    let T = this.treatTarget;
+    if (d !== 'ors') {
+      const dd = st.ddefs.get(d);
+      if (T !== null) {
+        let L = st.letter.get(T).get(d);
+        for (const u of this.units) {
+          if (!u.alive) continue;
+          const lu = st.letter.get(u.type).get(d);
+          if (LETTER_RANK[lu] > LETTER_RANK[L]) {
+            L = lu;
+            T = u.type;
+          }
+        }
+        stats.totalShots += 1;
+        inc2(stats.shots, d, L);
+        inc2(stats.shotsOn, T, L);
+        if (L === 'N' || L === 'X' || st.udefs.get(T).abxNotNeeded) stats.unnecessary += 1;
+        if (L === 'N') stats.wasted += 1;
+        const pl = own(this.gd.pressure, L);
+        inc(this.pressure, d, (pl !== undefined ? pl : 0) * this.treatPressure);
+        if (T === 'hpylori' && d !== 'hpylori_combo') {
+          stats.hpyloriSingleDrugHits += 1;
+          const hp = own(this.gd.hpyloriSingleDrugPressure, d);
+          if (hp !== undefined && hp !== null) inc(this.pressure, 'hpylori_combo', hp * this.treatPressure);
+        }
+      }
+      const c = (dd.collateral !== undefined ? dd.collateral : 0) * this.treatCollateral;
+      if (c > 0) this._collateral(c, t);
+      const pt = dd.ppiTicks;
+      if (pt !== undefined && pt !== null) this.ppiUntil = t + pt;
+    }
+    if (this.treatPulses > 0) this.treatments.push({ d, next: t, left: this.treatPulses });
+    this.events.push({ type: 'treat', d, u: T });
+  }
+
+  _treatTurn(t) {
+    const keep = [];
+    for (const tr of this.treatments) {
+      if (tr.next === t) {
+        this._treatPulse(tr.d, t);
+        tr.left -= 1;
+        tr.next = t + this.treatEvery;
+      }
+      if (tr.left > 0) keep.push(tr);
+    }
+    this.treatments = keep;
+  }
+
+  _treatPulse(d, t) {
+    const st = this.st;
+    if (d === 'ors') {
+      const hmax = this.hydrationMax;
+      let add = mulpct(hmax, this.treatOrsPct);
+      const ors = st.bdefs.get('ors_station');
+      if (ors !== undefined && this.hydration * 100 < ors.severeBelowPct * hmax) add = mulpct(add, ors.severeOrsPct);
+      const h = this.hydration + add;
+      const nh = h < hmax ? h : hmax;
+      this.stats.orsRefill += nh - this.hydration;
+      this.hydration = nh;
+      this.events.push({ type: 'tpulse', d, n: 0 });
+      return;
+    }
+    const R = own(this.resistance, d) !== undefined ? this.resistance[d] : 0;
+    const src = { drug: d, idx: -1 };
+    let n = 0;
+    for (const u of this.units) {
+      if (!u.alive) continue;
+      const pct = st.dpct.get(u.type).get(d);
+      if (pct <= 0) continue;
+      let dmg = mulpct(mulpct(u.maxHp, this.treatPulsePct), pct);
+      dmg = mulpct(dmg, 100 - R);
+      if (dmg < 1) dmg = 1;
+      n += 1;
+      this._damageUnit(u, dmg, t, 'treat', src);
+    }
+    this.events.push({ type: 'tpulse', d, n });
   }
 
   _cross(prev, s, t) {
@@ -897,6 +1012,12 @@ export class Battle {
     if (wl !== undefined) {
       for (const ut of wl) this._spawn(ut, 0, true, 'wave', t);
     }
+    const ws = this.waveStarts.get(t);
+    if (ws !== undefined) {
+      this.treatSlots += this.treatPerWave;
+      this.treatTarget = ws;
+      this.events.push({ type: 'wave', u: ws });
+    }
     const q = this.queue;
     while (this.qi < q.length && q[this.qi].t < t) this.qi += 1;
     while (this.qi < q.length && q[this.qi].t === t) {
@@ -928,6 +1049,7 @@ export class Battle {
         else if (role === 'flora') this._floraTurn(b, t, live);
       }
     }
+    if (this.treatments.length) this._treatTurn(t);
     this._hydration(t);
     if (this.mode === 'attack' && this.stopflowAt > 0 && !this.autoStopflowUsed &&
         this.patient !== 'child' &&
@@ -1235,7 +1357,7 @@ export class Battle {
       const T = u.type;
       const stats = this.stats;
       inc(stats.kills, T);
-      if (kind === 'battery') inc2(stats.drugKills, b.drug, T);
+      if (kind === 'battery' || kind === 'treat') inc2(stats.drugKills, b.drug, T);
       else if (kind === 'building') inc2(stats.towerKills, b.key, T);
       this.events.push({ type: 'kill', u: u.id, by: b ? b.idx : -1, kind });
       if (T === 'amoeba') {
@@ -1540,6 +1662,13 @@ export function evaluateObjectives(gd, objectives, result) {
           if (typeof d !== 'string') continue;
           const row = obj(own(dk, d));
           for (const v of Object.values(row)) n += num(v);
+        }
+        ok = n >= num(ob.n);
+      } else if (k === 'treated_with') {
+        const tr = obj(stats.treatments);
+        let n = 0;
+        for (const d of Array.isArray(ob.drugs) ? ob.drugs : []) {
+          if (typeof d === 'string') n += num(own(tr, d));
         }
         ok = n >= num(ob.n);
       } else if (k === 'building_standing') {

@@ -18,7 +18,7 @@ real enteric germs. The hydration meter makes dehydration, not tower damage, the
 dies; wrong antibiotics waste ATP, breed resistance and can wipe out the flora and summon
 C. difficile.
 
-Current version: **1.4.0 "Laparotomy"**. Every release is named and kept: see [CHANGELOG.md](CHANGELOG.md).
+Current version: **1.4.2 "Duodenum"**. Every release is named and kept: see [CHANGELOG.md](CHANGELOG.md).
 
 | What | Where |
 |---|---|
@@ -31,8 +31,9 @@ Current version: **1.4.0 "Laparotomy"**. Every release is named and kept: see [C
 ## Game modes
 
 - **Case campaign**: 10 clinical cases (rotavirus, ETEC, cholera, Shigella, typhoid, amoebic liver
-  abscess, H. pylori, C. difficile, Ascaris, a mixed hostel outbreak). You defend the patient against
-  scripted waves; stars reward the correct treatment.
+  abscess, H. pylori, C. difficile, Ascaris, a mixed hostel outbreak). You build the patient's defences,
+  and every time a wave of germs attacks you choose the treatment (ORS or a drug): the right drug saves
+  the patient, the wrong one does nothing and breeds resistance. Stars reward the correct treatment.
 - **Multiplayer**: attack other players' saved bases (or training bases); your base defends itself.
 - **League**: 10 identical tournament bases (one scored attempt each) and 3 Defence Trials.
 - **Cohort Challenges**: college cohorts, base snapshots, vaccination-based herd immunity.

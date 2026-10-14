@@ -1,6 +1,6 @@
 import { h, icon, setTitle, starsEl, fmt, mount, navigate, chip } from '../ui.js';
 import { store, loadGameData, loadCards } from '../store.js';
-import { idx, objectiveText, unitName, drugName, resultKind } from './logic.js';
+import { idx, objectiveText, unitName, drugName, resultKind, treatmentVerdict, shortDrugName } from './logic.js';
 
 function stat(k, v) {
   return h('div', { class: 'stat' }, h('div', { class: 'v' }, v), h('div', { class: 'k' }, k));
@@ -53,6 +53,26 @@ export async function render(root) {
       r.rewards && (r.rewards.atp || r.rewards.nutrients) ? stat('Loot', `${fmt(r.rewards.atp)} ATP / ${fmt(r.rewards.nutrients)} N`) : null,
       r.rewards && r.rewards.trophies ? stat('Merit points', `${r.rewards.trophies > 0 ? '+' : ''}${r.rewards.trophies}`) : null));
   root.append(hero);
+
+  // Each treatment chosen when a wave attacked: right or wrong, and why.
+  const lb = store.lastBattle;
+  const waves = ((lb && lb.setup && lb.setup.campaign && lb.setup.campaign.waves) || []).slice().sort((a, b) => a.t - b.t);
+  const treats = ((lb && lb.commands) || []).filter((c) => c && c.c === 'treat').sort((a, b) => a.t - b.t);
+  if (treats.length && waves.length) {
+    let right = 0;
+    const rows = treats.map((c) => {
+      let germ = null;
+      for (const w of waves) if (w.t <= c.t) germ = w.u;
+      if (!germ) return null;
+      const v = treatmentVerdict(gd, germ, c.d);
+      if (v.right) right += 1;
+      return h('li', { class: v.right ? 'met' : 'unmet' }, icon(v.right ? 'check' : 'close'),
+        h('span', null, h('strong', null, `${unitName(gd, germ)}: ${shortDrugName(gd, c.d)}. `), v.text));
+    }).filter(Boolean);
+    root.append(h('section', { class: 'section' }, h('h2', null, icon('pill'), ' Your treatments'),
+      h('p', null, `You chose the right treatment ${right} of ${rows.length} time${rows.length === 1 ? '' : 's'}.`),
+      h('ul', { class: 'objectives' }, rows)));
+  }
 
   const cps = Array.isArray(r.checkpoints) ? r.checkpoints.filter((c) => c.answered) : [];
   if (cps.length) {

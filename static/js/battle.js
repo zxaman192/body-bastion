@@ -5,6 +5,7 @@ import { drawUnit, unitColor, drawUnitIcon } from './render/units.js';
 import { buildingTop, siteAnchorIso } from './render/buildings.js';
 import { toIso, formatTime } from './render/geom.js';
 import { audio } from './audio.js';
+import { treatmentVerdict, rightTreatments } from './screens/logic.js';
 
 const TICK_MS = 100;
 const BOOSTER_ICON = {
@@ -109,6 +110,9 @@ export function mountBattle(container, props = {}) {
   const pctEl = el('div', { class: 'bb-stat', title: 'Base destroyed' }, '0%');
   const starsEl = el('div', { class: 'bb-stars', 'aria-label': 'Stars' }, el('span', null, '☆'), el('span', null, '☆'), el('span', null, '☆'));
   const resEl = el('div', { class: 'bb-stat bb-res' });
+  const hasBatteries = defence && (((setup.campaign && setup.campaign.allowed) || []).includes('drug_battery')
+    || Object.values((setup.defender && setup.defender.layout) || {}).some((e) => e && e.b === 'drug_battery'));
+  const treatOptions = defence && setup.campaign ? ['ors', ...(setup.campaign.allowedDrugs || [])] : [];
   const soundBtn = el('button', { class: 'bb-icon', type: 'button', title: 'Sound on/off', 'aria-label': 'Toggle sound', onclick: () => {
     audio.setMuted(!audio.muted);
     audio.unlock();
@@ -235,11 +239,54 @@ export function mountBattle(container, props = {}) {
       switch (ev.type) {
         case 'checkpoint': {
           const cp = checkpointDefs[ev.z] || {};
-          say(`Checkpoint: germs have reached the ${cp.name || 'next part of the gut'}`, defence ? 'warn' : 'good', 'cp' + ev.z, 0);
+          if (defence) {
+            say(`Germs have reached the ${(cp.name || 'next part of the gut').toLowerCase()}`, 'warn', 'cp' + ev.z, 0);
+            break;
+          }
+          say(`Checkpoint: germs have reached the ${cp.name || 'next part of the gut'}`, 'good', 'cp' + ev.z, 0);
           audio.play('alarm');
           if (mode !== 'replay' && props.checkpoints && !cpAsked.has(ev.z)) {
             cpAsked.add(ev.z);
             startQuiz(ev.z);
+          }
+          break;
+        }
+        case 'wave': {
+          const ud = units.get(ev.u);
+          say(`${ud ? ud.name : 'Germs'} attacking!`, 'warn', 'wave' + src.tick, 0);
+          audio.play('alarm');
+          if (mode !== 'replay' && treatOptions.length) startTreatment(ev.u);
+          break;
+        }
+        case 'treat': {
+          const dn = ev.d === 'ors' ? 'ORS' : ((drugs.get(ev.d) || {}).name || ev.d).split(' (')[0];
+          const col = ev.d === 'ors' ? '#6fc3ff' : ((drugs.get(ev.d) || {}).color || '#ffffff');
+          const p = geom.posAt(Math.min(pathLen, 1400));
+          const q = toIso(p.x, p.y);
+          fx.ring(q.x, q.y, 10, 900, col, 1100, 1e9);
+          fx.text(q.x, q.y - 40, dn, col, 1500, 1e9, 16);
+          if (mode === 'replay' && ev.u) {
+            const v = treatmentVerdict(gd, ev.u, ev.d);
+            say(v.text, v.kind, 'tv' + src.tick, 0);
+          }
+          audio.play(ev.d === 'ors' ? 'iv' : 'spell');
+          break;
+        }
+        case 'tpulse': {
+          if (ev.d === 'ors') {
+            const p = geom.posAt(1800);
+            const q = toIso(p.x, p.y);
+            fx.drops(q.x, q.y - 20, '#6fc3ff', 700, p.y + 4);
+            break;
+          }
+          const col = (drugs.get(ev.d) || {}).color || '#ffffff';
+          for (const u of src.units) {
+            if (!u.alive) continue;
+            const L = ((gd.matrix || {})[u.type] || {})[ev.d] || 'N';
+            if (L === 'N') continue;
+            const p = unitIso(u);
+            fx.burst(p.x, p.y - 8, col, 3, 380, p.depth + 1, 22);
+            hurtAt.set(u.id, performance.now());
           }
           break;
         }
@@ -569,7 +616,7 @@ export function mountBattle(container, props = {}) {
       pctEl.textContent = `${d.pct}%`;
       [...starsEl.children].forEach((s, i) => { s.textContent = i < d.stars ? '★' : '☆'; s.classList.toggle('on', i < d.stars); });
     }
-    if (defence) resEl.textContent = `ATP ${src.atp}` + (setup.campaign ? `  •  Budget ${src.budget}` : '');
+    if (defence) resEl.textContent = [hasBatteries ? `ATP ${src.atp}` : null, setup.campaign ? `Budget ${src.budget}` : null].filter(Boolean).join('  •  ');
     pauseBtn.textContent = paused ? '▶' : '⏸';
     pauseBtn.setAttribute('aria-label', paused ? 'Resume' : 'Pause');
     speedBtn.textContent = `x${speed}`;
@@ -775,6 +822,73 @@ export function mountBattle(container, props = {}) {
   function cleanupAndExit() {
     finished = true;
     if (props.onExit) props.onExit();
+  }
+
+  // ---------------------------------------------------------------- treatment choice
+  // When a wave of germs attacks, the battle pauses and the doctor chooses ORS or a drug.
+  // The right drug clears the germ; a wrong one does nothing and breeds resistance.
+  function shuffled(list, seed) {
+    const out = list.slice();
+    let s = (seed * 2654435761) % 4294967296;
+    for (let i = out.length - 1; i > 0; i--) {
+      s = (s * 1103515245 + 12345) % 2147483648;
+      const j = s % (i + 1);
+      [out[i], out[j]] = [out[j], out[i]];
+    }
+    return out;
+  }
+
+  function startTreatment(germ) {
+    if (quiz || battle.over) return;
+    const ud = units.get(germ) || { name: germ, real: '' };
+    const grp = ((gd.groups || {})[ud.group] || {}).name || '';
+    const state = { done: false };
+    quiz = state;
+    state.close = () => {
+      if (state.done) return;
+      state.done = true;
+      quizLayer.hidden = true;
+      quizLayer.replaceChildren();
+      if (quiz === state) quiz = null;
+      last = performance.now();
+    };
+    const choose = (d) => {
+      if (state.done) return;
+      if (d && battle.command({ c: 'treat', d })) {
+        const v = treatmentVerdict(gd, germ, d);
+        let text = v.text;
+        if (!v.right) {
+          const best = rightTreatments(gd, germ).map((k) => (k === 'ors' ? 'ORS' : ((drugs.get(k) || {}).name || k).split(' (')[0]));
+          if (best.length) text += ` Best: ${best.join(' or ')}.`;
+        }
+        say(text, v.kind, 'tv' + battle.tick, 0);
+        audio.play(v.right ? 'correct' : 'wrong');
+      } else if (!d) {
+        say(`No treatment given for ${ud.name}.`, 'info', 'tv' + battle.tick, 0);
+      }
+      state.close();
+    };
+    const cards = shuffled(treatOptions, battle.tick).map((d) => {
+      const dd = drugs.get(d);
+      const name = d === 'ors' ? 'ORS + zinc' : (dd ? dd.name.split(' (')[0] : d);
+      const sub = d === 'ors' ? 'Oral rehydration salts: replaces lost water and salt' : (dd ? dd.cls : '');
+      return el('button', { class: 'bb-quiz-opt bb-treat-opt', type: 'button', style: { borderLeftColor: d === 'ors' ? '#6fc3ff' : (dd && dd.color) || '#888' }, onclick: () => choose(d) },
+        el('span', { class: 'bb-quiz-letter', 'aria-hidden': 'true' }, d === 'ors' ? '\u{1F4A7}' : '\u{1F48A}'),
+        el('span', null, el('strong', null, name), el('small', null, sub)));
+    });
+    const box = el('div', { class: 'bb-dialog bb-quiz bb-treat', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'bbt-title' },
+      el('div', { class: 'bb-quiz-head' },
+        el('span', { class: 'bb-quiz-flag' }, 'Germs attacking!'),
+        el('h2', { id: 'bbt-title' }, ud.name),
+        el('p', { class: 'bb-small bb-muted' }, [ud.real, grp].filter(Boolean).join(' · '))),
+      el('div', { class: 'bb-quiz-body' },
+        el('p', { class: 'bb-quiz-q' }, 'Choose a treatment to save the patient:'),
+        el('div', { class: 'bb-quiz-opts' }, ...cards),
+        el('div', { class: 'bb-sheet-actions' }, el('button', { class: 'bb-btn', type: 'button', onclick: () => choose(null) }, 'No treatment'))));
+    quizLayer.replaceChildren(box);
+    quizLayer.hidden = false;
+    const first = box.querySelector('.bb-treat-opt');
+    if (first) first.focus();
   }
 
   // ---------------------------------------------------------------- checkpoint questions
@@ -990,7 +1104,7 @@ export function mountBattle(container, props = {}) {
         } }, done ? `Vaccinated: ${name}` : `Vaccinate: ${name} (${setup.campaign.vaccineCost || 0})`));
       }
       bottom.append(el('div', { class: 'bb-bar bb-intro' },
-        el('div', { class: 'bb-small' }, el('strong', null, 'Prepare your defence. '), 'Tap a glowing site to build. Batteries fire only at the germs you prescribe. Waves begin when you press Start.'),
+        el('div', { class: 'bb-small' }, el('strong', null, 'Prepare your defence. '), 'Tap a glowing site to build, then press Start. When germs attack you choose the treatment: the right drug saves the patient.'),
         vacc,
         el('button', { class: 'bb-btn bb-primary bb-big', type: 'button', onclick: () => startCampaign() }, 'Start')));
       return;
@@ -1004,7 +1118,7 @@ export function mountBattle(container, props = {}) {
     } }, 'Stop-Flow (loperamide)');
     sfBtn.dataset.role = 'stopflow';
     bottom.append(el('div', { class: 'bb-bar' }, sfBtn,
-      el('span', { class: 'bb-muted bb-small bb-hint' }, 'Tap a site to build or remove; tap a battery to change its prescription.')));
+      el('span', { class: 'bb-muted bb-small bb-hint' }, hasBatteries ? 'Tap a site to build or remove; tap a battery to change its prescription.' : 'Tap a site to build or remove.')));
   }
 
   function paintBottomLive() {

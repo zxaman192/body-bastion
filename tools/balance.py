@@ -58,29 +58,42 @@ def STOP(t):
 ALL = [u["key"] for u in GD["units"]]
 
 # Strategies: level id -> {name: commands}. "best" must win all stars; others are expected to lose stars.
+# Cases have no drug batteries: when each wave attacks, the doctor chooses one treatment (ORS or a drug).
+
+
+def TREAT(level_id, drugs):
+    """One treatment per wave, chosen a tick after the wave starts (as a player would)."""
+    lv = next(c for c in GD["campaign"] if c["id"] == level_id)
+    starts = sorted({w["t"] for w in lv["waves"]})
+    if isinstance(drugs, str):
+        drugs = [drugs] * len(starts)
+    return [{"t": t + 1, "c": "treat", "d": d} for t, d in zip(starts, drugs) if d]
+
+
 CAMPAIGN = {
-    1: {"best": [B("E2", "ors_station"), B("B4", "iga_cannon")],
-        "no_ors": [B("B4", "iga_cannon"), B("A3", "paneth_tower")],
-        "antibiotic": [B("E2", "ors_station"), B("B4", "drug_battery", "azithromycin", ["rotavirus"])]},
-    2: {"best": [B("E2", "ors_station"), B("B4", "iga_cannon")],
-        "antibiotic": [B("E2", "ors_station"), B("B4", "drug_battery", "azithromycin", ["etec"])]},
-    3: {"best": [B("E2", "iv_drip"), B("B4", "drug_battery", "doxycycline", ["cholera"]), VAX("cholera")],
-        "no_iv_wrong_drug": [B("B4", "drug_battery", "ceftriaxone", ALL), B("A3", "paneth_tower")]},
-    4: {"best": [B("B4", "drug_battery", "azithromycin", ["shigella"]), B("C5", "neutrophil_barracks")],
-        "stopflow_fq": [B("B4", "drug_battery", "fluoroquinolone", ["shigella"]), B("C5", "macrophage_tower"), STOP(300), STOP(700), STOP(1100)]},
-    5: {"best": [B("D3", "drug_battery", "ceftriaxone", ["typhoid"]), B("C5", "drug_battery", "azithromycin", ["typhoid"]), VAX("typhoid")],
-        "fq_only": [B("D3", "drug_battery", "fluoroquinolone", ["typhoid"]), B("C5", "macrophage_tower")]},
-    6: {"best": [B("C5", "drug_battery", "metronidazole", ["amoeba"]), B("D3", "drug_battery", "luminal_agent", ["amoeba_cyst"]), B("D1", "macrophage_tower")],
-        "metro_only": [B("D3", "drug_battery", "metronidazole", ["amoeba"]), B("D1", "macrophage_tower"), B("C5", "macrophage_tower")]},
-    7: {"best": [B("A4", "drug_battery", "hpylori_combo", ["hpylori"]), B("A2", "drug_battery", "hpylori_combo", ["hpylori"])],
-        "single_drugs": [B("A4", "drug_battery", "azithromycin", ["hpylori"]), B("A2", "drug_battery", "metronidazole", ["hpylori"])]},
-    8: {"best": [SELL("B3"), SELL("C4"), B("C5", "drug_battery", "vanco_fidaxo", ["cdiff"]), B("D3", "drug_battery", "vanco_fidaxo", ["cdiff"]), B("E2", "neutrophil_barracks")],
-        "keep_culprits": [B("C5", "drug_battery", "metronidazole", ["cdiff"])]},
-    9: {"best": [B("B4", "drug_battery", "albendazole", ["worm"]), B("C5", "drug_battery", "albendazole", ["worm"]), B("A3", "macrophage_tower")],
-        "wrong_drug": [B("B4", "drug_battery", "metronidazole", ["worm"]), B("C5", "drug_battery", "ceftriaxone", ["worm"]), B("A3", "macrophage_tower")]},
-    10: {"best": [B("E2", "iv_drip"), B("B4", "drug_battery", "doxycycline", ["cholera"]), B("C5", "drug_battery", "azithromycin", ["shigella", "typhoid"]),
-                  B("D3", "drug_battery", "metronidazole", ["amoeba"]), B("A4", "iga_cannon"), B("E3", "ors_station")],
-         "broad_everything": [B("B4", "drug_battery", "ceftriaxone", ALL), B("C5", "drug_battery", "fluoroquinolone", ALL), B("D3", "drug_battery", "azithromycin", ALL)]},
+    1: {"best": [B("E2", "ors_station"), B("B4", "iga_cannon")] + TREAT(1, "ors"),
+        "antibiotic": [B("E2", "ors_station"), B("B4", "iga_cannon")] + TREAT(1, "azithromycin"),
+        "no_treatment": [B("E2", "ors_station"), B("B4", "iga_cannon")]},
+    2: {"best": [B("E2", "ors_station"), B("B4", "iga_cannon")] + TREAT(2, "ors"),
+        "antibiotic": [B("E2", "ors_station"), B("B4", "iga_cannon")] + TREAT(2, "azithromycin")},
+    3: {"best": [B("E2", "iv_drip"), VAX("cholera")] + TREAT(3, "doxycycline"),
+        "wrong_drug": [B("E2", "iv_drip"), VAX("cholera")] + TREAT(3, "ceftriaxone")},
+    4: {"best": [B("C5", "neutrophil_barracks")] + TREAT(4, "azithromycin"),
+        "ciprofloxacin": [B("C5", "neutrophil_barracks")] + TREAT(4, "fluoroquinolone"),
+        "stopflow": [B("C5", "neutrophil_barracks"), STOP(300), STOP(700), STOP(1100)] + TREAT(4, "azithromycin")},
+    5: {"best": [VAX("typhoid")] + TREAT(5, "ceftriaxone"),
+        "ciprofloxacin": [VAX("typhoid")] + TREAT(5, "fluoroquinolone")},
+    6: {"best": [B("D1", "macrophage_tower")] + TREAT(6, ["metronidazole", "luminal_agent", "metronidazole"]),
+        "metro_only": [B("D1", "macrophage_tower")] + TREAT(6, "metronidazole")},
+    7: {"best": [B("A3", "iga_cannon")] + TREAT(7, "hpylori_combo"),
+        "single_drug": [B("A3", "iga_cannon")] + TREAT(7, "azithromycin")},
+    8: {"best": [SELL("B3"), SELL("C4"), B("E2", "neutrophil_barracks")] + TREAT(8, ["vanco_fidaxo", "ors", "vanco_fidaxo", "vanco_fidaxo"]),
+        "metronidazole": [SELL("B3"), SELL("C4"), B("E2", "neutrophil_barracks")] + TREAT(8, "metronidazole")},
+    9: {"best": [B("A3", "macrophage_tower")] + TREAT(9, "albendazole"),
+        "wrong_drug": [B("A3", "macrophage_tower")] + TREAT(9, "metronidazole")},
+    10: {"best": [B("E2", "iv_drip"), B("A4", "iga_cannon"), B("E3", "ors_station")]
+                 + TREAT(10, ["ors", "doxycycline", "azithromycin", "ors", "ceftriaxone", "metronidazole", "doxycycline"]),
+         "broad_everything": [B("E2", "iv_drip"), B("A4", "iga_cannon"), B("E3", "ors_station")] + TREAT(10, "ceftriaxone")},
 }
 
 TRIALS = {
