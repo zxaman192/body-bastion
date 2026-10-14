@@ -11,7 +11,6 @@ import { loadAudio } from './screens/engine.js';
 import { VERSION, VERSION_NAME } from './version.js';
 
 const SCREEN_FILES = {
-  welcome: 'welcome',
   login: 'login',
   register: 'register',
   home: 'home',
@@ -89,7 +88,7 @@ async function render() {
     const access = canAccess(route, store.user);
     if (!access.ok && access.reason === 'login') {
       rememberLoginTarget(hash);
-      navigate(pref('welcome.seen', false) ? '#/login' : '#/welcome', { replace: true });
+      navigate('#/login', { replace: true });
       return;
     }
     if (route && route.guestOnly && store.user && !store.user.is_guest) {
@@ -198,8 +197,6 @@ async function bootUser() {
 
 function startIntro() {
   if (/[?&]nointro(?:[=&]|$)/.test(location.search)) return;
-  // New visitors go straight to the welcome screen, which states the goal in one sentence.
-  if (!getToken()) return;
   const parsed = parseHash(location.hash || '#/home');
   if (parsed.route && parsed.route.bare) return;
   const seen = !!pref('intro.seen', false);
@@ -242,7 +239,7 @@ async function boot() {
   loadCards();
   window.addEventListener('hashchange', onHashChange);
   window.addEventListener('bb:rerender', () => render());
-  if (!location.hash) history.replaceState(null, '', store.user ? '#/home' : pref('welcome.seen', false) ? '#/login' : '#/welcome');
+  if (!location.hash) history.replaceState(null, '', store.user ? '#/home' : '#/login');
   await render();
   registerServiceWorker();
   unlockAudioOnce();

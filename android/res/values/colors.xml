@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- navy of the Body Bastion logo -->
-    <color name="night">#020322</color>
-    <color name="icon_bg">#020322</color>
+    <color name="night">#1A0510</color>
+    <color name="icon_bg">#7A1630</color>
 </resources>

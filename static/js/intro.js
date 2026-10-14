@@ -278,18 +278,13 @@ export function playIntro(opts = {}) {
     const live = document.createElement('p');
     live.style.cssText = 'position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);';
     live.setAttribute('aria-live', 'polite');
-    live.textContent = 'Body Bastion. Defend, learn, survive.';
+    live.textContent = 'Body Bastion. Defend the gut. Learn the drugs.';
     wrap.append(cv, skip, live);
     document.body.append(wrap);
     const prevFocus = document.activeElement;
     try { skip.focus({ preventScroll: true }); } catch { /* ignore */ }
 
     const ctx = cv.getContext('2d');
-    // The title card shows the Body Bastion logo; the drawn crest is the fallback if it cannot load.
-    const logo = new Image();
-    let logoOk = false;
-    logo.onload = () => { logoOk = true; };
-    logo.src = opts.logo || '/icons/logo-512.webp';
     let vw = 1, vh = 1, dpr = 1;
     const resize = () => {
       dpr = Math.min(2, window.devicePixelRatio || 1);
@@ -448,39 +443,25 @@ export function playIntro(opts = {}) {
           if (k % 2) drawRbc(ctx, ox, oy, M * 0.018, a, p * 0.9, 0.7);
           else drawAntibody(ctx, ox, oy, M * 0.014, a, p * 0.9);
         }
+        crest(ctx, W / 2, crestY, cs, p);
         const ts = Math.min(W * 0.11, M * 0.13);
-        let belowY = crestY + cs * 0.62 + ts * 1.9;
-        if (logoOk) {
-          const full = Math.min(M * 0.62, H * 0.6);
-          const ls = full * (0.85 + 0.15 * p);
-          const top = Math.max(H * 0.06, H * 0.44 - full * 0.6);
-          ctx.save();
-          ctx.shadowColor = 'rgba(0,0,0,0.55)';
-          ctx.shadowBlur = 30;
-          ctx.drawImage(logo, W / 2 - ls / 2, top + (full - ls) / 2, ls, ls);
-          ctx.restore();
-          belowY = top + full + ts * 0.45;
-        } else {
-          crest(ctx, W / 2, crestY, cs, p);
-          outlinedText(ctx, 'BODY BASTION', W / 2, crestY + cs * 0.62 + ts * 0.25, ts * (0.8 + 0.2 * p), '#ffe17a', '#5a1028', ts * 0.03);
-          ctx.font = `800 ${Math.max(14, ts * 0.3)}px system-ui, sans-serif`;
-          ctx.fillStyle = '#ffd6e4';
-          ctx.textAlign = 'center';
-          ctx.fillText('Defend. Learn. Survive.', W / 2, crestY + cs * 0.62 + ts * 1.05);
-        }
+        outlinedText(ctx, 'BODY BASTION', W / 2, crestY + cs * 0.62 + ts * 0.25, ts * (0.8 + 0.2 * p), '#ffe17a', '#5a1028', ts * 0.03);
+        ctx.font = `800 ${Math.max(14, ts * 0.3)}px system-ui, sans-serif`;
+        ctx.fillStyle = '#ffd6e4';
         ctx.textAlign = 'center';
+        ctx.fillText('Defend the gut. Learn the drugs.', W / 2, crestY + cs * 0.62 + ts * 1.05);
         const tap = clamp01((t - titleAt - 0.9) / 0.4);
         if (tap > 0) {
           ctx.globalAlpha = tap * (ready ? 0.65 + 0.35 * Math.sin(t * 4) : 0.9);
           ctx.font = `900 ${Math.max(15, ts * 0.32)}px system-ui, sans-serif`;
           ctx.fillStyle = '#ffffff';
           const msg = ready ? 'Tap to begin' : ((typeof opts.statusText === 'function' ? opts.statusText() : opts.statusText) || 'Loading...');
-          ctx.fillText(msg, W / 2, Math.min(H - 40, belowY));
+          ctx.fillText(msg, W / 2, Math.min(H - 40, crestY + cs * 0.62 + ts * 1.9));
           if (!ready) {
             ctx.strokeStyle = '#ffffff';
             ctx.lineWidth = 3;
             ctx.beginPath();
-            const ry = Math.min(H - 40, belowY) + ts * 0.55;
+            const ry = Math.min(H - 40, crestY + cs * 0.62 + ts * 1.9) + ts * 0.55;
             ctx.arc(W / 2, ry, ts * 0.16, t * 5, t * 5 + 4.2);
             ctx.stroke();
           }

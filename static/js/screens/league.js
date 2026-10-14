@@ -3,7 +3,6 @@ import { get } from '../api.js';
 import { loadGameData, store, isGuest } from '../store.js';
 import { phaseText } from './logic.js';
 import { boostToggle, startBattle } from './battleflow.js';
-import { howItWorks } from '../onboard.js';
 
 export async function render(root, params) {
   setTitle('League');
@@ -25,11 +24,6 @@ export async function render(root, params) {
 
   append(root, [
     screenHeader('League round', { subtitle: 'Identical bases and armies for everyone: pure skill.', back: '#/home' }),
-    howItWorks('league', 'How the league works', [
-      ['Practise first.', 'Practice runs on every base and Defence Trial are free and never scored.'],
-      ['One scored attempt.', 'When the league round opens, each tournament base and each Defence Trial gets exactly one scored attempt. Leaving early still uses it.'],
-      ['Same for everyone.', 'Everybody gets the same army and bases, so only skill counts. Your total adds up your scored attempts.'],
-    ]),
     h('div', { class: `banner ${lg.phase === 'league' ? 'callout-ok' : ''}` }, icon('trophy'), h('div', { class: 'grow' }, h('p', null, phaseText(lg.phase)))),
     h('div', { class: 'result-stats mt-2' },
       h('div', { class: 'stat' }, h('div', { class: 'v' }, fmt(lg.total || 0)), h('div', { class: 'k' }, 'Your league total')),

@@ -64,7 +64,7 @@ def create(request: Request, payload: dict = Body(default=None), user: dict = De
     gd = get_gd()
     mode = p.get("mode")
     if mode not in ("campaign", "tournament", "trial"):
-        raise HTTPException(422, "Choose a mission, a tournament base or a defence trial.")
+        raise HTTPException(422, "Choose a campaign level, a tournament base or a defence trial.")
     ref = str(p.get("ref", "")).strip()
     if setups.classroom_target(gd, mode, ref) is None:
         raise HTTPException(422, "That level, base or trial does not exist.")

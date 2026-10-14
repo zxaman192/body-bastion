@@ -13,9 +13,9 @@ PLATFORM_JAR="${PLATFORM_JAR:-$(ls -d "$ANDROID_SDK"/platforms/*/android.jar | s
 JAVA_HOME="${JAVA_HOME:-/c/Program Files/Android/Android Studio/jbr}"
 export JAVA_HOME PATH="$JAVA_HOME/bin:$PATH"
 KEYSTORE_DIR="${KEYSTORE_DIR:-$ROOT/../android-signing}"
-VERSION_NAME="${VERSION_NAME:-1.5.0}"
-VERSION_CODE="${VERSION_CODE:-150}"
-RELEASE_NAME="${RELEASE_NAME:-Pylorus}"
+VERSION_NAME="${VERSION_NAME:-1.4.0}"
+VERSION_CODE="${VERSION_CODE:-140}"
+RELEASE_NAME="${RELEASE_NAME:-Laparotomy}"
 MIN_SDK=26
 TARGET_SDK=35
 EXE=""; [ -f "$BUILD_TOOLS/aapt2.exe" ] && EXE=".exe"
@@ -28,7 +28,6 @@ mkdir -p "$OUT/res" "$OUT/gen" "$OUT/classes" "$OUT/dex" "$OUT/assets" "$DIST"
 
 echo "== assets: splash page with the intro animation inlined"
 cp "$HERE"/assets/* "$OUT/assets/"
-cp "$ROOT/static/icons/logo-512.png" "$OUT/assets/logo.png"
 INTRO="$(sed -e 's/^export function playIntro/function playIntro/' "$ROOT/static/js/intro.js")"
 python_inline() {
   # replace the /*INTRO_JS*/ marker without sed escaping problems

@@ -2,7 +2,6 @@ import { h, icon, setTitle, screenHeader, tabs, busy, confirmDialog, toast, moun
 import { post } from '../api.js';
 import { loadGameData, refreshState, setState, store } from '../store.js';
 import { researchStatus, buildingName, costText, idx, unitName } from './logic.js';
-import { howItWorks } from '../onboard.js';
 import { resourceBar } from './home.js';
 
 const LABS = [
@@ -29,12 +28,7 @@ export async function render(root) {
     res = resourceBar(store.state);
     mount(resHost, res.el);
   };
-  root.append(screenHeader('Research', { subtitle: 'Spend ATP and nutrients to unlock drugs, vaccines and immune upgrades.', back: '#/home' }),
-    howItWorks('research', 'How research works', [
-      ['Build a lab.', 'Drugs are researched in the Pharmacy Lab, vaccines in the Vaccine Lab, T cells in a Peyer’s Patch.'],
-      ['Win the mission first.', 'Some research opens only after you have won the mission that teaches it.'],
-      ['Use it on your base.', 'New drugs can be loaded into Drug Batteries; vaccines weaken that germ whenever it attacks you.'],
-    ]), resHost);
+  root.append(screenHeader('Research', { subtitle: 'Spend ATP and nutrients to unlock drugs, vaccines and immune upgrades.', back: '#/home' }), resHost);
   paintRes();
   const tabHost = h('div', { class: 'mt-2' });
   root.append(tabHost);

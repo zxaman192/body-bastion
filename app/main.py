@@ -1,5 +1,4 @@
 import logging
-import os
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException
@@ -51,11 +50,9 @@ async def lifespan(app: FastAPI):
 
 def create_app() -> FastAPI:
     cfg = get_config()
-    app = FastAPI(title="Body Bastion", version="1.5.0", lifespan=lifespan, docs_url="/api/docs",
+    app = FastAPI(title="Body Bastion", version="1.2.0", lifespan=lifespan, docs_url="/api/docs",
                   redoc_url=None, openapi_url="/api/openapi.json")
     app.add_middleware(GZipMiddleware, minimum_size=1024)
-    # The local dev server never lets the browser reuse a stale module after an edit.
-    shell_cache = "no-store" if os.environ.get("BB_DEV_NO_STORE") == "1" else "no-cache"
 
     @app.middleware("http")
     async def headers(request: Request, call_next):
@@ -68,7 +65,7 @@ def create_app() -> FastAPI:
         if path.startswith("/api/"):
             h.setdefault("Cache-Control", "no-store")
         elif path == "/" or path.endswith((".html", ".js", ".css", ".json", ".webmanifest")):
-            h["Cache-Control"] = shell_cache
+            h["Cache-Control"] = "no-cache"
         return response
 
     for r in (auth, privacy, game, battle, league, clans, classroom, admin):

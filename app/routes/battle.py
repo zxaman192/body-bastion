@@ -7,7 +7,7 @@ from sqlalchemy import and_, func, or_, select
 from sqlalchemy.exc import IntegrityError
 
 from app import cards, clock, db, economy, scoring, security, setups, sim
-from app.gamedata import get_gd, index_of, mission_label, pick_checkpoint_question, pick_question, public_question
+from app.gamedata import get_gd, index_of, pick_checkpoint_question, pick_question, public_question
 from app.util import as_dict, get_int
 
 router = APIRouter(prefix="/api", tags=["battle"])
@@ -230,11 +230,10 @@ def start(request: Request, payload: dict = Body(default=None)):
             lvl = target.get("level")
             level = ix.campaign.get(lvl) if isinstance(lvl, int) else None
             if level is None:
-                raise HTTPException(404, "Unknown mission.")
+                raise HTTPException(404, "Unknown campaign level.")
             base = economy.ensure_base(conn, gd, user["id"], now)
-            if not economy.mission_open(gd, base, lvl):
-                prev = ix.campaign_prev.get(lvl)
-                raise HTTPException(403, f"Win {mission_label(gd, prev)} with at least one star first.")
+            if lvl > 1 and economy.campaign_stars(base, lvl - 1) < 1:
+                raise HTTPException(403, f"Finish level {lvl - 1} with at least one star first.")
             setup = setups.campaign_setup(gd, seed, level)
             row.update(ref=str(lvl), defender_kind="campaign", defender_name=level["title"])
             opponent = {"name": level["title"], "kind": "campaign"}

@@ -4,10 +4,9 @@ import { loadGameData, refreshState, store } from '../store.js';
 import { mountBase } from './engine.js';
 import { armyBuilder, boostToggle, startBattle } from './battleflow.js';
 import { resourceBar } from './home.js';
-import { howItWorks } from '../onboard.js';
 
 export async function render(root, params) {
-  setTitle('Raid');
+  setTitle('Attack');
   root.append(spinnerBlock());
   let gd;
   try {
@@ -27,23 +26,12 @@ export async function render(root, params) {
   let view = null;
   let found = null;
 
-  const practice = h('button', { class: 'btn', type: 'button' }, icon('play', { size: 18 }), 'Practice raid (free, not scored)');
-  practice.addEventListener('click', () => busy(practice, async () => {
-    if (view) { view.destroy(); view = null; }
-    res.stop();
-    await startBattle(root, { mode: 'practice', target: { base_id: 'T1' }, title: 'Practice raid: Clean Canteen', back: '#/attack', again: '#/attack' });
-  }));
   root.append(
-    screenHeader('Raid another gut', { subtitle: 'Find a base, choose your germ army, then break through to the Bone Marrow Core.', back: '#/home' }),
-    howItWorks('raid', 'How raids work', [
-      ['Choose an army.', 'Each germ takes army space and costs nutrients to train. Bacteria, viruses and parasites behave differently: read each card.'],
-      ['Read the base.', 'Before you start, shaded bands show where each defence can hit. A drug only hurts the germs it is prescribed for and can kill.'],
-      ['Win stars.', 'One for destroying half the buildings, one for the Bone Marrow Core, one for everything. Germs that make toxins can also collapse a base by dehydration.'],
-    ], { extra: h('div', { class: 'btn-group mb-1' }, practice) }),
+    screenHeader('Attack another gut', { subtitle: 'Find a base, choose your germ army, then break through to the Bone Marrow Core.', back: '#/home' }),
     resHost, oppHost, mapHost, armyHost);
   onLeave(root, () => { if (view) view.destroy(); });
 
-  const goBtn = h('button', { class: 'btn btn-primary btn-big btn-block mt-2', type: 'button', disabled: true }, icon('germ'), 'Start the raid');
+  const goBtn = h('button', { class: 'btn btn-primary btn-big btn-block mt-2', type: 'button', disabled: true }, icon('germ'), 'Attack!');
   let army = null;
   function paintGo() {
     goBtn.disabled = !found || !army || army.empty || !army.affordable;
@@ -83,7 +71,7 @@ export async function render(root, params) {
     res.stop();
     const ok = await startBattle(root, {
       mode: 'multiplayer', target: { token: found.token }, army: army.army, boost: boost.value,
-      title: `Raid: ${found.opponent.name}`, back: '#/attack', again: '#/attack',
+      title: `Attack: ${found.opponent.name}`, back: '#/attack', again: '#/attack',
     });
     if (!ok) {
       res = resourceBar(store.state);

@@ -6,7 +6,7 @@
         <item name="android:navigationBarColor">@color/night</item>
         <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
         <item name="android:windowSplashScreenBackground">@color/night</item>
-        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_launcher_logo</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
         <item name="android:windowSplashScreenIconBackgroundColor">@color/icon_bg</item>
     </style>
 </resources>

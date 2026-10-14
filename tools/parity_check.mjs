@@ -6,7 +6,7 @@ import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { simulate, Battle, evaluateObjectives } from '../static/js/sim.js';
+import { simulate, Battle } from '../static/js/sim.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const root = join(here, '..');
@@ -82,7 +82,6 @@ function runLive(setup, commands) {
 const t0 = performance.now();
 let mismatches = 0;
 let liveRuns = 0;
-let objectiveChecks = 0;
 let totalEvents = 0;
 const scenarios = doc.scenarios;
 for (const sc of scenarios) {
@@ -93,15 +92,6 @@ for (const sc of scenarios) {
     mismatches++;
     if (mismatches <= 15) console.log(`MISMATCH ${sc.name}: ${d}`);
     continue;
-  }
-  if (sc.objectives) {
-    objectiveChecks++;
-    const met = evaluateObjectives(gd, sc.objectives.list, json);
-    const dobj = diff(met, sc.objectives.met, 'objectives');
-    if (dobj) {
-      mismatches++;
-      if (mismatches <= 15) console.log(`OBJECTIVES MISMATCH ${sc.name}: ${dobj}`);
-    }
   }
   if (sc.live) {
     liveRuns++;
@@ -115,6 +105,6 @@ for (const sc of scenarios) {
   }
 }
 const dt = performance.now() - t0;
-console.log(`parity_check: ${scenarios.length} scenarios (+${liveRuns} live step-by-step replays, ${totalEvents} events, ${objectiveChecks} star checks), ` +
+console.log(`parity_check: ${scenarios.length} scenarios (+${liveRuns} live step-by-step replays, ${totalEvents} events), ` +
   `${mismatches} mismatches, ${(dt / 1000).toFixed(1)}s`);
 process.exit(mismatches === 0 ? 0 : 1);

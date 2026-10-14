@@ -19,7 +19,6 @@ def main():
     os.chdir(ROOT)
     os.environ.setdefault("DATABASE_URL", "sqlite:///./bodybastion-dev.db")
     os.environ.setdefault("SECRET_KEY", "local-development-only-secret")
-    os.environ.setdefault("BB_DEV_NO_STORE", "1")
     if not os.environ.get("ADMIN_USERNAME"):
         os.environ["ADMIN_USERNAME"] = "admin"
         os.environ["ADMIN_PASSWORD"] = "localadmin123"

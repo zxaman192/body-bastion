@@ -96,13 +96,8 @@ def test_base_editing_and_validation(client):
 
 def test_campaign_flow_and_unlocks(client):
     H = guest(client)
-    order = [c["id"] for c in GD["campaign"]]
-    assert order[0] == 11 and GD["campaign"][0]["training"] is True
-    # mission 3 (cholera, id 3) needs mission 2 (rotavirus, id 1); the training mission is optional
-    r = client.post("/api/battle/start", headers=H, json={"mode": "campaign", "target": {"level": 3}})
-    assert r.status_code == 403 and "Mission 2" in r.json()["detail"]
-    assert client.post("/api/battle/start", headers=H, json={"mode": "campaign", "target": {"level": 11}}).status_code == 200
-    cmds = [{"t": 0, "c": "build", "site": "E2", "b": "ors_station"}]
+    assert client.post("/api/battle/start", headers=H, json={"mode": "campaign", "target": {"level": 2}}).status_code == 403
+    cmds = [{"t": 0, "c": "build", "site": "E2", "b": "ors_station"}, {"t": 0, "c": "build", "site": "B4", "b": "iga_cannon"}]
     start, f = play(client, H, {"mode": "campaign", "target": {"level": 1}, "boost": True}, cmds, answer=0)
     body = f.json()
     assert f.status_code == 200 and body["verified"] is True
@@ -110,17 +105,7 @@ def test_campaign_flow_and_unlocks(client):
     assert "vaccine_rotavirus" in body["unlocked"]["research"]
     s = client.get("/api/state", headers=H).json()
     assert s["campaign"]["1"] == 3
-    assert client.post("/api/battle/start", headers=H, json={"mode": "campaign", "target": {"level": 3}}).status_code == 200
-    assert client.post("/api/battle/start", headers=H, json={"mode": "campaign", "target": {"level": 2}}).status_code == 403
-
-
-def test_training_mission_is_won_by_the_guided_build(client):
-    H = guest(client)
-    start, f = play(client, H, {"mode": "campaign", "target": {"level": 11}}, [{"t": 0, "c": "build", "site": "B3", "b": "paneth_tower"}])
-    body = f.json()
-    assert f.status_code == 200 and body["stars_campaign"] == 3
-    start, f = play(client, H, {"mode": "campaign", "target": {"level": 11}}, [])
-    assert f.json()["stars_campaign"] == 0
+    assert client.post("/api/battle/start", headers=H, json={"mode": "campaign", "target": {"level": 2}}).status_code == 200
 
 
 def test_multiplayer_vs_bot_and_mismatch_flag(client):
@@ -342,20 +327,3 @@ def test_secret_key_is_generated_once_and_persisted(tmp_path, monkeypatch):
     db.dispose_engine()
     config.reset_config()
     assert keys[0] == keys[1] and len(keys[0]) >= 32
-
-
-def test_learning_outcomes_report(client):
-    H = guest(client)
-    play(client, H, {"mode": "campaign", "target": {"level": 11}}, [{"t": 0, "c": "build", "site": "B3", "b": "paneth_tower"}])
-    play(client, H, {"mode": "campaign", "target": {"level": 1}}, [])
-    A = login(client, "admin", "adminpass123")
-    d = client.get("/api/admin/learning", headers=A).json()["missions"]
-    assert [m["id"] for m in d] == [c["id"] for c in GD["campaign"]]
-    first = d[0]
-    assert first["number"] == 1 and first["players"] >= 1 and first["first_try_win_pct"] is not None
-    assert len(first["objectives"]) == len(GD["campaign"][0]["objectives"])
-    rota = next(m for m in d if m["id"] == 1)
-    assert rota["attempts"] >= 1 and rota["objectives"][1]["met_pct"] is not None
-    r = client.get("/api/admin/export/learning.csv", headers=A)
-    assert r.status_code == 200 and "first_try_win_pct" in r.text.splitlines()[0]
-    assert client.get("/api/admin/learning", headers=H).status_code == 403

@@ -48,7 +48,6 @@ const ICONS = {
   child: '<circle cx="12" cy="6" r="3"/><path d="M8 21v-6l-2-3 3-2h6l3 2-2 3v6"/>',
   adult: '<circle cx="12" cy="5" r="2.5"/><path d="M9 21v-8H7l1-5h8l1 5h-2v8"/>',
   next: '<path d="M9 5l7 7-7 7"/>',
-  grid: '<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',
 };
 
 export function icon(name, opts = {}) {
@@ -71,13 +70,12 @@ export function brandMark(size = 40) {
   const span = document.createElement('span');
   span.className = 'brand-mark';
   span.setAttribute('aria-hidden', 'true');
-  const img = document.createElement('img');
-  img.src = size > 64 ? '/icons/logo-512.webp' : '/icons/logo-256.png';
-  img.width = size;
-  img.height = size;
-  img.alt = '';
-  img.decoding = 'async';
-  span.append(img);
+  span.innerHTML = `<svg viewBox="0 0 512 512" width="${size}" height="${size}" focusable="false">
+<path d="M112 120V88h44v28h34V88h44v28h44V88h44v28h34V88h44v32l0 140c0 92-66 160-144 196-78-36-144-104-144-196z" fill="#c2185b"/>
+<path d="M112 120V88h44v28h34V88h44v28h44V88h44v28h34V88h44v32" fill="none" stroke="#7a0f3a" stroke-width="10" stroke-linejoin="round"/>
+<path d="M190 176h132v58H190v58h132v42h-66" fill="none" stroke="#7a0f3a" stroke-width="50" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M190 176h132v58H190v58h132v42h-66" fill="none" stroke="#ffd2bf" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="256" cy="376" r="32" fill="#ffc94a" stroke="#7a0f3a" stroke-width="10"/></svg>`;
   return span;
 }
 

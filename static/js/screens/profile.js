@@ -1,11 +1,8 @@
 import { h, icon, setTitle, screenHeader, busy, toast, confirmDialog, promptDialog, navigate } from '../ui.js';
 import { post, del, clearToken } from '../api.js';
-import { store, loadPrivacy, loadGuide, clearSession, pref, setPref, applyTheme, loadGameData } from '../store.js';
+import { store, loadPrivacy, loadGuide, clearSession, pref, setPref, applyTheme } from '../store.js';
 import { loadAudio } from './engine.js';
 import { VERSION, VERSION_NAME, RELEASES } from '../version.js';
-import { resetTutorial, tutorialSkipped, skipTutorial } from '../progress.js';
-import { resetGlossary } from '../glossary.js';
-
 
 export async function render(root) {
   setTitle('Profile');
@@ -42,31 +39,6 @@ export async function render(root) {
     h('label', { class: 'switch' }, sound, h('span', { class: 'track', 'aria-hidden': 'true' }), h('span', null, 'Sound and music')),
     h('label', { class: 'field', for: 'pref-volume' }, h('span', { class: 'field-label' }, 'Volume'), vol, volText),
     h('label', { class: 'field' }, h('span', { class: 'field-label' }, 'Theme'), theme)));
-
-  // Learning and help: replay the tutorial, choose how much guidance and how many features to show.
-  const toggle = (key, fallback, label, hint, onChange) => {
-    const input = h('input', { type: 'checkbox', role: 'switch' });
-    input.checked = !!pref(key, fallback);
-    input.addEventListener('change', () => { setPref(key, input.checked); if (onChange) onChange(input.checked); });
-    return h('div', null, h('label', { class: 'switch' }, input, h('span', { class: 'track', 'aria-hidden': 'true' }), h('span', null, label)),
-      hint ? h('p', { class: 'field-hint mt-0' }, hint) : null);
-  };
-  const replay = h('button', { class: 'btn btn-primary', type: 'button' }, icon('replay', { size: 18 }), 'Replay the tutorial');
-  replay.addEventListener('click', async () => {
-    resetTutorial();
-    resetGlossary();
-    const gd = await loadGameData();
-    const first = (gd.campaign || [])[0];
-    toast('Tutorial reset: coaching tips and plain-language explanations will show again.', 'ok');
-    navigate(first ? `#/campaign/${first.id}?go=1` : '#/home');
-  });
-  const skip = h('button', { class: 'btn', type: 'button', disabled: tutorialSkipped() ? true : null }, 'Skip the tutorial');
-  skip.addEventListener('click', () => { skipTutorial(); skip.disabled = true; toast('Tutorial skipped: every part of the game is now on your home screen.', 'ok'); });
-  root.append(h('div', { class: 'card mt-2 form' }, h('h2', { class: 'mt-0' }, 'Learning and help'),
-    h('div', { class: 'btn-group' }, replay, skip),
-    toggle('ui.everything', false, 'Show every feature now', 'Normally research, raids, the league and cohorts appear one by one as you win missions.'),
-    toggle('battle.tips', true, 'Tips during battles', 'Short tips about what is happening. Warnings always show; every message is also kept in the battle’s message list.'),
-    toggle('battle.quiz', true, 'Checkpoint questions', 'A question when germs reach a new part of the gut; a right answer earns a booster. Never asked in the first training missions.')));
 
   root.append(h('div', { class: 'card mt-2' },
     h('h2', { class: 'mt-0' }, `Version ${VERSION} "${VERSION_NAME}"`),
@@ -107,6 +79,6 @@ export async function render(root) {
   root.append(h('details', { class: 'card mt-2' }, h('summary', null, 'Credits and licences'),
     h('div', { class: 'prose small' },
       guide && guide.credits ? h('p', null, guide.credits) : null,
-      h('p', null, 'The Body Bastion logo is the project’s own artwork. All other game art is drawn in code at run time and all sounds and music are synthesised in the browser: there are no third-party image, sound or font assets.'),
+      h('p', null, 'All game art is drawn in code at run time and all sounds and music are synthesised in the browser: there are no third-party image, sound or font assets.'),
       h('p', null, 'Built with open-source software: FastAPI, Starlette and Uvicorn (BSD), SQLAlchemy (MIT), psycopg (LGPL), segno QR codes (BSD).'))));
 }

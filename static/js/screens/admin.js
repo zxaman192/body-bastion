@@ -1,7 +1,6 @@
 import { h, icon, setTitle, screenHeader, tabs, busy, toast, confirmDialog, emptyBlock, fmtDate, chip } from '../ui.js';
 import { get, post, del, download } from '../api.js';
-import { phaseText, objectiveText, idx } from './logic.js';
-import { loadGameData } from '../store.js';
+import { phaseText } from './logic.js';
 
 export function render(root, params) {
   setTitle('Admin');
@@ -13,7 +12,6 @@ export function render(root, params) {
     { id: 'settings', label: 'League', icon: 'sliders', render: settings },
     { id: 'wars', label: 'Cohort Challenges', icon: 'flag', render: wars },
     { id: 'awards', label: 'Awards', icon: 'trophy', render: awards },
-    { id: 'learning', label: 'Learning', icon: 'book', render: learning },
     { id: 'data', label: 'Data', icon: 'download', render: data },
   ], { active: params.tab, onChange: (id) => history.replaceState(null, '', `#/admin/${id}`), label: 'Admin sections' });
 }
@@ -117,27 +115,6 @@ async function wars(panel, alive) {
   panel.append(list.rows.length ? ul : emptyBlock('No challenges yet.'));
 }
 
-// Learning outcomes measured from play: first-try success and how often each mission's goals are met.
-async function learning(panel, alive) {
-  const [gd, d] = await Promise.all([loadGameData(), get('/api/admin/learning')]);
-  if (!alive()) return;
-  const pct = (v) => (v === null || v === undefined ? '-' : `${v}%`);
-  panel.append(
-    h('p', { class: 'muted small' }, 'Each mission teaches one idea, and its stars test it. Low first-try success or a star few players earn shows where students struggle. Download the CSV from the Data tab.'),
-    h('div', { class: 'table-wrap' }, h('table', { class: 'table' },
-      h('thead', null, h('tr', null, ['Mission', 'Players', 'Attempts', 'Won first try', '3 stars', 'Each star met (all attempts)'].map((t) => h('th', null, t)))),
-      h('tbody', null, d.missions.map((m) => {
-        const lv = idx(gd).campaign.get(m.id);
-        return h('tr', null,
-          h('td', null, h('strong', null, `${m.number}. ${m.title}`), h('br'), h('small', { class: 'muted' }, m.lo)),
-          h('td', null, String(m.players)),
-          h('td', null, String(m.attempts)),
-          h('td', null, pct(m.first_try_win_pct)),
-          h('td', null, pct(m.three_star_pct)),
-          h('td', null, h('ul', { class: 'plain-list small' }, m.objectives.map((o) => h('li', null, `${pct(o.met_pct)}: ${objectiveText(gd, o.objective, lv)}`)))));
-      })))));
-}
-
 async function awards(panel, alive) {
   const a = await get('/api/admin/awards');
   if (!alive()) return;
@@ -168,7 +145,7 @@ function data(panel) {
     } catch { /* toast */ }
   }));
   panel.append(h('div', { class: 'card' }, h('h3', { class: 'mt-0' }, 'Exports (CSV)'),
-    h('div', { class: 'btn-group' }, btn('league', 'League results'), btn('trials', 'Defence Trials'), btn('clanwars', 'Cohort Challenges'), btn('battles', 'All battles'), btn('learning', 'Learning outcomes'), btn('users', 'Registrations'))),
+    h('div', { class: 'btn-group' }, btn('league', 'League results'), btn('trials', 'Defence Trials'), btn('clanwars', 'Cohort Challenges'), btn('battles', 'All battles'), btn('users', 'Registrations'))),
   h('div', { class: 'card mt-2' }, h('h3', { class: 'mt-0' }, 'After the event (DPDP Act)'),
     h('p', { class: 'muted small' }, 'Personal data is kept only until the competition and its results are finished. Then delete it.'), purge));
 }

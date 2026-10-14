@@ -1,21 +1,15 @@
 # Body Bastion
 
-**Defend. Learn. Survive.** Keep your patient alive by stopping germs before they reach the Bone Marrow
-Core, using the right defence for each germ. A strategy game about gut infections, immunity and
-antibiotics for medical and allied-health students (Department of Pharmacology, Maulana Azad
+**Defend the gut. Learn the drugs.** A base-building strategy game about gut infections, immunity
+and antibiotics for medical and allied-health students (Department of Pharmacology, Maulana Azad
 Medical College, New Delhi, with the MAMC Gaming Society).
 
 **Play it:** https://body-bastion.onrender.com (Render free plan, Singapore: the first visit after
 15 minutes of inactivity takes about a minute to wake the server). An Android app is built from
 [android/](android/README.md).
 
-New players land on a welcome screen that states the goal in one sentence and has one button,
-**Play now**. It starts a guest game straight inside a guided training mission: an interactive coach
-highlights one control at a time (the site to tap, the defence to choose, its range, the Start button)
-and waits for the player to do it. The first four missions each add one mechanic with few choices,
-and the home screen reveals research, raids, the league and cohorts as missions are won. Every coach
-bubble has **Skip tutorial**; the **?** menu and the profile have **Replay the tutorial**. See
-[docs/ONBOARDING.md](docs/ONBOARDING.md).
+New players see an opening animation and are offered a one-minute guided tour of the base (replay
+it any time with the **?** button); Case 1 has its own coaching tips.
 
 You build and upgrade a gut base (stomach, small intestine, colon, liver gate, Bone Marrow Core) with
 real defences (acid, mucus and villi walls, gut flora, Paneth cells, IgA, macrophages, neutrophils,
@@ -24,34 +18,27 @@ real enteric germs. The hydration meter makes dehydration, not tower damage, the
 dies; wrong antibiotics waste ATP, breed resistance and can wipe out the flora and summon
 C. difficile.
 
-Current version: **1.5.0 "Pylorus"**. Every release is named and kept: see [CHANGELOG.md](CHANGELOG.md).
+Current version: **1.4.0 "Laparotomy"**. Every release is named and kept: see [CHANGELOG.md](CHANGELOG.md).
 
 | What | Where |
 |---|---|
 | Plan analysis and the 53 corrections (v1.1 -> v1.2) | [docs/ANALYSIS.md](docs/ANALYSIS.md) |
 | Exact rules, simulation algorithm, API | [docs/SPEC.md](docs/SPEC.md) |
 | Balance report | [docs/BALANCE.md](docs/BALANCE.md) |
-| First five minutes, tutorial design, play-test protocol | [docs/ONBOARDING.md](docs/ONBOARDING.md) |
-| Clinical accuracy review | [docs/CLINICAL-REVIEW.md](docs/CLINICAL-REVIEW.md) |
 | All rules data (units, buildings, drug matrix, cases, bases) | [shared/gamedata.json](shared/gamedata.json) |
 | Knowledge-boost questions, explanation cards, guide text | `shared/questions.json`, `shared/cards.json`, `shared/guide.json` |
 
 ## Game modes
 
-- **Missions**: a training mission and 10 clinical cases, ordered from basic ideas to advanced
-  reasoning in four chapters: Basic training (building a defence; hydration and ORS), Antibiotics: when
-  and which (the right drug for cholera; no antibiotic for ETEC; resistance in Shigella), Prevention
-  and other invaders (typhoid vaccine; worms; two-step amoebiasis treatment) and Advanced clinical
-  reasoning (H. pylori combination therapy; C. difficile after broad-spectrum antibiotics; a mixed
-  outbreak). Each mission has one learning goal, one new mechanic, hints that never cost stars, a
-  "Learn why" panel and a learning summary.
+- **Case campaign**: 10 clinical cases (rotavirus, ETEC, cholera, Shigella, typhoid, amoebic liver
+  abscess, H. pylori, C. difficile, Ascaris, a mixed hostel outbreak). You defend the patient against
+  scripted waves; stars reward the correct treatment.
 - **Multiplayer**: attack other players' saved bases (or training bases); your base defends itself.
 - **League**: 10 identical tournament bases (one scored attempt each) and 3 Defence Trials.
 - **Cohort Challenges**: college cohorts, base snapshots, vaccination-based herd immunity.
 - **Classroom**: a teacher creates a session with a QR code; groups play on phones without accounts;
   results update live on a projector page.
-- **Organiser tools**: approvals (guardian consent for under-18s), league phases, Cohort Challenges,
-  a learning-outcomes report per mission (first-try success, how often each learning goal is met), awards
+- **Organiser tools**: approvals (guardian consent for under-18s), league phases, Cohort Challenges, awards
   (Champion, Best Cohort, Best Steward, Best Defender), CSV exports, fair-play review with replays,
   and one-click deletion of all player data after the event (DPDP Act 2023).
 
@@ -89,8 +76,8 @@ node tools/parity_check.mjs
 ```
 
 The server's Python simulation is authoritative; the browser runs an exact JavaScript mirror
-(`static/js/sim.js`). The parity tools replay 1,500+ random battles through both, compare every
-mission's star scoring, and must report 0 mismatches. Re-run them after changing any number in `shared/gamedata.json`.
+(`static/js/sim.js`). The parity tools replay 1,500+ random battles through both and must report
+0 mismatches. Re-run them after changing any number in `shared/gamedata.json`.
 
 ## Deploy on Render
 
