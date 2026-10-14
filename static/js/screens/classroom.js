@@ -1,6 +1,8 @@
 import { h, icon, setTitle, screenHeader, busy, mount, spinnerBlock, errorBlock, svgFromString, copyText, emptyBlock, fmtDate, chip, confirmDialog } from '../ui.js';
 import { get, post, del, download } from '../api.js';
 import { loadGameData } from '../store.js';
+import { howItWorks } from '../onboard.js';
+import { missionNumber } from './logic.js';
 
 export async function render(root, params) {
   setTitle('Classroom');
@@ -14,10 +16,15 @@ export async function render(root, params) {
     return;
   }
   if (!params.isCurrent()) return;
-  root.replaceChildren(screenHeader('Classroom mode', { subtitle: 'Create a match, project the QR code, and let groups play on their phones. Results update live on the projector.', back: '#/home' }));
+  root.replaceChildren(screenHeader('Classroom mode', { subtitle: 'Create a match, project the QR code, and let groups play on their phones. Results update live on the projector.', back: '#/home' }),
+    howItWorks('classroom', 'How a class session works', [
+      ['Pick one battle.', 'A mission teaches a single idea; start with the training mission or Mission 2 for a first class.'],
+      ['Project the code.', 'Groups scan the QR code or type the code on their phones. No accounts are needed.'],
+      ['Discuss the results.', 'The projector ranks groups live; open the replays and ask why the best group won.'],
+    ]));
 
   const modeSel = h('select', { class: 'input', 'aria-label': 'Battle type' },
-    h('option', { value: 'campaign' }, 'Campaign case (defence)'),
+    h('option', { value: 'campaign' }, 'Mission (defence)'),
     h('option', { value: 'trial' }, 'Defence Trial'),
     h('option', { value: 'tournament' }, 'Tournament base (attack)'));
   const refSel = h('select', { class: 'input', 'aria-label': 'Which one' });
@@ -25,7 +32,7 @@ export async function render(root, params) {
   function fillRefs() {
     refSel.replaceChildren();
     const m = modeSel.value;
-    const items = m === 'campaign' ? gd.campaign.map((c) => [String(c.id), `Case ${c.id}: ${c.title}`])
+    const items = m === 'campaign' ? gd.campaign.map((c) => [String(c.id), `Mission ${missionNumber(gd, c.id)}: ${c.title}`])
       : m === 'trial' ? (gd.trials || []).map((t) => [t.id, `${t.id}: ${t.name}`])
         : gd.tournament.bases.map((b) => [b.id, `${b.id}: ${b.name} (difficulty ${b.difficulty})`]);
     for (const [v, l] of items) refSel.append(h('option', { value: v }, l));

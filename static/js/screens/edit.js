@@ -8,6 +8,7 @@ import {
   idx, buildOptions, upgradeInfo, refundFor, buildingHp, costText, stopflowOptions, shortDrugName,
 } from './logic.js';
 import { resourceBar } from './home.js';
+import { howItWorks } from '../onboard.js';
 
 const CAT_ICONS = {
   core: 'castle', wall: 'shield', tower: 'shieldcheck', battery: 'pill', support: 'drop', resource: 'atp', lab: 'flask', special: 'map',
@@ -59,7 +60,7 @@ function drugPicker(gd, state, initial) {
 }
 
 export async function render(root, params) {
-  setTitle('Edit base');
+  setTitle('Build');
   root.append(spinnerBlock());
   let gd;
   try {
@@ -82,7 +83,12 @@ export async function render(root, params) {
   let res = null;
 
   root.append(
-    screenHeader('Edit base', { subtitle: 'Tap a site on the map (or in the list below) to build, upgrade, set a prescription or remove.', back: '#/home' }),
+    screenHeader('Build your base', { subtitle: 'Tap a site on the map (or in the list below) to build, upgrade, set a prescription or remove.', back: '#/home' }),
+    howItWorks('build', 'How your base works', [
+      ['It defends itself.', 'Other players raid this base while you are away; it fights with whatever you build here.'],
+      ['Build and upgrade.', 'Buildings cost ATP and nutrients. The Bone Marrow Core level limits how many you can have and how high they can be upgraded.'],
+      ['Prescribe carefully.', 'Drug Batteries only fire at the germs you tick. Wrong or unnecessary shots breed resistance and harm the gut flora.'],
+    ]),
     resHost,
     h('div', { class: 'mt-2' }, baseHost),
     h('div', { class: 'grid-2 mt-2' }, coreHost, policyHost),

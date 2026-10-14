@@ -2,6 +2,7 @@ import { h, icon, setTitle, screenHeader, busy, mount, spinnerBlock, errorBlock,
 import { get, post } from '../api.js';
 import { loadGameData, refreshState, setState, store, isGuest } from '../store.js';
 import { unitName } from './logic.js';
+import { howItWorks } from '../onboard.js';
 import { armyBuilder, boostToggle, startBattle } from './battleflow.js';
 
 export async function render(root, params) {
@@ -15,7 +16,12 @@ export async function render(root, params) {
     return;
   }
   if (!params.isCurrent()) return;
-  root.replaceChildren(screenHeader('Cohort', { subtitle: 'One cohort per college. Vaccinate together for herd immunity, then fight Cohort Challenges.', back: '#/home' }));
+  root.replaceChildren(screenHeader('Cohort', { subtitle: 'One cohort per college. Vaccinate together for herd immunity, then fight Cohort Challenges.', back: '#/home' }),
+    howItWorks('cohort', 'How cohorts work', [
+      ['Join or start one.', 'A cohort is a team of classmates from one college.'],
+      ['Vaccinate together.', 'Every member who researches a vaccine raises the cohort’s coverage: herd immunity protects everyone’s base a little.'],
+      ['Cohort Challenges.', 'Organisers pair cohorts; members raid the other cohort’s bases and every star counts for the team.'],
+    ]));
   if (isGuest()) {
     root.append(h('div', { class: 'callout callout-warn' }, icon('user'), h('p', { class: 'mb-0' }, 'Guests cannot join cohorts. Register an account from your profile to play Cohort Challenges.')));
     return;

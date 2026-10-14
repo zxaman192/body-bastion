@@ -309,7 +309,7 @@ class Gen:
             b = r.choice(allowed) if r.random() < 0.85 else r.choice(all_b)
             c = {'t': r.choice([0, 0, 0, r.randint(0, mt)]), 'c': 'build', 'site': r.choice(site_ids), 'b': b}
             if b == 'drug_battery' or r.random() < 0.05:
-                c['drug'] = r.choice(drugs) if r.random() < 0.85 else r.choice(self.drugs)
+                c['drug'] = r.choice(drugs) if drugs and r.random() < 0.85 else r.choice(self.drugs)
                 c['rx'] = self.rx()
             cmds.append(c)
         for _ in range(r.randint(0, 3)):
@@ -362,6 +362,29 @@ def run_scenario(gd, setup, commands):
     return sim.simulate(gd, setup_rt, cmds_rt)
 
 
+STATS = ['unnecessary', 'wasted', 'orsRefill', 'ivUsed', 'collateral', 'cdiffSpawned', 'buildingsDestroyed',
+         'wormStolen', 'hpyloriSingleDrugHits', 'neutralised', 'nope']
+
+
+def objective_set(level, r):
+    """The level's own star objectives plus one random example of every objective type (stars parity)."""
+    extra = [
+        {'key': 'survive'},
+        {'key': 'max_unnecessary', 'n': r.choice([0, 1, 5, 30])},
+        {'key': 'max_wasted', 'n': r.choice([0, 2, 10])},
+        {'key': 'max_shots', 'n': r.choice([0, 10, 50])},
+        {'key': 'min_hydration', 'pct': r.choice([0, 25, 50, 70, 95])},
+        {'key': 'no_stopflow'},
+        {'key': 'killed_with', 'drugs': r.sample(['doxycycline', 'azithromycin', 'ceftriaxone', 'metronidazole', 'albendazole'], 2), 'n': r.choice([0, 1, 3, 8])},
+        {'key': 'building_standing', 'site': r.choice(['KUPF', 'CORE', 'W7', 'B3', 'E1'])},
+        {'key': 'vaccinated', 'germ': r.choice(['typhoid', 'cholera', 'rotavirus'])},
+        {'key': 'max_stat', 'stat': r.choice(STATS), 'n': r.choice([0, 5, 40, 300])},
+        {'key': 'min_stat', 'stat': r.choice(STATS), 'n': r.choice([0, 1, 50, 5000])},
+        {'key': 'unknown_key'},
+    ]
+    return list(level.get('objectives') or []) + extra
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--count-scale', type=float, default=1.0)
@@ -378,18 +401,26 @@ def main():
     for base in gd['tournament']['bases']:
         for i in range(int(32 * args.count_scale)):
             scen.append(g.tournament(base, i))
+    objs = {}
     for level in gd['campaign']:
         for i in range(int(36 * args.count_scale)):
-            scen.append(g.campaign(level, 'L%d' % level['id'], i))
+            s = g.campaign(level, 'L%d' % level['id'], i)
+            objs[len(scen)] = objective_set(level, rnd)
+            scen.append(s)
     for trial in gd['trials']:
         for i in range(int(40 * args.count_scale)):
-            scen.append(g.campaign(trial, trial['id'], i))
+            s = g.campaign(trial, trial['id'], i)
+            objs[len(scen)] = objective_set(trial, rnd)
+            scen.append(s)
     scen.extend(edge_cases(gd))
     t0 = time.perf_counter()
     out = []
     for i, (name, setup, cmds) in enumerate(scen):
         res = run_scenario(gd, setup, cmds)
-        out.append({'name': name, 'setup': setup, 'commands': cmds, 'result': res, 'live': i % 4 == 0})
+        item = {'name': name, 'setup': setup, 'commands': cmds, 'result': res, 'live': i % 4 == 0}
+        if i in objs:
+            item['objectives'] = {'list': objs[i], 'met': sim.evaluate_objectives(gd, objs[i], res)}
+        out.append(item)
     dt = time.perf_counter() - t0
     doc = {'gamedataSha256': gd_digest(), 'count': len(out), 'scenarios': out}
     with open(args.out, 'w', encoding='utf-8') as f:

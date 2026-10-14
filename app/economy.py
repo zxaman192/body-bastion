@@ -5,7 +5,7 @@ from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError
 
 from app import clock, db
-from app.gamedata import index_of
+from app.gamedata import index_of, mission_label
 
 MS_PER_HOUR = 3_600_000
 
@@ -174,6 +174,19 @@ def apply_memory(gd: dict, base: dict, defended_layout: dict, kills: dict) -> li
 def campaign_stars(base: dict, level) -> int:
     v = (base.get("campaign") or {}).get(str(level), 0)
     return v if isinstance(v, int) else 0
+
+
+def mission_open(gd: dict, base: dict, level_id: int) -> bool:
+    """Training missions are always open; any other mission opens once the previous non-training mission
+    has a star (or once the mission itself has been won, so reordering never locks a player out)."""
+    ix = index_of(gd)
+    lv = ix.campaign.get(level_id)
+    if lv is None:
+        return False
+    if lv.get("training") or campaign_stars(base, level_id) >= 1:
+        return True
+    prev = ix.campaign_prev.get(level_id)
+    return prev is None or campaign_stars(base, prev) >= 1
 
 
 def drugs_unlocked(gd: dict, base: dict) -> list[str]:
@@ -419,7 +432,7 @@ def research_status(gd: dict, base: dict, key: str) -> tuple[dict | None, str | 
         return r, f"Needs a {lab_name} at level {r.get('labLevel', 1)} or higher."
     req = r.get("requiresLevel", 0) or 0
     if req > 0 and campaign_stars(base, req) < 1:
-        return r, f"Earn at least one star on campaign level {req} first."
+        return r, f"Earn at least one star on {mission_label(gd, req)} first."
     return r, None
 
 

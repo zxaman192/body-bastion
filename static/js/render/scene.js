@@ -236,7 +236,7 @@ export class Scene {
   }
 
   drawRanges(list) {
-    for (const r of list) drawRangeIntervals(this.ctx, this.geom, r.intervals, r.color);
+    for (const r of list) drawRangeIntervals(this.ctx, this.geom, r.intervals, r.color, { strong: !!r.strong });
   }
 
   drawLabels() {

@@ -5,8 +5,9 @@ import { post } from '../api.js';
 import { store, loadCards, loadGameData, refreshState, pref, setPref } from '../store.js';
 import { loadBattle, playSound } from './engine.js';
 import {
-  questionParts, rendererMode, boostSummary, objectiveText, deployableUnits, armySpaceUsed, armyCost, clampArmy, idx,
+  questionParts, rendererMode, boostSummary, objectiveText, deployableUnits, armySpaceUsed, armyCost, clampArmy, idx, missionNumber,
 } from './logic.js';
+import { groupPlain } from '../explain.js';
 
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'];
 
@@ -23,6 +24,8 @@ export function levelProps(gd, ctx) {
     if (level) {
       return {
         level,
+        mission: true,
+        missionNumber: missionNumber(gd, level.id),
         objectives: (level.objectives || []).map((o) => ({ ...o, text: objectiveText(gd, o, level) })),
       };
     }
@@ -32,7 +35,7 @@ export function levelProps(gd, ctx) {
     if (trial) {
       return {
         level: { ...trial, title: trial.name, case: trial.brief },
-        objectives: [{ key: 'survive', text: objectiveText(gd, { key: 'survive' }, trial) }],
+        objectives: (trial.objectives || [{ key: 'survive' }]).map((o) => ({ ...o, text: objectiveText(gd, o, trial) })),
       };
     }
   }
@@ -169,7 +172,7 @@ async function submitFinish(run, commands, local) {
 function leaveGuardFor(run) {
   return () => confirmDialog(
     run.mode === 'campaign' || run.mode === 'trial'
-      ? 'Leave this case? The battle will be abandoned and nothing will be saved.'
+      ? 'Leave this mission? The battle will be abandoned and nothing will be saved.'
       : run.scored
         ? 'Leave this battle? It will be abandoned, and in the league it still uses your one scored attempt.'
         : 'Leave this battle? It will be abandoned and nothing will be saved.',
@@ -228,6 +231,7 @@ export async function runBattle(root, run) {
         mode: run.mode, title: run.title, levelId: run.levelId, trialId: run.trialId, baseId: run.baseId,
         code: run.code, again: run.again, back: run.back, practice: !!run.practice, isGroup: !!run.apiOpts.groupToken,
         boostCorrect: !!run.boostCorrect, opponent: run.opponent || null, scored: !!run.scored,
+        hintsUsed: (localResult && localResult.hintsUsed) || 0, retry: run.retry || null,
       },
     };
     if (!run.apiOpts.groupToken && store.user) refreshState({ silent: true }).catch(() => {});
@@ -393,7 +397,8 @@ export function armyBuilder(gd, state, { onChange } = {}) {
       unitGlyph(gd, u),
       h('div', { class: 'grow' },
         h('strong', null, u.name),
-        h('small', null, `${u.real} - ${g.name || u.group} - ${u.space} space${u.spawnCount > 1 ? `, ${u.spawnCount} per deploy` : ''}`)),
+        h('small', null, `${groupPlain(gd, u.group)} · ${u.space} space${u.spawnCount > 1 ? ` · ${u.spawnCount} per deploy` : ''}`),
+        u.how ? h('small', { class: 'unit-how' }, u.how) : null),
       h('div', { class: 'stepper' },
         h('button', { type: 'button', class: 'icon-btn', 'data-op': 'minus', 'aria-label': `Remove one ${u.name}`, onclick: () => change(u.key, -1) }, icon('minus', { size: 18 })),
         count,

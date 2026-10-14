@@ -2,7 +2,7 @@ import copy
 import secrets
 
 from app import economy
-from app.gamedata import index_of
+from app.gamedata import index_of, mission_label
 
 SEED_MAX = 2147483646
 
@@ -133,5 +133,5 @@ def target_name(gd: dict, mode: str, ref: str) -> str:
     if target is None:
         return str(ref)
     if mode == "campaign":
-        return f"Level {target['id']}: {target.get('title', target.get('germ', ''))}"
+        return mission_label(gd, int(target["id"]))
     return target.get("name", str(ref))

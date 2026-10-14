@@ -1,6 +1,9 @@
 {
  "intro": "Body Bastion is a strategy game about the gut and the germs that attack it. You build and upgrade a gut base (stomach acid, mucus and villi walls, the gut flora, immune-cell towers, ORS and IV fluid stations and drug batteries) and you attack other players' guts with armies of real enteric germs. Medical knowledge wins: rehydration saves bases, the right drug beats the right germ, unnecessary antibiotics breed resistance and destroy the flora, and vaccines weaken an attack without ever abolishing it. Made by the Department of Pharmacology, Maulana Azad Medical College, New Delhi, with the MAMC Gaming Society, for MBBS and allied-health students.",
  "howToPlay": [
+  "The goal: keep your patient alive by stopping germs before they reach the Bone Marrow Core, using the right defence for each germ.",
+  "Start with the missions. Press Play now (no sign-up needed) to begin the guided training mission. Each mission after it teaches one idea and adds one new tool, from hydration to combination therapy. Hints never cost stars and you can retry as often as you like. Skip or replay the tutorial from the ? button or your profile.",
+  "You are the doctor: each mission is a real clinical case. Germ waves attack the patient; you build defences within a budget, prescribe drugs and pause whenever you need to. Stars come from keeping the patient alive and meeting the mission's treatment goals. Research, your own base, raids, the league and cohorts open as you win missions.",
   "Register (organisers approve accounts) or try the game as a guest. Under-18 players need a parent or guardian's consent.",
   "Build your gut base. Germs enter at the mouth and travel one path: stomach, small intestine, colon, liver gate, then the Bone Marrow Core. Tap an empty site to build; tap a building to upgrade, move its prescription or remove it. Some buildings belong to one zone only (Acid Moat in the stomach, Villi Wall and Peyer's Patch in the small intestine, Gut Flora Garden in the colon, Kupffer Cell Gate at the liver).",
   "Prescribe your Drug Batteries. Each battery holds one researched drug and fires only at the germ types you tick. Nothing ticked means the battery stays idle. Every shot costs ATP from the base's pool.",
@@ -8,9 +11,8 @@
   "Attack. Pick an army of unlocked germs that fits your army space (training costs nutrients), then deploy germs at the mouth by tapping their cards. Tap a tactic, then tap the gut path to use it. A battle lasts up to 3 minutes; you may end it early.",
   "Answer the knowledge boost (optional). Before a battle you get one 20-second question. A correct answer gives your germs +10% health when attacking, or your towers and drugs +10% damage in campaign cases and Defence Trials, and adds 150 points to a tournament attack score.",
   "Win stars. One star for destroying at least 50% of the buildings (walls do not count), one for destroying the Bone Marrow Core, one for 100%. If the defender's hydration reaches zero the base collapses: 3 stars and 100%.",
-  "Read the 'Why did this happen?' cards after each battle. They explain the real mechanism behind what you saw.",
-  "Upgrade. Mitochondria Plants make ATP and Nutrient Absorbers make nutrients over time. Spend them on buildings, upgrades, a stronger Bone Marrow Core, and research: new drugs in the Pharmacy Lab, vaccines in the Vaccine Lab and T cells in the Peyer's Patch.",
-  "Play the case campaign. You are the doctor: each level is a real clinical case in which scripted germ waves attack a base you set up within a budget. Pause, speed up, build, sell, change prescriptions and use Stop-Flow during the battle. Stars come from surviving and meeting the case's two treatment objectives."
+  "After each battle read What happened (cause, effect and a tip to try) and What you learned. Learn why explains the real biology behind what you saw.",
+  "Upgrade. Mitochondria Plants make ATP and Nutrient Absorbers make nutrients over time. Spend them on buildings, upgrades, a stronger Bone Marrow Core, and research: new drugs in the Pharmacy Lab, vaccines in the Vaccine Lab and T cells in the Peyer's Patch."
  ],
  "rules": [
   {

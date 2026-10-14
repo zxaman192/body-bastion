@@ -861,13 +861,29 @@ export function drawPathSpan(ctx, geom, s0, s1, fill, stroke) {
   ctx.restore();
 }
 
-export function drawRangeIntervals(ctx, geom, intervals, color) {
+// A defence's reach: the stretch of gut it can hit, shaded across the full width of the lumen
+// with a bright dashed edge so it reads clearly over the anatomy.
+export function drawRangeIntervals(ctx, geom, intervals, color, { strong = false } = {}) {
+  const base = String(color || '#ffffff').slice(0, 7);
+  const m = ctx.getTransform();
+  const unit = Math.min(2.5, (typeof window !== 'undefined' && window.devicePixelRatio) || 1) / Math.max(0.01, Math.hypot(m.a, m.b));
   ctx.save();
   ctx.lineCap = 'round';
   ctx.lineJoin = 'round';
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 12;
   for (const [a, b] of intervals) {
+    const pts = floorBetween(geom, Math.max(0, a), Math.min(geom.len, b));
+    if (pts) {
+      poly(ctx, band(pts, (p) => p.w * 1.1));
+      ctx.fillStyle = rgba(base, strong ? 0.5 : 0.32);
+      ctx.fill();
+      ctx.strokeStyle = rgba('#ffffff', 0.95);
+      ctx.lineWidth = (strong ? 3 : 2) * unit;
+      ctx.setLineDash([9 * unit, 6 * unit]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+    ctx.strokeStyle = color;
+    ctx.lineWidth = Math.max(12, 4 * unit);
     ctx.beginPath();
     const steps = Math.max(2, Math.ceil((b - a) / 25));
     for (let k = 0; k <= steps; k++) {

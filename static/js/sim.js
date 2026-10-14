@@ -1553,6 +1553,10 @@ export function evaluateObjectives(gd, objectives, result) {
         const stat = ob.stat;
         const v = typeof stat === 'string' ? asInt(own(stats, stat)) : null;
         ok = v !== null && v <= num(ob.n);
+      } else if (k === 'min_stat') {
+        const stat = ob.stat;
+        const v = typeof stat === 'string' ? asInt(own(stats, stat)) : null;
+        ok = v !== null && v >= num(ob.n);
       }
     }
     out.push(ok);

@@ -1,12 +1,12 @@
 {
   "name": "Body Bastion",
   "short_name": "Bastion",
-  "description": "Defend the gut. Learn the drugs. A base-building strategy game about gut infections, immunity and antibiotics.",
-  "start_url": "/#/home",
+  "description": "Keep your patient alive by stopping germs before they reach the Bone Marrow Core. A strategy game about gut infections, immunity and antibiotics.",
+  "start_url": "/#/welcome",
   "scope": "/",
   "display": "fullscreen",
   "orientation": "any",
-  "background_color": "#1a0510",
+  "background_color": "#020322",
   "theme_color": "#6b4425",
   "categories": [
     "education",
@@ -29,11 +29,6 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
-    },
-    {
-      "src": "/icons/icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml"
     }
   ],
   "display_override": [

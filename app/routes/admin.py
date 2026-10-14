@@ -221,6 +221,15 @@ def export(kind: str, admin: dict = Depends(admin_dep)):
             return csv_response("battles.csv", ["id", "mode", "ref", "attacker", "defender", "status", "stars", "pct",
                                                 "score", "verified", "flags", "review", "sim_ms", "created_at_utc",
                                                 "finished_at_utc"], rows)
+        if kind == "learning":
+            rows = []
+            for m in learning_report(gd, conn):
+                met = [o["met_pct"] for o in m["objectives"]] + [None] * (3 - len(m["objectives"]))
+                rows.append([m["number"], m["id"], m["title"], m["players"], m["attempts"], m["win_pct"],
+                             m["first_try_win_pct"], m["three_star_pct"], m["avg_tries"], *met[:3], m["lo"]])
+            return csv_response("learning.csv", ["mission", "id", "title", "players", "attempts", "win_pct",
+                                                 "first_try_win_pct", "three_star_players_pct", "avg_tries_per_player",
+                                                 "star1_met_pct", "star2_met_pct", "star3_met_pct", "learning_objective"], rows)
         if kind == "clanwars":
             names = {c.id: c.name for c in conn.execute(select(db.clans.c.id, db.clans.c.name)).all()}
             rows = []
@@ -233,6 +242,68 @@ def export(kind: str, admin: dict = Depends(admin_dep)):
             return csv_response("clanwars.csv", ["id", "clan_a", "clan_b", "status", "stars_a", "stars_b", "pct_a",
                                                  "pct_b", "winner", "starts_utc", "ends_utc"], rows)
     raise HTTPException(404, "Unknown export.")
+
+
+def learning_report(gd: dict, conn) -> list[dict]:
+    """Per mission, in play order: how many players tried it, how many won at the first attempt, and how
+    often each star objective (each one a learning goal) was met. Measures learning outcomes from play."""
+    ix = index_of(gd)
+    rows = conn.execute(
+        select(db.battles.c.attacker_id, db.battles.c.ref, db.battles.c.result, db.battles.c.objectives, db.battles.c.stars)
+        .where(and_(db.battles.c.mode == "campaign", db.battles.c.status == "finished"))
+        .order_by(db.battles.c.id)
+    ).all()
+    per: dict[int, dict] = {}
+    for r in rows:
+        try:
+            lid = int(r.ref)
+        except (TypeError, ValueError):
+            continue
+        if lid not in ix.campaign:
+            continue
+        m = per.setdefault(lid, {"attempts": 0, "wins": 0, "players": {}, "met": []})
+        survived = bool((r.result or {}).get("survived"))
+        objs = r.objectives if isinstance(r.objectives, list) else []
+        m["attempts"] += 1
+        m["wins"] += 1 if survived else 0
+        while len(m["met"]) < len(objs):
+            m["met"].append(0)
+        for i, ok in enumerate(objs):
+            m["met"][i] += 1 if ok else 0
+        if r.attacker_id is not None:
+            p = m["players"].setdefault(r.attacker_id, {"first": survived, "best": 0, "tries": 0})
+            p["tries"] += 1
+            p["best"] = max(p["best"], int(r.stars or 0))
+    out = []
+    for lv in gd["campaign"]:
+        lid = int(lv["id"])
+        m = per.get(lid, {"attempts": 0, "wins": 0, "players": {}, "met": []})
+        players = m["players"].values()
+        n = len(m["players"])
+        out.append({
+            "id": lid,
+            "number": ix.campaign_number[lid],
+            "title": lv.get("title", ""),
+            "lo": lv.get("lo", ""),
+            "attempts": m["attempts"],
+            "players": n,
+            "win_pct": round(100 * m["wins"] / m["attempts"]) if m["attempts"] else None,
+            "first_try_win_pct": round(100 * sum(1 for p in players if p["first"]) / n) if n else None,
+            "three_star_pct": round(100 * sum(1 for p in players if p["best"] >= 3) / n) if n else None,
+            "avg_tries": round(sum(p["tries"] for p in players) / n, 1) if n else None,
+            "objectives": [
+                {"objective": o, "met_pct": round(100 * m["met"][i] / m["attempts"]) if m["attempts"] and i < len(m["met"]) else None}
+                for i, o in enumerate(lv.get("objectives") or [])
+            ],
+        })
+    return out
+
+
+@router.get("/admin/learning")
+def learning(user: dict = Depends(observer_dep)):
+    gd = get_gd()
+    with db.engine().connect() as conn:
+        return {"missions": learning_report(gd, conn)}
 
 
 @router.post("/admin/purge")

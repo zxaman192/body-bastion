@@ -6,7 +6,7 @@ export function authHero(sub) {
   return h('div', { class: 'auth-hero' },
     brandMark(96),
     h('h1', null, 'Body Bastion'),
-    h('p', { class: 'tagline' }, 'Defend the gut. Learn the drugs.'),
+    h('p', { class: 'tagline' }, 'Defend. Learn. Survive.'),
     sub ? h('p', { class: 'muted mt-1' }, sub) : null);
 }
 

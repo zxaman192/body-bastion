@@ -1,5 +1,5 @@
 {
- "version": "1.4.0",
+ "version": "1.5.0",
  "tps": 10,
  "maxTicks": 1800,
  "hydrationMax": 100000,
@@ -468,32 +468,44 @@
   "gneg": {
    "name": "Gram-negative bacterium",
    "color": "#D55E00",
-   "glyph": "rod"
+   "glyph": "rod",
+   "plain": "Bacterium",
+   "plainText": "A single living cell with its own machinery. Antibiotics can kill bacteria, but many bacterial diarrhoeas get better without them."
   },
   "gpos": {
    "name": "Gram-positive bacterium",
    "color": "#CC79A7",
-   "glyph": "spore-rod"
+   "glyph": "spore-rod",
+   "plain": "Bacterium",
+   "plainText": "A single living cell with its own machinery. Antibiotics can kill bacteria, but each drug only covers some of them."
   },
   "virus": {
    "name": "Virus",
    "color": "#009E73",
-   "glyph": "wheel"
+   "glyph": "wheel",
+   "plain": "Virus",
+   "plainText": "A tiny packet of genes that can only multiply inside our cells. No antibiotic works on a virus; fluids and antibodies do."
   },
   "fungus": {
    "name": "Fungus",
    "color": "#F0E442",
-   "glyph": "budding"
+   "glyph": "budding",
+   "plain": "Fungus (yeast)",
+   "plainText": "A yeast that normally lives quietly in the gut. It grows out of control when antibiotics remove the good bacteria. Antifungals, not antibiotics, act on it."
   },
   "protozoa": {
    "name": "Protozoan parasite",
    "color": "#E69F00",
-   "glyph": "blob"
+   "glyph": "blob",
+   "plain": "Parasite (single cell)",
+   "plainText": "A single-celled animal-like parasite. It needs antiparasitic drugs such as metronidazole; most antibiotics do nothing."
   },
   "helminth": {
    "name": "Helminth (worm)",
    "color": "#8B5A2B",
-   "glyph": "worm"
+   "glyph": "worm",
+   "plain": "Parasite (worm)",
+   "plainText": "A many-celled worm. It needs an anthelmintic such as albendazole; antibiotics do nothing."
   }
  },
  "units": [
@@ -520,7 +532,8 @@
    "unlock": 0,
    "ability": "Fast wave that drains hydration (NSP4 enterotoxin, villus damage). Antibiotics are useless against a virus.",
    "weak": "ORS (zinc for children under 5); IgA; rotavirus vaccine roughly halves severe attacks but does not stop all attacks",
-   "antibioticsNotNeeded": true
+   "antibioticsNotNeeded": true,
+   "how": "Comes in big, fast waves and walks straight down the gut. It barely fights; once past the stomach it drains hydration."
   },
   {
    "key": "etec",
@@ -545,7 +558,8 @@
    "unlock": 0,
    "ability": "Many small units; heat-labile and heat-stable toxins drain hydration.",
    "weak": "ORS; antibiotics usually not needed (azithromycin only for severe traveller's diarrhoea)",
-   "antibioticsNotNeeded": true
+   "antibioticsNotNeeded": true,
+   "how": "Arrives three at a time and walks straight down the gut, draining hydration. Walls hold it up."
   },
   {
    "key": "cholera",
@@ -569,7 +583,8 @@
    ],
    "unlock": 0,
    "ability": "Cholera toxin (cAMP rise, chloride secretion) drains hydration very fast; little direct damage. Very acid-sensitive.",
-   "weak": "ORS, with IV Ringer's lactate for severe dehydration; single-dose doxycycline (azithromycin alternative) for moderate-severe cases; oral cholera vaccine (about 65%, 3-5 years)"
+   "weak": "ORS, with IV Ringer's lactate for severe dehydration; single-dose doxycycline (azithromycin alternative) for moderate-severe cases; oral cholera vaccine (about 65%, 3-5 years)",
+   "how": "Walks straight down the gut and drains hydration very fast. Stomach acid kills it easily."
   },
   {
    "key": "shigella",
@@ -601,7 +616,8 @@
    },
    "vsBuildingPct": {
     "macrophage_tower": 200
-   }
+   },
+   "how": "Raider: stops to attack defences beside the gut. Hits colon walls and Macrophage Towers twice as hard."
   },
   {
    "key": "typhoid",
@@ -625,7 +641,8 @@
    ],
    "unlock": 5,
    "ability": "Crosses the gut wall through Peyer's patches, survives inside macrophages and heads for the liver and blood. Fluoroquinolone resistance is common in India.",
-   "weak": "Ceftriaxone or azithromycin (fluoroquinolones usually fail in India); Kupffer cells; macrophages only after T-cell activation; typhoid conjugate vaccine (about 80% protection, not lifelong)"
+   "weak": "Ceftriaxone or azithromycin (fluoroquinolones usually fail in India); Kupffer cells; macrophages only after T-cell activation; typhoid conjugate vaccine (about 80% protection, not lifelong)",
+   "how": "Stalker: slips past walls without stopping and heads for the liver and the Core, where it hits twice as hard."
   },
   {
    "key": "amoeba",
@@ -650,7 +667,8 @@
    ],
    "unlock": 6,
    "ability": "Slow; squeezes through walls and heads for the liver gate, where it does double damage (amoebic liver abscess). Lyses neutrophils. When killed it leaves a cyst behind unless a luminal agent clears it.",
-   "weak": "Metronidazole for the invasive trophozoite, then a luminal agent (diloxanide furoate or paromomycin) for the cysts; activated macrophages; Kupffer cells"
+   "weak": "Metronidazole for the invasive trophozoite, then a luminal agent (diloxanide furoate or paromomycin) for the cysts; activated macrophages; Kupffer cells",
+   "how": "Slow. Squeezes past walls and ignores defences until the liver, then attacks them twice as hard. Leaves a cyst when it dies."
   },
   {
    "key": "amoeba_cyst",
@@ -672,7 +690,8 @@
    "tags": [],
    "unlock": 99,
    "ability": "Left behind when an Amoeba Blob dies. Cysts sit in the gut lumen behind a tough wall: immune cells and tissue drugs barely touch them, so the infection relapses unless a luminal agent clears them.",
-   "weak": "Luminal agent (diloxanide furoate or paromomycin)"
+   "weak": "Luminal agent (diloxanide furoate or paromomycin)",
+   "how": "Drifts down the gut inside a tough wall. Immune cells and most drugs cannot touch it."
   },
   {
    "key": "hpylori",
@@ -694,7 +713,8 @@
    "tags": [],
    "unlock": 7,
    "ability": "Urease neutralises acid, so the Acid Moat cannot hurt it. Drills the stomach (double damage there, half elsewhere) and evades immune cells.",
-   "weak": "Combination therapy only: PPI + two antibiotics together. A single antibiotic alone breeds resistance."
+   "weak": "Combination therapy only: PPI + two antibiotics together. A single antibiotic alone breeds resistance.",
+   "how": "Driller: attacks defences beside the stomach twice as hard (half as hard elsewhere). Stomach acid cannot hurt it and immune cells do half damage."
   },
   {
    "key": "candida",
@@ -716,7 +736,8 @@
    "tags": [],
    "unlock": 99,
    "ability": "Cannot be deployed. Overgrows when broad-spectrum antibiotics wipe out the gut flora; with no healthy flora it is 60% stronger. Healthy flora kills it (colonisation resistance).",
-   "weak": "Rebuilding the Gut Flora Garden and stopping the culprit antibiotic. Candida in stool is usually colonisation: antifungals are for thrush or invasive candidiasis, not for gut Candida after antibiotics."
+   "weak": "Rebuilding the Gut Flora Garden and stopping the culprit antibiotic. Candida in stool is usually colonisation: antifungals are for thrush or invasive candidiasis, not for gut Candida after antibiotics.",
+   "how": "Appears only when antibiotics have wiped out the good gut bacteria. Attacks defences beside the gut."
   },
   {
    "key": "worm",
@@ -738,7 +759,8 @@
    "tags": [],
    "unlock": 9,
    "ability": "Big slow tank that steals nutrients while it lives in the intestine; barely moved by peristalsis.",
-   "weak": "Albendazole; deworming day"
+   "weak": "Albendazole; deworming day",
+   "how": "Huge and slow. Attacks defences beside the gut, smashes walls and steals nutrients while it lives in the intestine."
   },
   {
    "key": "cdiff",
@@ -763,7 +785,8 @@
    ],
    "unlock": 99,
    "ability": "Cannot be deployed. Appears when broad-spectrum antibiotics destroy the defender's gut flora (toxins A and B, pseudomembranous colitis).",
-   "weak": "Oral fidaxomicin or vancomycin (metronidazole only if neither is available); stop the culprit antibiotic; rebuild the flora; never loperamide"
+   "weak": "Oral fidaxomicin or vancomycin (metronidazole only if neither is available); stop the culprit antibiotic; rebuild the flora; never loperamide",
+   "how": "Appears when broad-spectrum antibiotics destroy the gut flora. Attacks defences beside the gut and drains hydration."
   }
  ],
  "drugs": [
@@ -919,7 +942,7 @@
   },
   "cholera": {
    "ors": "Y",
-   "ceftriaxone": "N",
+   "ceftriaxone": "X",
    "azithromycin": "Y",
    "fluoroquinolone": "P",
    "doxycycline": "Y",
@@ -2032,13 +2055,98 @@
  },
  "campaign": [
   {
+   "id": 11,
+   "germ": "etec",
+   "training": true,
+   "title": "Training: hold the line",
+   "case": "Your first patient swallowed bacteria with some street food. The body already has one defence working: stomach acid. Add one more and stop the germs before they reach the Bone Marrow Core.",
+   "best": "A Paneth Cell Tower beside the small intestine, where the germs that survive the stomach walk past. A Mucus Wall in front of it holds them in range for longer.",
+   "coreLevel": 1,
+   "budget": 400,
+   "maxTicks": 1000,
+   "layout": {
+    "CORE": {
+     "b": "core",
+     "lv": 1
+    },
+    "MOAT": {
+     "b": "acid_moat",
+     "lv": 1
+    }
+   },
+   "allowed": [
+    "paneth_tower",
+    "mucus_wall"
+   ],
+   "allowedDrugs": [],
+   "allowedVaccines": [],
+   "research": {
+    "tcells": false
+   },
+   "resistance": {},
+   "memory": {},
+   "waves": [
+    {
+     "t": 60,
+     "u": "etec",
+     "n": 4,
+     "gap": 20
+    },
+    {
+     "t": 330,
+     "u": "etec",
+     "n": 8,
+     "gap": 12
+    }
+   ],
+   "objectives": [
+    {
+     "key": "survive"
+    },
+    {
+     "key": "min_hydration",
+     "pct": 70
+    },
+    {
+     "key": "max_stat",
+     "stat": "buildingsDestroyed",
+     "n": 0
+    }
+   ],
+   "rewards": [
+    300,
+    300
+   ],
+   "patient": "adult",
+   "atp": 0,
+   "checkpoints": false,
+   "boost": false,
+   "chapter": "Basic training",
+   "lo": "Your gut has its own immune defences that kill bacteria before they can do harm.",
+   "mechanic": {
+    "name": "Building a defence",
+    "text": "Tap a glowing site beside the gut, choose a defence, then press Start. A defence only hits germs inside its range."
+   },
+   "summary": [
+    "Stomach acid is the body's first barrier: it kills many swallowed germs.",
+    "Paneth cells in the small intestine release defensins, natural antibiotics made by your own body.",
+    "A defence only reaches germs inside its range, so where you build matters."
+   ],
+   "hints": [
+    "Germs always take the same route: mouth, stomach, small intestine, colon, liver, then the Core.",
+    "A defence at the start of the small intestine gets the longest shot at germs that survive the stomach.",
+    "Build a Paneth Cell Tower on site B3, then a Mucus Wall on W3 to hold the germs in its range."
+   ],
+   "why": "Most swallowed bacteria never cause disease. Stomach acid (pH 1 to 2) kills many of them. The small intestine adds more defences: Paneth cells at the bottom of its crypts release defensins and lysozyme, and goblet cells make mucus that keeps bacteria off the gut wall. Illness starts only when germs get past these barriers in large numbers."
+  },
+  {
    "id": 1,
    "germ": "rotavirus",
    "title": "Child with watery diarrhoea",
    "case": "Aarav, 14 months, from a Delhi slum: 3 days of watery diarrhoea and vomiting, sunken eyes, drinks eagerly. Stool has no blood. Rotavirus antigen positive.",
    "best": "ORS + zinc only; no antibiotic. Rotavirus vaccine prevents most severe cases.",
    "coreLevel": 2,
-   "budget": 900,
+   "budget": 600,
    "maxTicks": 1500,
    "layout": {
     "CORE": {
@@ -2060,19 +2168,18 @@
     "E8": {
      "b": "mitochondria",
      "lv": 1
+    },
+    "B5": {
+     "b": "iga_cannon",
+     "lv": 1
     }
    },
    "allowed": [
     "ors_station",
-    "drug_battery",
     "iga_cannon",
-    "paneth_tower",
-    "mucus_wall"
+    "paneth_tower"
    ],
-   "allowedDrugs": [
-    "azithromycin",
-    "ceftriaxone"
-   ],
+   "allowedDrugs": [],
    "allowedVaccines": [],
    "research": {
     "tcells": false
@@ -2104,12 +2211,13 @@
      "key": "survive"
     },
     {
-     "key": "max_unnecessary",
-     "n": 0
+     "key": "min_stat",
+     "stat": "orsRefill",
+     "n": 1
     },
     {
      "key": "min_hydration",
-     "pct": 40
+     "pct": 50
     }
    ],
    "rewards": [
@@ -2117,7 +2225,148 @@
     300
    ],
    "patient": "child",
-   "atp": 700
+   "atp": 700,
+   "checkpoints": false,
+   "boost": false,
+   "chapter": "Basic training",
+   "lo": "Diarrhoea kills by dehydration, so replacing lost fluid with ORS is the most important treatment.",
+   "mechanic": {
+    "name": "Hydration",
+    "text": "The blue bar is the patient's hydration. Germs past the stomach drain it; an ORS + Zinc Station refills it. If it reaches zero the patient collapses, even if every defence is standing."
+   },
+   "summary": [
+    "Rotavirus is a virus. It damages the lining of the small intestine and causes watery diarrhoea and vomiting in young children.",
+    "Watery diarrhoea kills by dehydration. ORS replaces water and salts; zinc shortens the illness in children under 5.",
+    "Antibiotics cannot kill viruses, so this child needs fluids, not antibiotics."
+   ],
+   "hints": [
+    "Watch the blue hydration bar at the top: that is what this child is losing.",
+    "An ORS + Zinc Station refills hydration all the time. Build it before you press Start.",
+    "Build an ORS + Zinc Station near the Core. If you have budget left, a second IgA Antibody Cannon helps: IgA antibodies neutralise viruses, while Paneth cells barely touch them."
+   ],
+   "why": "Rotavirus infects the cells at the tips of the villi. Damaged cells absorb less, and a viral toxin (NSP4) makes the gut pour out fluid, so the child loses water and salt faster than they can drink. ORS works because sodium and glucose are still absorbed together by the healthy cells, and water follows them back into the body. IgA antibodies on the gut surface neutralise the virus. Antibiotics have nothing to act on in a virus."
+  },
+  {
+   "id": 3,
+   "germ": "cholera",
+   "title": "Cholera outbreak after floods",
+   "case": "After monsoon floods in a relief camp, a 30-year-old man has profuse 'rice-water' stools, vomiting and leg cramps. He is drowsy with very sunken eyes. Stool shows darting motile comma-shaped bacteria.",
+   "best": "IV Ringer's lactate for severe dehydration, then ORS; a single dose of doxycycline (azithromycin as the alternative) for moderate-to-severe cases; oral cholera vaccine (2 doses) for the camp.",
+   "coreLevel": 3,
+   "budget": 1000,
+   "maxTicks": 1500,
+   "layout": {
+    "CORE": {
+     "b": "core",
+     "lv": 3
+    },
+    "MOAT": {
+     "b": "acid_moat",
+     "lv": 2
+    },
+    "W3": {
+     "b": "mucus_wall",
+     "lv": 1
+    },
+    "W4": {
+     "b": "mucus_wall",
+     "lv": 1
+    },
+    "B3": {
+     "b": "paneth_tower",
+     "lv": 2
+    },
+    "E1": {
+     "b": "ors_station",
+     "lv": 1
+    },
+    "E2": {
+     "b": "iv_drip",
+     "lv": 1
+    },
+    "W7": {
+     "b": "flora_garden",
+     "lv": 1
+    }
+   },
+   "allowed": [
+    "ors_station",
+    "drug_battery",
+    "paneth_tower"
+   ],
+   "allowedDrugs": [
+    "doxycycline",
+    "azithromycin",
+    "ceftriaxone"
+   ],
+   "allowedVaccines": [],
+   "research": {
+    "tcells": false
+   },
+   "resistance": {},
+   "memory": {},
+   "waves": [
+    {
+     "t": 20,
+     "u": "cholera",
+     "n": 12,
+     "gap": 5
+    },
+    {
+     "t": 300,
+     "u": "cholera",
+     "n": 16,
+     "gap": 4
+    },
+    {
+     "t": 650,
+     "u": "cholera",
+     "n": 20,
+     "gap": 3
+    }
+   ],
+   "objectives": [
+    {
+     "key": "survive"
+    },
+    {
+     "key": "killed_with",
+     "drugs": [
+      "doxycycline",
+      "azithromycin"
+     ],
+     "n": 5
+    },
+    {
+     "key": "min_hydration",
+     "pct": 50
+    }
+   ],
+   "rewards": [
+    500,
+    400
+   ],
+   "patient": "adult",
+   "atp": 700,
+   "checkpoints": false,
+   "boost": false,
+   "chapter": "Antibiotics: when and which",
+   "lo": "When an antibiotic is needed, choose one that works on that germ: doxycycline or azithromycin for cholera.",
+   "mechanic": {
+    "name": "Drug Battery and prescription",
+    "text": "A Drug Battery fires one antibiotic, but only at the germs you tick on its prescription. Every shot costs drug ATP. A drug the germ is not sensitive to wastes the shot."
+   },
+   "summary": [
+    "Cholera toxin makes the gut pour out water: a patient can lose litres of 'rice-water' stool in a few hours.",
+    "Fluids come first: IV Ringer's lactate for severe dehydration, then ORS.",
+    "A single dose of doxycycline (or azithromycin) shortens cholera. Ceftriaxone is not a cholera drug."
+   ],
+   "hints": [
+    "Fluids still come first: the ORS station and the IV drip are already working for you.",
+    "A Drug Battery needs a drug and a prescription. Tick only the germ you want it to shoot.",
+    "Build a Drug Battery with doxycycline, prescribed for the Cholera Flood only, beside the small intestine."
+   ],
+   "why": "Vibrio cholerae sticks to the small-intestine lining and releases cholera toxin, which keeps the gut cells' chloride channels open; water follows the salt into the gut. The germ barely invades, so death comes from dehydration and shock. An antibiotic cuts stool volume and how long the germ is shed, so a single dose of doxycycline is recommended for moderate to severe cholera (GTFCC 2018); azithromycin is the alternative, for example in pregnancy."
   },
   {
    "id": 2,
@@ -2149,9 +2398,7 @@
    "allowed": [
     "ors_station",
     "drug_battery",
-    "paneth_tower",
-    "iga_cannon",
-    "mucus_wall"
+    "paneth_tower"
    ],
    "allowedDrugs": [
     "azithromycin",
@@ -2202,108 +2449,26 @@
     300
    ],
    "patient": "adult",
-   "atp": 700
-  },
-  {
-   "id": 3,
-   "germ": "cholera",
-   "title": "Cholera outbreak after floods",
-   "case": "After monsoon floods in a relief camp, a 30-year-old man has profuse 'rice-water' stools, vomiting and leg cramps. He is drowsy with very sunken eyes. Stool shows darting motile comma-shaped bacteria.",
-   "best": "IV Ringer's lactate for severe dehydration, then ORS; a single dose of doxycycline (azithromycin as the alternative) for moderate-to-severe cases; oral cholera vaccine (2 doses) for the camp.",
-   "coreLevel": 3,
-   "budget": 1300,
-   "maxTicks": 1500,
-   "layout": {
-    "CORE": {
-     "b": "core",
-     "lv": 3
-    },
-    "MOAT": {
-     "b": "acid_moat",
-     "lv": 2
-    },
-    "W3": {
-     "b": "mucus_wall",
-     "lv": 1
-    },
-    "W4": {
-     "b": "mucus_wall",
-     "lv": 1
-    },
-    "B3": {
-     "b": "paneth_tower",
-     "lv": 2
-    },
-    "E1": {
-     "b": "ors_station",
-     "lv": 1
-    }
+   "atp": 700,
+   "checkpoints": false,
+   "boost": false,
+   "chapter": "Antibiotics: when and which",
+   "lo": "Most watery diarrhoea gets better with fluids alone; an antibiotic adds side effects and resistance without helping.",
+   "mechanic": {
+    "name": "Antibiotic stewardship",
+    "text": "Every antibiotic shot is counted. Unnecessary shots breed resistance and harm the gut's good bacteria, even when the germ is a bacterium."
    },
-   "allowed": [
-    "ors_station",
-    "iv_drip",
-    "drug_battery",
-    "iga_cannon",
-    "paneth_tower"
+   "summary": [
+    "ETEC, a strain of E. coli, is the commonest cause of traveller's diarrhoea.",
+    "It settles in a few days with ORS; antibiotics are kept for severe illness.",
+    "Antibiotics given 'just in case' breed resistant bacteria in the patient and the community."
    ],
-   "allowedDrugs": [
-    "doxycycline",
-    "azithromycin",
-    "ceftriaxone",
-    "fluoroquinolone"
+   "hints": [
+    "Ask first: is this patient getting worse in a way only an antibiotic can fix?",
+    "Your immune defences and ORS can handle ETEC without a single drug shot.",
+    "Build an ORS + Zinc Station and a Paneth Cell Tower, and no Drug Battery."
    ],
-   "allowedVaccines": [
-    "cholera"
-   ],
-   "vaccineCost": 300,
-   "research": {
-    "tcells": false
-   },
-   "resistance": {},
-   "memory": {},
-   "waves": [
-    {
-     "t": 20,
-     "u": "cholera",
-     "n": 12,
-     "gap": 5
-    },
-    {
-     "t": 300,
-     "u": "cholera",
-     "n": 16,
-     "gap": 4
-    },
-    {
-     "t": 650,
-     "u": "cholera",
-     "n": 20,
-     "gap": 3
-    }
-   ],
-   "objectives": [
-    {
-     "key": "survive"
-    },
-    {
-     "key": "killed_with",
-     "drugs": [
-      "doxycycline",
-      "azithromycin"
-     ],
-     "n": 5
-    },
-    {
-     "key": "vaccinated",
-     "germ": "cholera"
-    }
-   ],
-   "rewards": [
-    500,
-    400
-   ],
-   "patient": "adult",
-   "atp": 700
+   "why": "ETEC makes two toxins that switch on fluid secretion, like a mild cholera. It does not invade the gut wall, and the illness ends on its own in 3 to 5 days as the gut lining renews itself. Antibiotics shorten it by only about a day, so guidelines keep them (azithromycin in South Asia) for severe illness. Every unnecessary course selects resistant bacteria."
   },
   {
    "id": 4,
@@ -2348,14 +2513,12 @@
     "drug_battery",
     "neutrophil_barracks",
     "macrophage_tower",
-    "ors_station",
-    "mucus_wall"
+    "ors_station"
    ],
    "allowedDrugs": [
     "azithromycin",
     "ceftriaxone",
-    "fluoroquinolone",
-    "metronidazole"
+    "fluoroquinolone"
    ],
    "allowedVaccines": [],
    "research": {
@@ -2390,11 +2553,15 @@
      "key": "survive"
     },
     {
-     "key": "no_stopflow"
+     "key": "killed_with",
+     "drugs": [
+      "azithromycin",
+      "ceftriaxone"
+     ],
+     "n": 3
     },
     {
-     "key": "max_unnecessary",
-     "n": 3
+     "key": "no_stopflow"
     }
    ],
    "rewards": [
@@ -2402,7 +2569,25 @@
     400
    ],
    "patient": "adult",
-   "atp": 700
+   "atp": 700,
+   "stopflow": true,
+   "chapter": "Antibiotics: when and which",
+   "lo": "Antibiotic resistance means a drug that once worked can fail: choose the one that still works locally.",
+   "mechanic": {
+    "name": "Antibiotic resistance",
+    "text": "In this case 60% of Shigella resist ciprofloxacin, so its shots do much less damage. Local resistance is shown on each drug before you choose it."
+   },
+   "summary": [
+    "Shigella invades the colon wall and causes dysentery: fever, cramps and blood and mucus in the stool.",
+    "Ciprofloxacin resistance is common in India, so azithromycin (or ceftriaxone if severe) is used instead.",
+    "Never give loperamide in dysentery: slowing the gut traps the invading bacteria inside."
+   ],
+   "hints": [
+    "Check the local resistance shown on each drug.",
+    "Neutrophils, the pus cells of dysentery, fight Shigella better than macrophages, which Shigella kills.",
+    "Build an azithromycin Drug Battery prescribed for Shigella and a Neutrophil Reserve, and leave Stop-Flow alone."
+   ],
+   "why": "Shigella needs only 10 to 100 bacteria to cause disease. It crosses the colon lining, kills the macrophages that swallow it and spreads from cell to cell, causing ulcers and bloody stools. Neutrophils flood in, which is why the stool is full of pus cells. Resistance genes spread fast between bacteria; in India many Shigella now resist ciprofloxacin, so azithromycin or ceftriaxone is chosen using local data."
   },
   {
    "id": 5,
@@ -2499,7 +2684,137 @@
     500
    ],
    "patient": "adult",
-   "atp": 700
+   "atp": 700,
+   "stopflow": true,
+   "chapter": "Prevention and other invaders",
+   "lo": "Vaccination prevents disease before it starts; typhoid conjugate vaccine protects about 8 in 10 people.",
+   "mechanic": {
+    "name": "Vaccination",
+    "text": "Before the waves start you can vaccinate. Vaccinated germs arrive weaker and IgA antibodies hit them twice as hard. A vaccine lowers the risk; it does not make it zero."
+   },
+   "summary": [
+    "Typhoid bacteria cross the gut wall and spread through the blood to the liver, spleen and bone marrow.",
+    "Treat with ceftriaxone or azithromycin; ciprofloxacin usually fails in India.",
+    "Typhoid conjugate vaccine prevents most typhoid; safe water and sanitation prevent the rest."
+   ],
+   "hints": [
+    "This germ does not stay in the gut: keep the Kupffer Cell Gate in the liver standing.",
+    "Vaccinate before you press Start: the button is next to Start.",
+    "Vaccinate against typhoid, then build ceftriaxone and azithromycin Drug Batteries prescribed for Typhoid."
+   ],
+   "why": "Salmonella Typhi crosses the gut lining over the Peyer's patches and survives inside resting macrophages, which carry it to the liver, spleen and bone marrow. That is why typhoid is a fever illness more than a diarrhoeal one. Kupffer cells, the liver's macrophages, filter the blood arriving from the gut. The typhoid conjugate vaccine trains the immune system to make lasting antibodies against the germ's outer capsule (Vi antigen)."
+  },
+  {
+   "id": 9,
+   "germ": "worm",
+   "title": "School child with worms",
+   "case": "A 9-year-old school child is pale and thin, with poor appetite and vague abdominal pain; a round worm was passed in the stool last week. Haemoglobin is 9 g/dL.",
+   "best": "Single-dose albendazole 400 mg (200 mg for ages 1-2); National Deworming Day (10 February and 10 August, ages 1-19); iron for anaemia; hand-washing and sanitation.",
+   "coreLevel": 4,
+   "budget": 1500,
+   "maxTicks": 1800,
+   "layout": {
+    "CORE": {
+     "b": "core",
+     "lv": 4
+    },
+    "MOAT": {
+     "b": "acid_moat",
+     "lv": 2
+    },
+    "PERI": {
+     "b": "peristalsis",
+     "lv": 2
+    },
+    "W3": {
+     "b": "villi_wall",
+     "lv": 2
+    },
+    "W5": {
+     "b": "villi_wall",
+     "lv": 2
+    },
+    "B5": {
+     "b": "paneth_tower",
+     "lv": 2
+    },
+    "E1": {
+     "b": "ors_station",
+     "lv": 1
+    }
+   },
+   "allowed": [
+    "drug_battery",
+    "macrophage_tower",
+    "mucus_wall",
+    "villi_wall"
+   ],
+   "allowedDrugs": [
+    "albendazole",
+    "metronidazole",
+    "ceftriaxone"
+   ],
+   "allowedVaccines": [],
+   "research": {
+    "tcells": false
+   },
+   "resistance": {},
+   "memory": {},
+   "waves": [
+    {
+     "t": 30,
+     "u": "worm",
+     "n": 2,
+     "gap": 60
+    },
+    {
+     "t": 700,
+     "u": "worm",
+     "n": 3,
+     "gap": 50
+    }
+   ],
+   "objectives": [
+    {
+     "key": "survive"
+    },
+    {
+     "key": "killed_with",
+     "drugs": [
+      "albendazole"
+     ],
+     "n": 3
+    },
+    {
+     "key": "max_stat",
+     "stat": "wormStolen",
+     "n": 300
+    }
+   ],
+   "rewards": [
+    800,
+    700
+   ],
+   "patient": "child",
+   "atp": 700,
+   "stopflow": true,
+   "chapter": "Prevention and other invaders",
+   "lo": "Worms are animals, not bacteria: they need an anthelmintic such as albendazole, and antibiotics do nothing.",
+   "mechanic": {
+    "name": "Matching the drug to the kind of germ",
+    "text": "Bacteria, viruses, fungi and parasites are built differently, so each needs a different class of drug. Check the germ's kind before you prescribe."
+   },
+   "summary": [
+    "Roundworm (Ascaris) eggs are swallowed with food or hands soiled by contaminated earth; adult worms live in the small intestine and steal nutrients.",
+    "A single dose of albendazole kills them. India's National Deworming Day treats children twice a year.",
+    "Hand-washing and toilets break the cycle."
+   ],
+   "hints": [
+    "The Worm Titan is huge and slow: you have time, but it soaks up damage.",
+    "Antibiotics are made for bacteria. A worm needs an anthelmintic.",
+    "Build two albendazole Drug Batteries prescribed for the Worm Titan."
+   ],
+   "why": "Ascaris lumbricoides is a roundworm up to 30 cm long. Swallowed eggs hatch in the gut, the larvae travel through the lungs and come back to the small intestine, where the adults feed on the gut contents. Heavy infection in children slows growth and can rarely block the bowel. Albendazole stops the worm taking up glucose, so it starves; antibiotics have nothing to act on in a worm."
   },
   {
    "id": 6,
@@ -2595,7 +2910,25 @@
     500
    ],
    "patient": "adult",
-   "atp": 700
+   "atp": 700,
+   "stopflow": true,
+   "chapter": "Prevention and other invaders",
+   "lo": "Some infections need two drugs in turn: one for germs in the tissues, one for germs left in the gut.",
+   "mechanic": {
+    "name": "Two-step treatment",
+    "text": "When an Amoeba Blob dies it leaves a cyst in the gut. Metronidazole kills the invading amoeba; a luminal agent is needed to clear the cysts."
+   },
+   "summary": [
+    "Entamoeba histolytica is a single-celled parasite spread by cysts in contaminated food and water.",
+    "Metronidazole treats invasive disease such as amoebic dysentery or a liver abscess.",
+    "A luminal agent (paromomycin or diloxanide furoate) must follow, or cysts left in the gut cause relapse and spread."
+   ],
+   "hints": [
+    "Watch what an Amoeba Blob leaves behind when it dies.",
+    "Metronidazole is absorbed into the tissues, so it barely touches cysts sitting inside the gut.",
+    "Build a metronidazole Drug Battery for the Amoeba Blob and a luminal-agent battery for the Amoeba Cyst, and keep the Kupffer gate standing."
+   ],
+   "why": "Amoebae invade the colon wall (amoebic dysentery) and can travel up the portal vein to the liver, where they cause an abscess. Metronidazole is well absorbed, so it reaches high levels in the tissues but low levels inside the gut. Paromomycin and diloxanide furoate are poorly absorbed and act inside the gut, clearing the cysts that would otherwise restart the infection or spread it to others."
   },
   {
    "id": 7,
@@ -2686,7 +3019,25 @@
     600
    ],
    "patient": "adult",
-   "atp": 700
+   "atp": 700,
+   "stopflow": true,
+   "chapter": "Advanced clinical reasoning",
+   "lo": "Combination therapy: several drugs together cure an infection that quickly resists any one drug alone.",
+   "mechanic": {
+    "name": "Combination regimen",
+    "text": "The H. pylori regimen battery gives a PPI plus antibiotics together. A single antibiotic alone counts as a resistance risk and does nothing to this germ."
+   },
+   "summary": [
+    "H. pylori lives under the stomach's mucus and neutralises acid with urease, so stomach acid cannot kill it.",
+    "It causes most duodenal ulcers and raises the risk of stomach cancer.",
+    "Treat with a full regimen (bismuth quadruple therapy, or PPI + two antibiotics) for 14 days; never one antibiotic alone."
+   ],
+   "hints": [
+    "The Acid Moat cannot hurt this germ: it makes its own alkaline shield.",
+    "One antibiotic alone fails and breeds resistance.",
+    "Build two H. pylori regimen batteries prescribed for the H. pylori Driller."
+   ],
+   "why": "H. pylori makes urease, which turns urea into ammonia and neutralises the acid around it, then burrows into the mucus layer. Any single antibiotic leaves resistant survivors, and clarithromycin resistance is now common in India. A proton pump inhibitor raises the stomach pH so the antibiotics work better; given with two or three antimicrobials, sometimes with bismuth, it cures most patients."
   },
   {
    "id": 8,
@@ -2807,101 +3158,25 @@
     600
    ],
    "patient": "adult",
-   "atp": 700
-  },
-  {
-   "id": 9,
-   "germ": "worm",
-   "title": "School child with worms",
-   "case": "A 9-year-old school child is pale and thin, with poor appetite and vague abdominal pain; a round worm was passed in the stool last week. Haemoglobin is 9 g/dL.",
-   "best": "Single-dose albendazole 400 mg (200 mg for ages 1-2); National Deworming Day (10 February and 10 August, ages 1-19); iron for anaemia; hand-washing and sanitation.",
-   "coreLevel": 4,
-   "budget": 1500,
-   "maxTicks": 1800,
-   "layout": {
-    "CORE": {
-     "b": "core",
-     "lv": 4
-    },
-    "MOAT": {
-     "b": "acid_moat",
-     "lv": 2
-    },
-    "PERI": {
-     "b": "peristalsis",
-     "lv": 2
-    },
-    "W3": {
-     "b": "villi_wall",
-     "lv": 2
-    },
-    "W5": {
-     "b": "villi_wall",
-     "lv": 2
-    },
-    "B5": {
-     "b": "paneth_tower",
-     "lv": 2
-    },
-    "E1": {
-     "b": "ors_station",
-     "lv": 1
-    }
+   "atp": 700,
+   "stopflow": true,
+   "chapter": "Advanced clinical reasoning",
+   "lo": "Broad-spectrum antibiotics also kill the gut's good bacteria; without them C. difficile takes over.",
+   "mechanic": {
+    "name": "Collateral damage to the gut flora",
+    "text": "The Gut Flora Garden is the patient's good bacteria. Broad-spectrum antibiotic shots damage it; if it dies, C. difficile and Candida appear. Removing a culprit battery stops the damage."
    },
-   "allowed": [
-    "drug_battery",
-    "macrophage_tower",
-    "mucus_wall",
-    "villi_wall"
+   "summary": [
+    "The gut's normal bacteria crowd out harmful ones (colonisation resistance).",
+    "Broad-spectrum antibiotics wipe them out; C. difficile spores then germinate and release toxins that inflame the colon.",
+    "Stop the culprit antibiotic, give oral vancomycin or fidaxomicin, and let the flora recover."
    ],
-   "allowedDrugs": [
-    "albendazole",
-    "metronidazole",
-    "ceftriaxone"
+   "hints": [
+    "Two batteries already firing in this patient are the problem, not the solution.",
+    "Tap a battery to remove it and stop the damage to the flora.",
+    "Remove the ceftriaxone and ciprofloxacin batteries, then build oral vancomycin/fidaxomicin batteries prescribed for C. difficile."
    ],
-   "allowedVaccines": [],
-   "research": {
-    "tcells": false
-   },
-   "resistance": {},
-   "memory": {},
-   "waves": [
-    {
-     "t": 30,
-     "u": "worm",
-     "n": 2,
-     "gap": 60
-    },
-    {
-     "t": 700,
-     "u": "worm",
-     "n": 3,
-     "gap": 50
-    }
-   ],
-   "objectives": [
-    {
-     "key": "survive"
-    },
-    {
-     "key": "killed_with",
-     "drugs": [
-      "albendazole"
-     ],
-     "n": 3
-    },
-    {
-     "key": "max_stat",
-     "stat": "wormStolen",
-     "n": 300
-    }
-   ],
-   "rewards": [
-    800,
-    700
-   ],
-   "patient": "child",
-   "atp": 700
+   "why": "C. difficile spores survive for months in hospitals. A healthy microbiome changes the bile acids that trigger the spores to germinate and uses up their food, keeping C. difficile quiet. After broad-spectrum antibiotics (especially clindamycin, cephalosporins and fluoroquinolones) that protection collapses. Oral vancomycin and fidaxomicin stay inside the gut where the germ is; fidaxomicin spares more of the normal flora."
   },
   {
    "id": 10,
@@ -3039,7 +3314,25 @@
     1000
    ],
    "patient": "adult",
-   "atp": 700
+   "atp": 700,
+   "stopflow": true,
+   "chapter": "Advanced clinical reasoning",
+   "lo": "In an outbreak each patient needs the right treatment: rehydrate everyone, and give each drug only to the germs it treats.",
+   "mechanic": {
+    "name": "Putting it all together",
+    "text": "Six germs arrive in waves. Use everything you have learned: fluids first, the right drug for each germ, vaccines, and no unnecessary antibiotics."
+   },
+   "summary": [
+    "Outbreaks from contaminated water mix many germs; the symptoms (watery, bloody, fever) point to the cause.",
+    "Hydration is for everyone; antibiotics are targeted.",
+    "Safe water, sanitation and vaccines stop the next outbreak."
+   ],
+   "hints": [
+    "Plan for watery diarrhoea first (hydration), then the invasive germs (bloody stools, fever).",
+    "Prescribe each battery for specific germs, never for 'everything'.",
+    "IV drip and doxycycline for cholera, azithromycin for Shigella and Typhoid, metronidazole for the Amoeba, plus IgA and ORS."
+   ],
+   "why": "Faecal contamination of water carries many gut germs at once. Doctors sort patients by syndrome: acute watery diarrhoea (rehydrate; an antibiotic only for cholera), dysentery (an antibiotic for Shigella) and enteric fever (blood culture, then ceftriaxone or azithromycin). Public-health action, such as chlorinating the water, finding the source and vaccinating, ends the outbreak."
   }
  ],
  "tournament": {

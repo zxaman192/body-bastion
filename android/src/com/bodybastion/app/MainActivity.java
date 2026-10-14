@@ -69,7 +69,7 @@ public class MainActivity extends Activity {
         s.setSupportZoom(false);
         s.setBuiltInZoomControls(false);
         s.setDisplayZoomControls(false);
-        s.setUserAgentString(s.getUserAgentString() + " BodyBastionApp/1.4");
+        s.setUserAgentString(s.getUserAgentString() + " BodyBastionApp/1.5");
 
         web.setWebChromeClient(new WebChromeClient());
         web.setWebViewClient(new WebViewClient() {

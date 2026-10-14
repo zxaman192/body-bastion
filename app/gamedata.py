@@ -61,6 +61,15 @@ class Index:
         self.site_order = [s["id"] for s in gd["map"]["sites"]]
         self.research = {r["key"]: r for r in gd["research"]}
         self.campaign = {int(c["id"]): c for c in gd["campaign"]}
+        # Missions are played in list order; ids are stable keys (stars, unlocks and research refer to them).
+        self.campaign_order = [int(c["id"]) for c in gd["campaign"]]
+        self.campaign_number = {cid: i + 1 for i, cid in enumerate(self.campaign_order)}
+        self.campaign_prev = {}
+        prev = None
+        for c in gd["campaign"]:
+            self.campaign_prev[int(c["id"])] = prev
+            if not c.get("training"):
+                prev = int(c["id"])
         self.trials = {t["id"]: t for t in gd.get("trials", [])}
         self.tbases = {b["id"]: b for b in gd["tournament"]["bases"]}
         self.bots = {b["id"]: b for b in gd.get("bots", [])}
@@ -81,6 +90,16 @@ def index_of(gd: dict) -> Index:
 
 def idx() -> Index:
     return index_of(get_gd())
+
+
+def mission_label(gd: dict, level_id: int) -> str:
+    """'Mission 3 (Cholera outbreak after floods)' for player-facing messages."""
+    ix = index_of(gd)
+    lv = ix.campaign.get(level_id)
+    n = ix.campaign_number.get(level_id)
+    if lv is None or n is None:
+        return f"mission {level_id}"
+    return f"Mission {n} ({lv.get('title', '')})"
 
 
 def _option_text(opt) -> str:

@@ -1,6 +1,7 @@
 // Pure helpers shared by the shell screens. No DOM access here.
 
 export const ROUTES = [
+  { name: 'welcome', path: 'welcome', public: true, bare: true },
   { name: 'login', path: 'login', public: true, guestOnly: true },
   { name: 'register', path: 'register', public: true, guestOnly: true },
   { name: 'home', path: 'home' },
@@ -178,6 +179,12 @@ const STAT_SENTENCES = {
   liverDamage: (n) => (n === 0 ? 'Do not let the liver gate take any abscess damage.' : `Keep liver damage at or below ${n}.`),
 };
 
+const MIN_STAT_SENTENCES = {
+  orsRefill: () => 'Give ORS: build an ORS + Zinc Station.',
+  ivUsed: () => 'Start IV fluids when dehydration becomes severe.',
+  neutralised: (n) => `Neutralise at least ${n} germs with IgA antibodies.`,
+};
+
 const STAT_LABELS = {
   wasted: 'wasted shots', unnecessary: 'unnecessary antibiotic shots', totalShots: 'drug shots', atpSpent: 'ATP spent',
   outOfAtp: 'shots missed for lack of ATP', collateral: 'flora damage', cdiffSpawned: 'C. difficile spawned',
@@ -232,6 +239,11 @@ export function objectiveText(gd, obj, level) {
       const vname = r ? r.name.replace(/\s*\(.*\)\s*$/, '') : `${unitName(gd, obj.germ)} vaccine`;
       return `Vaccinate against ${unitName(gd, obj.germ).replace(/ (Wave|Swarm|Flood|Raider|Stalker|Blob|Driller|Creeper|Titan|Phantom)$/, '')} (${vname}) before the waves arrive.`;
     }
+    case 'min_stat': {
+      const f = MIN_STAT_SENTENCES[obj.stat];
+      if (f) return f(n);
+      return `Reach at least ${n} ${statLabel(obj.stat)}.`;
+    }
     case 'max_stat': {
       const f = STAT_SENTENCES[obj.stat];
       if (f) return f(n);
@@ -242,7 +254,43 @@ export function objectiveText(gd, obj, level) {
   }
 }
 
-export function levelUnlocked(level, campaignStars) {
+// ------------------------------------------------------------------ missions
+// Missions are played in gamedata list order; ids are stable keys (stars, unlocks and research use them).
+export function missionById(gd, id) {
+  return ((gd && gd.campaign) || []).find((m) => Number(m.id) === Number(id)) || null;
+}
+
+export function missionNumber(gd, id) {
+  const i = ((gd && gd.campaign) || []).findIndex((m) => Number(m.id) === Number(id));
+  return i < 0 ? null : i + 1;
+}
+
+export function missionLabel(gd, id) {
+  const m = missionById(gd, id);
+  return m ? `Mission ${missionNumber(gd, id)}: ${m.title}` : `Mission ${id}`;
+}
+
+// The mission that must be won before this one, or null. Training missions never block anything.
+export function prerequisite(gd, id) {
+  let prev = null;
+  for (const m of (gd && gd.campaign) || []) {
+    if (Number(m.id) === Number(id)) return prev;
+    if (!m.training) prev = m;
+  }
+  return null;
+}
+
+export function missionOpen(gd, mission, campaignStars) {
+  const m = mission && typeof mission === 'object' ? mission : missionById(gd, mission);
+  if (!m) return false;
+  const stars = campaignStars || {};
+  if (m.training || Number(stars[String(m.id)] || 0) >= 1) return true;
+  const prev = prerequisite(gd, m.id);
+  return !prev || Number(stars[String(prev.id)] || 0) >= 1;
+}
+
+export function levelUnlocked(level, campaignStars, gd) {
+  if (gd) return missionOpen(gd, level, campaignStars);
   const id = Number(level.id !== undefined ? level.id : level);
   if (id === 1) return true;
   const prev = campaignStars ? campaignStars[String(id - 1)] : 0;
@@ -383,7 +431,7 @@ export function researchStatus(gd, state, item) {
   if (labLv === 0) return { owned: false, ok: false, reason: `Build a ${buildingName(gd, item.lab)} first`, labLv };
   if (labLv < (item.labLevel || 1)) return { owned: false, ok: false, reason: `Needs ${buildingName(gd, item.lab)} level ${item.labLevel}`, labLv };
   if (item.requiresLevel && Number((state.campaign || {})[String(item.requiresLevel)] || 0) < 1) {
-    return { owned: false, ok: false, reason: `Win campaign case ${item.requiresLevel} first`, labLv };
+    return { owned: false, ok: false, reason: `Win ${missionLabel(gd, item.requiresLevel)} first`, labLv };
   }
   if (!affordable(state.resources, item.cost)) return { owned: false, ok: false, reason: 'Not enough resources', labLv };
   return { owned: false, ok: true, reason: null, labLv };

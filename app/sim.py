@@ -1529,6 +1529,10 @@ def evaluate_objectives(gd, objectives, result):
                 stat = ob.get('stat')
                 v = as_int(stats.get(stat)) if isinstance(stat, str) else None
                 ok = v is not None and v <= _num(ob.get('n'))
+            elif k == 'min_stat':
+                stat = ob.get('stat')
+                v = as_int(stats.get(stat)) if isinstance(stat, str) else None
+                ok = v is not None and v >= _num(ob.get('n'))
         out.append(ok)
     return out
 
